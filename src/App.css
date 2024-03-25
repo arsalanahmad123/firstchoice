@@ -1,0 +1,22 @@
+@font-face {
+    font-family: 'hagred';
+    src: url('./assets/fonts/regular.ttf') format('truetype'),
+        url('./assets/fonts/bold.ttf') format('truetype'),
+        url('./assets/fonts/extrabold.ttf') format('truetype');
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'hagred';
+    overflow: hidden;
+}
+
+.active {
+    background-color: #d2734f;
+    font-weight: bolder;
+}
