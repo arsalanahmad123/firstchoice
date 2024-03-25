@@ -1,7 +1,7 @@
 import React from 'react'
 import { MdEmail } from 'react-icons/md'
 import { MdLock } from 'react-icons/md'
-import Logo from '../assets/Logo.png'
+import Logo from '../assets/logo.png'
 import back from '../assets/bgadmin.png'
 const Login = () => {
     return (
