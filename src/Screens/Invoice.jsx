@@ -7,7 +7,7 @@ const Invoice = () => {
     return (
         <>
             <Wrapper title={'Invoice'}>
-                <h1 className='text-white mt-3'>Our Latest Invoices</h1>
+                <h1 className='text-white mt-3'>Our Latest Invoices </h1>
                <Table />
             </Wrapper>
         </>
