@@ -6,9 +6,8 @@ import Table from '../Components/Table'
 const Invoice = () => {
     return (
         <>
-            <Wrapper title={'Invoice'}>
-                <h1 className='text-white mt-3'>Our Latest Invoices</h1>
-               <Table />
+            <Wrapper title={'Latest Invoices'}>
+                <Table />
             </Wrapper>
         </>
     )
