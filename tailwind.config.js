@@ -7,6 +7,7 @@ export default {
                 darkorange: '#d2734f',
                 bgDarkColor: '#1f1f1f',
                 bgLight: '#252525',
+                
             },
         },
     },
