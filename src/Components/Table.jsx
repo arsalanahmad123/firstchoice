@@ -23,7 +23,7 @@ const Table = () => {
                         <td>12/16/2020</td>
                         <td>Blue</td>
                     </tr>
-                    
+
                     <tr>
                         <th>11</th>
                         <td>Andy Tipple</td>
