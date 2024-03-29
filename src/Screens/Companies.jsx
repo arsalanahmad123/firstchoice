@@ -9,11 +9,13 @@ import Ellipse24 from '../assets/Ellipse24.png'
 import { CgSearch } from "react-icons/cg";
 import EmployeeProfile from "../Components/EmployeeProfile";
 import Header from "../Components/Header";
+
 const Companies = () => {
   return (
     <>
       <Wrapper title={"Companies"}>
        <Header/>
+
         <div className="flex">
         <div className="flex gap-x-7 px-6   pt-16 text-center">
           <EmployeeProfile img={Ellipse} desc={"Ahad"} />
