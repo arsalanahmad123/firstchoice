@@ -1,54 +1,70 @@
 import React from 'react'
-import { MdGroupWork } from "react-icons/md";
-import { GiProfit } from "react-icons/gi";
-import { FaSortAmountUp } from "react-icons/fa";
-import { HiBuildingOffice2 } from "react-icons/hi2";
-
+import { MdGroupWork } from 'react-icons/md'
+import { GiProfit } from 'react-icons/gi'
+import { FaSortAmountUp } from 'react-icons/fa'
+import { HiBuildingOffice2 } from 'react-icons/hi2'
+import { FaFileInvoiceDollar } from 'react-icons/fa6'
 
 const DashboardCard = () => {
     return (
         <>
-            <div className='flex flex-row justify-center  items-center py-1 gap-x-5 w-full'>
-                <div className="card w-72 bg-[#d2eff3] black ">
-                    <MdGroupWork className='size-10 lg:ml-60' />
-                    <div className="card-body pt-">
-                        <h2 className="text-md -mt-8">Active Works</h2>
-                        <p>$$$</p>
-
+            <div className='flex flex-row justify-between  items-center py-4 gap-x-3 w-full'>
+                <div className='rounded-lg bg-card1 text-black relative h-32 w-52 px-4'>
+                    <MdGroupWork className='size-12 text-card1 absolute -top-2 -right-2 bg-bgDarkColor rounded-full border-[10px] border-bgDarkColor' />
+                    <div className='flex flex-col justify-center  h-full pt-2'>
+                        <h2 className='text-xl font-semibold uppercase w-28'>
+                            Pending Works
+                        </h2>
+                        <p className='text-2xl font-bold text-darkorange italic  text-right'>
+                            0
+                        </p>
                     </div>
                 </div>
-                <div className="card w-72 bg-[#fffac3] text-black">
-                    <HiBuildingOffice2 className='size-10 lg:ml-60' />
-                    <div className="card-body pt-">
-                        <h2 className="text-md -mt-8">Total
-                            Companies</h2>
-                        <p>$$$</p>
-
+                <div className=' bg-card2 text-black relative h-32 w-52 px-4 rounded-lg'>
+                    <HiBuildingOffice2 className='size-12 text-card2 absolute -top-2 -right-2 bg-bgDarkColor rounded-full border-[10px] border-bgDarkColor' />
+                    <div className='flex flex-col justify-center h-full pt-2'>
+                        <h2 className='text-xl font-semibold uppercase'>
+                            Total Companies
+                        </h2>
+                        <p className='text-2xl font-bold text-darkorange italic text-right '>
+                            100
+                        </p>
                     </div>
                 </div>
-                <div className="card w-72 bg-[#fffac3] text-black">
-                    <FaSortAmountUp className='size-9 lg:ml-60' />
-                    <div className="card-body pt-">
-                        <h2 className=" text-md -mt-8">Daily Revenue</h2>
-                        <p>$$$</p>
-
+                <div className=' bg-card3 text-black relative h-32 w-52 px-4 rounded-lg'>
+                    <FaSortAmountUp className='size-12 text-card3 absolute -top-2 -right-2 bg-bgDarkColor rounded-full border-[10px] border-bgDarkColor' />
+                    <div className='flex flex-col justify-center  h-full pt-2'>
+                        <h2 className=' text-xl font-semibold uppercase w-28'>
+                            Daily Revenue
+                        </h2>
+                        <p className='text-2xl font-bold text-darkorange italic text-right'>
+                            $1000
+                        </p>
                     </div>
                 </div>
-                <div className="card w-72 bg-[#ffccbe] text-black">
-                    <GiProfit className='size-10 lg:ml-60 ' />
-                    <div className="card-body pt-">
-                        <h2 className="text-md -mt-8">Daily Profit</h2>
-                        <p>$$$</p>
-
+                <div className=' bg-card4 text-black relative h-32 w-52 px-4 rounded-lg'>
+                    <GiProfit className='size-12 text-card4 absolute -top-2 -right-2 bg-bgDarkColor rounded-full border-[10px] border-bgDarkColor' />
+                    <div className='flex flex-col justify-center  h-full pt-2 '>
+                        <h2 className='text-xl font-semibold uppercase w-28'>
+                            Monthly Profit
+                        </h2>
+                        <p className='text-2xl font-bold text-darkorange italic text-right'>
+                            $10000
+                        </p>
                     </div>
                 </div>
-
+                <div className=' bg-card5 text-black relative h-32 w-52 px-4 rounded-lg'>
+                <FaFileInvoiceDollar className='size-12 text-card4 absolute -top-2 -right-2 bg-bgDarkColor rounded-full border-[10px] border-bgDarkColor' />
+                    <div className='flex flex-col justify-center h-full pt-2'>
+                        <h2 className='text-xl font-semibold uppercase w-28'>
+                            Total Invoices
+                        </h2>
+                        <p className='text-2xl font-bold text-darkorange italic text-right'>
+                            199
+                        </p>
+                    </div>
+                </div>
             </div>
-            <div className='flex flex-row justify-center  items-center py-5 gap-x-5 w-full'>
-
-
-            </div>
-
         </>
     )
 }

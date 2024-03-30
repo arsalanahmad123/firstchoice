@@ -7,7 +7,11 @@ export default {
                 darkorange: '#d2734f',
                 bgDarkColor: '#1f1f1f',
                 bgLight: '#252525',
-                
+                card1: '#D2EFF3',
+                card2: '#FFFAC3',
+                card3: '#DBCAFF',
+                card4: '#FFCDBC',
+                card5: '#a7e2c9',
             },
         },
     },

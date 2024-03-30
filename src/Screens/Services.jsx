@@ -6,10 +6,18 @@ const Services = () => {
     return (
         <>
             <Wrapper title={'Services'}>
-                <div className='flex gap-x-6'>
-           <Service_Card  Service_Name="service name will be here" costPrice="costPrice" salePrice="salePrice" />
-           <Service_Card  Service_Name="service name will be here" costPrice="costPrice" salePrice="salePrice" />
-           </div>
+                <div
+                    className='flex gap-x-6 flex-row flex-wrap mx-5 mt-3 gap-y-5
+                '
+                >
+                    {Array.from({ length: 10 }).map((_, i) => (
+                        <Service_Card
+                            serviceName='Phone Repair'
+                            costPrice={500}
+                            salePrice={1000}
+                        />
+                    ))}
+                </div>
             </Wrapper>
         </>
     )

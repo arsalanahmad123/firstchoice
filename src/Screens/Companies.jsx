@@ -1,38 +1,51 @@
-import React from "react";
-import AppLayout from "../Layout/AppLayout";
-import Wrapper from "../Layout/Wrapper";
-import Card from "../Components/Card";
+import React from 'react'
+import AppLayout from '../Layout/AppLayout'
+import Wrapper from '../Layout/Wrapper'
 import Ellipse from '../assets/Ellipse.png'
-import Ellipse23 from '../assets/Ellipse23.png'
-import Ellipse22 from '../assets/Ellipse22.png'
-import Ellipse24 from '../assets/Ellipse24.png'
-import { CgSearch } from "react-icons/cg";
-import EmployeeProfile from "../Components/EmployeeProfile";
-import Header from "../Components/Header";
+import CompanyCard from '../Components/CompanyCard'
+import Header from '../Components/Header'
+import { Routes, Route } from 'react-router-dom'
+import NewCompany from './NewCompany'
+
+const Homepage = () => {
+    return (
+        <>
+            <Wrapper title={'Companies'}>
+                <Header />
+
+                <div className='flex'>
+                    <div className='flex gap-x-5 gap-y-3 px-6 flex-row flex-wrap  pt-16 text-center'>
+                        {Array.from({ length: 6 }).map((_, i) => (
+                            <CompanyCard img={Ellipse} desc={'Ahad'} />
+                        ))}
+                    </div>
+                </div>
+            </Wrapper>
+        </>
+    )
+}
+
+const CompanyRoutes = () => {
+    return (
+        <>
+            <Routes>
+                <Route key={'companies'} path='/' element={<Homepage />} />
+                <Route
+                    key={'add-company'}
+                    path='/add-company'
+                    element={<NewCompany />}
+                />
+            </Routes>
+        </>
+    )
+}
 
 const Companies = () => {
-  return (
-    <>
-      <Wrapper title={"Companies"}>
-       <Header/>
+    return (
+        <>
+            <CompanyRoutes />
+        </>
+    )
+}
 
-        <div className="flex">
-        <div className="flex gap-x-7 px-6   pt-16 text-center">
-          <EmployeeProfile img={Ellipse} desc={"Ahad"} />
-        </div>
-        <div className="flex gap-x-7 px-6   pt-16 text-center">
-          <EmployeeProfile img={Ellipse23} desc={"Ali khan "} />
-        </div>
-        <div className="flex gap-x-7 px-6   pt-16 text-center">
-          <EmployeeProfile img={Ellipse22} desc={"Sania "} />
-        </div>
-        <div className="flex gap-x-7 px-6   pt-16 text-center">
-          <EmployeeProfile img={Ellipse24} desc={"Sani Zafar"} />
-        </div>
-        </div>
-      </Wrapper>
-    </>
-  );
-};
-
-export default AppLayout()(Companies);
+export default AppLayout()(Companies)

@@ -1,5 +1,6 @@
-import React from 'react'
 import SideBar from './SideBar'
+import { Suspense } from 'react'
+import Loader from '../Components/Loader'
 
 const AppLayout = () => (WrappedComponent) => {
     return (props) => {
@@ -7,7 +8,9 @@ const AppLayout = () => (WrappedComponent) => {
             <>
                 <main className='flex flex-row justify-between'>
                     <SideBar />
-                    <WrappedComponent {...props} />
+                    <Suspense fallback={<Loader />}>
+                        <WrappedComponent {...props} />
+                    </Suspense>
                 </main>
             </>
         )
