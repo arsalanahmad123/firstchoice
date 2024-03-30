@@ -1,6 +1,8 @@
 import React from 'react'
 
 const Service_Card = (props) => {
+ 
+
     return (
       <div className='flex  gap-x-6'>
             <div className="card w-72 text-white bg-bgLight left-6 top-7  ">

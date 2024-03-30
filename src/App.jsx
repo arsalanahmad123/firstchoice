@@ -12,6 +12,7 @@ import Revenue from "./Screens/Revenue";
 import Services from "./Screens/Services";
 import Admin from "./Screens/Admin";
 import Employees from "./Screens/Employees";
+import Add_Invoice from "./Screens/Add_Invoice";
 function App() {
   return (
     <>
@@ -27,6 +28,7 @@ function App() {
             <Route path="/revenue" element={<Revenue />} />
             <Route path="/services" element={<Services />} />
             <Route path="/employees" element={<Employees />} />
+            <Route path="/add_invoice" element={<Add_Invoice />} />
           </Route>
           <Route path="/login" element={<Login />} />
           <Route path="/admin" element={<Admin />} />
