@@ -3,6 +3,30 @@ import AppLayout from '../Layout/AppLayout'
 import Wrapper from '../Layout/Wrapper'
 import { CgSearch } from 'react-icons/cg'
 
+const dummData = [
+    {
+        id: 1,
+        name: 'KFC',
+        quantity: 10,
+        total_price: 2000,
+        status: 'pending',
+    },
+    {
+        id: 2,
+        name: 'Burger King',
+        quantity: 20,
+        total_price: 4000,
+        status: 'completed',
+    },
+    {
+        id: 3,
+        name: 'Pizza Hut',
+        quantity: 30,
+        total_price: 6000,
+        status: 'submitted',
+    },
+]
+
 const Orders = () => {
     return (
         <>
@@ -24,7 +48,7 @@ const Orders = () => {
                         </span>
                     </div>
                 </div>
-                <div className='overflow-x-auto  bg-bgLight max-h-[80vh] mt-10 mx-5 rounded-xl '>
+                <div className='overflow-x-auto  bg-bgLight max-h-[76vh] mt-10 mx-5 rounded-xl '>
                     <table className='table table-md  text-white '>
                         <thead>
                             <tr className='bg-darkorange text-white border-gray-700'>
@@ -36,15 +60,29 @@ const Orders = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {Array.from({ length: 10 }).map((_, i) => (
-                                <tr className='border-gray-700'>
-                                    <td>839</td>
-                                    <td>Star Bucks</td>
-                                    <td>90</td>
-                                    <td>$900</td>
+                            {dummData.map((item) => (
+                                <tr key={item.id}>
+                                    <td>{item.id}</td>
+                                    <td>{item.name}</td>
+                                    <td>{item.quantity}</td>
+                                    <td>{item.total_price}</td>
                                     <td>
-                                        <span className='badge badge-success text-white'>
-                                            Completed
+                                        <span
+                                            className={`badge px-3 ${
+                                                item.status === 'pending' &&
+                                                'badge-warning'
+                                            } ${
+                                                item.status === 'completed' &&
+                                                'badge-success'
+                                            }
+                                                ${
+                                                    item.status ===
+                                                        'submitted' &&
+                                                    'badge-neutral'
+                                                }
+                                            `}
+                                        >
+                                            {item.status}
                                         </span>
                                     </td>
                                 </tr>

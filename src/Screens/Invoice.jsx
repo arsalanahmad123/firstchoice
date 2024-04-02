@@ -25,7 +25,7 @@ const Invoice = () => {
                             completed
                         </span>
                     </div>
-                    <button className='text-white text-sm w-52 px-2 lg:py-1 lg:rounded-2xl bg-gradient-to-b from-yellow-400 to-yellow-600'>
+                    <button className='text-white text-sm w-52 px-2 lg:py-1 lg:rounded-2xl bg-darkorange'>
                         Add New Company
                     </button>
                 </div>

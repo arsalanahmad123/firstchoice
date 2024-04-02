@@ -1,39 +1,57 @@
 import './App.css'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { lazy, Suspense, useState, useEffect } from 'react'
 import ProtectedRoute from './Layout/ProtectedRoute'
-import Dashboard from './Screens/Dashboard'
-import Login from './Screens/Login'
-import Companies from './Screens/Companies'
-import Orders from './Screens/Orders'
-import Work from './Screens/Work'
-import Invoice from './Screens/Invoice'
-import Expense from './Screens/Expense'
-import Revenue from './Screens/Revenue'
-import Services from './Screens/Services'
-import Admin from './Screens/Admin'
-import Employees from './Screens/Employees'
-import Add_Invoice from './Screens/Add_Invoice'
+const Dashboard = lazy(() => import('./Screens/Dashboard'))
+const Login = lazy(() => import('./Screens/Login'))
+const Companies = lazy(() => import('./Screens/Companies'))
+const Orders = lazy(() => import('./Screens/Orders'))
+const Work = lazy(() => import('./Screens/Work'))
+const Invoice = lazy(() => import('./Screens/Invoice'))
+const Expense = lazy(() => import('./Screens/Expense'))
+const Revenue = lazy(() => import('./Screens/Revenue'))
+const Services = lazy(() => import('./Screens/Services'))
+const Admin = lazy(() => import('./Screens/Admin'))
+const Employees = lazy(() => import('./Screens/Employees'))
+const Add_Invoice = lazy(() => import('./Screens/Add_Invoice'))
+import Loader from './Components/Loader'
 
 function App() {
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setLoading(false)
+        }, 5000)
+        return () => clearTimeout(timer)
+    }, [])
     return (
         <>
             <BrowserRouter>
-                <Routes>
-                    <Route element={<ProtectedRoute />}>
-                        <Route path='/' element={<Dashboard />} />
-                        <Route path='/companies/*' element={<Companies />} />
-                        <Route path='/orders' element={<Orders />} />
-                        <Route path='/work' element={<Work />} />
-                        <Route path='/invoice' element={<Invoice />} />
-                        <Route path='/expense' element={<Expense />} />
-                        <Route path='/revenue' element={<Revenue />} />
-                        <Route path='/services' element={<Services />} />
-                        <Route path='/employees' element={<Employees />} />
-                        <Route path='/add_invoice' element={<Add_Invoice />} />
-                    </Route>
-                    <Route path='/login' element={<Login />} />
-                    <Route path='/admin' element={<Admin />} />
-                </Routes>
+                <Suspense fallback={loading && <Loader />}>
+                    <Routes>
+                        <Route element={<ProtectedRoute />}>
+                            <Route path='/' element={<Dashboard />} />
+                            <Route
+                                path='/companies/*'
+                                element={<Companies />}
+                            />
+                            <Route path='/orders' element={<Orders />} />
+                            <Route path='/work' element={<Work />} />
+                            <Route path='/invoice' element={<Invoice />} />
+                            <Route path='/expense' element={<Expense />} />
+                            <Route path='/revenue' element={<Revenue />} />
+                            <Route path='/services' element={<Services />} />
+                            <Route path='/employees' element={<Employees />} />
+                            <Route
+                                path='/add_invoice'
+                                element={<Add_Invoice />}
+                            />
+                        </Route>
+                        <Route path='/login' element={<Login />} />
+                        <Route path='/admin' element={<Admin />} />
+                    </Routes>
+                </Suspense>
             </BrowserRouter>
         </>
     )

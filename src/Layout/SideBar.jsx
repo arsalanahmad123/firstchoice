@@ -8,14 +8,14 @@ import { SiExpensify as Expense } from 'react-icons/si'
 import { GiProfit as Profit } from 'react-icons/gi'
 import { TbChartHistogram as Orders } from 'react-icons/tb'
 import NavList from '../Components/NavList'
-import logo from '../assets/logo2.png'
+import logo from '../assets/Logo.png'
 
 const SideBar = () => {
     return (
         <>
             <div className='max-w-[20%] bg-bgLight min-h-screen flex flex-col pt-8 px-3 '>
                 <img src={logo} alt='Logo' />
-                <ul className='flex flex-col justify-center items-center w-full gap-y-2 mt-2'>
+                <ul className='flex flex-col justify-center items-center w-full gap-y-2 mt-5'>
                     <NavList
                         icon={
                             <FiHome

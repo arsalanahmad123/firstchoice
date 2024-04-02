@@ -14,7 +14,7 @@ const Header = () => {
                 </div>
                 <Link
                     to={'/companies/add-company'}
-                    className='text-white flex justify-center items-center text-sm w-52 px-2 lg:py-1 lg:rounded-2xl bg-gradient-to-b from-yellow-400 to-yellow-600'
+                    className='text-white flex justify-center items-center text-sm w-52 px-2 lg:py-1 lg:rounded-2xl bg-darkorange'
                 >
                     Add New Company
                 </Link>

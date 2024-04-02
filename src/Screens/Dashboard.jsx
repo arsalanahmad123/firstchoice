@@ -12,7 +12,7 @@ const Dashboard = () => {
                     <div className='flex flex-col justify-start items-start gap-x-4  min-h-screen w-full'>
                         <DashboardCard />
                         <DashboarTable />
-                        <div className='flex justify-center items-center mt-5 bg-bgLight rounded-lg w-full py-2'>
+                        <div className='flex justify-center items-center mt-2 bg-bgLight rounded-lg w-full py-2'>
                             <DashboardChart />
                         </div>
                     </div>

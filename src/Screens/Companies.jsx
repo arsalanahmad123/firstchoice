@@ -14,9 +14,13 @@ const Homepage = () => {
                 <Header />
 
                 <div className='flex'>
-                    <div className='flex gap-x-5 gap-y-3 px-6 flex-row flex-wrap  pt-16 text-center'>
-                        {Array.from({ length: 6 }).map((_, i) => (
-                            <CompanyCard img={Ellipse} desc={'Ahad'} />
+                    <div className='flex gap-x-3 gap-y-3 px-5 flex-row flex-wrap  pt-10 text-center'>
+                        {Array.from({ length: 8 }).map((_, i) => (
+                            <CompanyCard
+                                key={i}
+                                img={Ellipse}
+                                desc={'StarBucks'}
+                            />
                         ))}
                     </div>
                 </div>

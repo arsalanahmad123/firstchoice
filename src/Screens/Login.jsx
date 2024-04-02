@@ -2,34 +2,39 @@ import React from 'react'
 import { MdEmail } from 'react-icons/md'
 import { MdLock } from 'react-icons/md'
 import Logo from '../assets/logo.png'
-import back from '../assets/adminbg.png'
+import backgroundVideo from '../assets/background.mp4'
 const Login = () => {
     return (
-        <div
-            data-theme='light'
-            className='lg:flex  lg:justify-between lg:gap-x-6  min-h-screen adjust'
-        >
-           
-            <div className='  hidden lg:flex lg:flex-col lg:justify-center lg:w-screen lg:p-16 lg:items-center '>
-              <img src={Logo} alt="" />
-                <h1 className='font-bold lg:text-3xl lg:pb-5 text-center text-black'>
-                    WELCOME TO FIRST CHOICE MANAGEMENT CUNSULTANCY
-                </h1>
-                <h1 className='font-semibold '>We Make Your Work Easier</h1>
-            </div>
-            <div className='lg:w-3/2 p-3  w-full  lg:min-h-full bg-[#af831b]  md:flex md:justify-center md:items-center relative'>
-                <div
-                    className='absolute top-5 md:-top-10 -left-10 '
-                    style={{ zIndex: 10 }}
+        <div data-theme='dark' className='flex  justify-between  min-h-screen '>
+            <div className=' flex flex-col justify-start w-full pt-16 items-center relative'>
+                <video
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    className='absolute min-h-full min-w-full top-0 left-0 object-cover'
                 >
-                    {/* <img src={back} className='' /> */}
+                    <source src={backgroundVideo} type='video/mp4' />
+                    Your browser does not support HTML5 video.
+                </video>
+                <div className='flex justify-center items-center flex-col absolute top-[50%] left-[50%] transform translate-x-[-50%] translate-y-[-50%] w-full h-full bg-[rgba(0,0,0,0.7)]'>
+                    <div className='flex justify-center items-center flex-col p-10 mb-auto'>
+                        <h1 className='font-bold text-3xl py-5 text-center text-white'>
+                            WELCOME TO FIRST CHOICE MANAGEMENT CUNSULTANCY
+                        </h1>
+                        <h1 className='font-semibold text-white'>
+                            We Make Your Work Easier
+                        </h1>
+                    </div>
                 </div>
+            </div>
+            <div className='lg:w-3/2 p-3  w-full  lg:min-h-full bg-lightGold  md:flex md:justify-center md:items-center relative'>
                 <div
-                    className={` md:w-96 p-5  bg-white flex flex-col justify-center rounded-3xl lg:min-h-full  `}
+                    className={` md:w-96 p-5  bg-bgLight flex flex-col justify-center rounded-3xl min-h-[80vh]  `}
                     style={{ zIndex: 20 }}
                 >
-                    <img src={Logo} className=' m-auto ' />
-                    <p className='text-dark m-auto  font-bold text-lg lg:pt-7 lg:-mt-9'>
+                    <img src={Logo} className='mb-10' />
+                    <p className='text-white text-center  font-bold text-lg '>
                         Sign Into Your Account
                     </p>
 
@@ -39,10 +44,10 @@ const Login = () => {
                             <input
                                 type='email'
                                 placeholder='E-mail'
-                                className='w-full pl-12 pr-4 py-3 rounded-lg bg-[#F5F5F7] focus:outline-none    focus:ring-0 focus:border-textActive'
+                                className='w-full pl-14 py-3 rounded-lg bg-gray-700 focus:outline-none    focus:ring-0 focus:border-textActive'
                             />
                             <div className='absolute  inset-y-0  left-0 pr-3 flex items-center pointer-events-none  '>
-                                <div className=' bg-[#af831b] h-full flex items-center px-2'>
+                                <div className=' bg-lightGold h-full flex items-center px-2 rounded'>
                                     <MdEmail className='  size-6 rounded  text-white' />
                                 </div>
                             </div>
@@ -54,10 +59,10 @@ const Login = () => {
                             <input
                                 type='password'
                                 placeholder='password'
-                                className='w-full  pl-12 pr-4 py-3 rounded-lg bg-[#F5F5F7] focus:outline-none    focus:ring-0 focus:border-textActive'
+                                className='w-full  pl-14  py-3 rounded-lg bg-gray-700 focus:outline-none    focus:ring-0 focus:border-textActive'
                             />
                             <div className='absolute  inset-y-0  left-0 pr-3 flex items-center pointer-events-none  '>
-                                <div className=' bg-[#af831b] h-full flex items-center px-2.5'>
+                                <div className=' bg-lightGold h-full flex items-center px-2.5 rounded'>
                                     <MdLock className='  size-6 rounded  text-white' />
                                 </div>
                             </div>
@@ -69,11 +74,13 @@ const Login = () => {
                                 name=''
                                 id=''
                             />
-                            <label className='font-xl text-black'>Remember Me</label>
+                            <label className='font-xl text-white'>
+                                Remember Me
+                            </label>
                         </div>
                         <button
                             type='submit'
-                            className=' m-auto bg-[#af831b]    rounded-xl  py-3 w-full mt-5 text-white'
+                            className=' m-auto bg-lightGold    rounded-xl  py-3 w-full mt-5 text-gray-700'
                         >
                             Login
                         </button>

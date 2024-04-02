@@ -3,7 +3,7 @@ import React from 'react'
 const DashboarTable = () => {
     return (
         <>
-            <div className='overflow-x-auto  bg-bgLight max-h-[35vh] mt-5 rounded-xl w-full'>
+            <div className='overflow-x-auto  bg-bgLight max-h-[35vh] mt-1 rounded-xl w-full'>
                 <h4 className='text-white text-2xl p-3 italic font-bold'>
                     New Orders
                 </h4>
