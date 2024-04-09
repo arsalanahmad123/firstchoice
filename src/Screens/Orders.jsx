@@ -27,6 +27,8 @@ const dummData = [
     },
 ]
 
+const selectedOption = 'bg-lightGold text-black'
+
 const Orders = () => {
     return (
         <>
@@ -49,9 +51,9 @@ const Orders = () => {
                     </div>
                 </div>
                 <div className='overflow-x-auto  bg-bgLight max-h-[76vh] mt-10 mx-5 rounded-xl '>
-                    <table className='table table-md  text-white '>
+                    <table className='table table-md   '>
                         <thead>
-                            <tr className='bg-darkorange text-white border-gray-700'>
+                            <tr className='bg-lightGold text-gray-900 border-gray-700'>
                                 <th>Order ID</th>
                                 <th>Company</th>
                                 <th>Quantity</th>
@@ -62,28 +64,49 @@ const Orders = () => {
                         <tbody>
                             {dummData.map((item) => (
                                 <tr key={item.id}>
-                                    <td>{item.id}</td>
-                                    <td>{item.name}</td>
-                                    <td>{item.quantity}</td>
-                                    <td>{item.total_price}</td>
+                                    <td className='text-white'>{item.id}</td>
+                                    <td className='text-white'>{item.name}</td>
+                                    <td className='text-white'>
+                                        {item.quantity}
+                                    </td>
+                                    <td className='text-white'>
+                                        {item.total_price}
+                                    </td>
                                     <td>
-                                        <span
-                                            className={`badge px-3 ${
-                                                item.status === 'pending' &&
-                                                'badge-warning'
-                                            } ${
-                                                item.status === 'completed' &&
-                                                'badge-success'
-                                            }
-                                                ${
-                                                    item.status ===
-                                                        'submitted' &&
-                                                    'badge-neutral'
-                                                }
+                                        <select
+                                            name='update-status'
+                                            id='update-status'
+                                            className={`bg-bgLight border border-lightGold text-white focus:outline-none p-1 rounded-lg      
                                             `}
                                         >
-                                            {item.status}
-                                        </span>
+                                            <option
+                                                value={item.status}
+                                                className={selectedOption}
+                                            >
+                                                {item.status}
+                                            </option>
+                                            <option value='waiting for payment'>
+                                                Waiting for payment
+                                            </option>
+                                            <option value='documents received'>
+                                                Documents received
+                                            </option>
+                                            <option value='in process'>
+                                                In process
+                                            </option>
+                                            <option value='approved'>
+                                                Approved
+                                            </option>
+                                            <option value='return for modification'>
+                                                Return for Modification
+                                            </option>
+                                            <option value='rejected'>
+                                                Rejected
+                                            </option>
+                                            <option value='completed'>
+                                                Completed
+                                            </option>
+                                        </select>
                                     </td>
                                 </tr>
                             ))}

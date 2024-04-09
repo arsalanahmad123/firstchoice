@@ -10,7 +10,7 @@ const Services = () => {
                     className='flex gap-x-6 flex-row flex-wrap mx-5 mt-3 gap-y-5
                 '
                 >
-                    {Array.from({ length: 10 }).map((_, i) => (
+                    {Array.from({ length: 6 }).map((_, i) => (
                         <Service_Card
                             serviceName='Phone Repair'
                             costPrice={500}

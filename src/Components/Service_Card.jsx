@@ -6,11 +6,11 @@ const Service_Card = (props) => {
             <h2 className='font-extrabold text-xl'>{props.serviceName}</h2>
             <p className='flex items-center gap-x-4 '>
                 Cost Price
-                <span className='badge bg-darkorange border-none text-white'>
+                <span className='badge bg-lightGold border-none text-gray-900'>
                     {props.costPrice}
                 </span>
             </p>
-            <div className='flex justify-between items-center mx-2'>
+            <div className='flex justify-between items-center '>
                 <button className='btn btn-xs btn-outline text-white'>
                     Edit Service
                 </button>

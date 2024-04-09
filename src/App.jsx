@@ -12,9 +12,9 @@ const Expense = lazy(() => import('./Screens/Expense'))
 const Revenue = lazy(() => import('./Screens/Revenue'))
 const Services = lazy(() => import('./Screens/Services'))
 const Admin = lazy(() => import('./Screens/Admin'))
-const Employees = lazy(() => import('./Screens/Employees'))
 const Add_Invoice = lazy(() => import('./Screens/Add_Invoice'))
 import Loader from './Components/Loader'
+import { Toaster } from 'react-hot-toast'
 
 function App() {
     const [loading, setLoading] = useState(true)
@@ -29,6 +29,7 @@ function App() {
         <>
             <BrowserRouter>
                 <Suspense fallback={loading && <Loader />}>
+                    <Toaster />
                     <Routes>
                         <Route element={<ProtectedRoute />}>
                             <Route path='/' element={<Dashboard />} />
@@ -38,11 +39,10 @@ function App() {
                             />
                             <Route path='/orders' element={<Orders />} />
                             <Route path='/work' element={<Work />} />
-                            <Route path='/invoice' element={<Invoice />} />
+                            <Route path='/invoice/*' element={<Invoice />} />
                             <Route path='/expense' element={<Expense />} />
                             <Route path='/revenue' element={<Revenue />} />
                             <Route path='/services' element={<Services />} />
-                            <Route path='/employees' element={<Employees />} />
                             <Route
                                 path='/add_invoice'
                                 element={<Add_Invoice />}

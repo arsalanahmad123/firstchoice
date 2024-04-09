@@ -1,12 +1,51 @@
-import React from 'react'
-import { MdEmail } from 'react-icons/md'
-import { MdLock } from 'react-icons/md'
+import React, { useEffect } from 'react'
 import Logo from '../assets/logo.png'
 import backgroundVideo from '../assets/background.mp4'
+import axios from 'axios'
+const BASE_URL = import.meta.env.VITE_BASE_URL
+import { useForm } from 'react-hook-form'
+import toast from 'react-hot-toast'
+import { useAuth } from '../Context/AuthContext'
 const Login = () => {
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm()
+
+    const { loggedIn } = useAuth()
+
+    const login = async (data) => {
+        try {
+            const response = await axios.post(`${BASE_URL}/auth/login`, data)
+
+            if (response.status === 200) {
+                toast.success('Login Successful')
+                sessionStorage.setItem('loggedIn', true)
+                sessionStorage.setItem(
+                    'company',
+                    JSON.stringify(response.data.data),
+                )
+                sessionStorage.setItem('token', response.data.data.token)
+                window.location.href = '/'
+            }
+        } catch (error) {
+            toast.error(error.response.data.message)
+        }
+    }
+
+    useEffect(() => {
+        if (loggedIn) {
+            window.location.href = '/'
+        }
+    })
+
     return (
-        <div data-theme='dark' className='flex  justify-between  min-h-screen '>
-            <div className=' flex flex-col justify-start w-full pt-16 items-center relative'>
+        <div
+            data-theme='dark'
+            className='flex  justify-between  min-h-screen flex-col md:flex-row md:bg-lightGold'
+        >
+            <div className=' lg:flex flex-col justify-start w-full pt-16 items-center relative hidden'>
                 <video
                     autoPlay
                     muted
@@ -38,34 +77,52 @@ const Login = () => {
                         Sign Into Your Account
                     </p>
 
-                    <div className='flex flex-col mt-3 text-white'>
+                    <form
+                        onSubmit={handleSubmit(login)}
+                        className='flex flex-col mt-3 text-white'
+                    >
                         <label htmlFor='email'>Email:</label>
-                        <div className='relative mt-2'>
+                        <div className='flex flex-col'>
                             <input
                                 type='email'
                                 placeholder='E-mail'
-                                className='w-full pl-14 py-3 rounded-lg bg-gray-700 focus:outline-none    focus:ring-0 focus:border-textActive'
+                                {...register('email', {
+                                    required: 'Email is required',
+                                    pattern: {
+                                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                                        message: 'Invalid email address',
+                                    },
+                                })}
+                                className='w-full pl-2 py-3 rounded-lg bg-gray-700 focus:outline-none    focus:ring-0 focus:border-textActive'
                             />
-                            <div className='absolute  inset-y-0  left-0 pr-3 flex items-center pointer-events-none  '>
-                                <div className=' bg-lightGold h-full flex items-center px-2 rounded'>
-                                    <MdEmail className='  size-6 rounded  text-white' />
-                                </div>
-                            </div>
+                            {errors.email && (
+                                <p className='text-red-500'>
+                                    {errors.email.message}
+                                </p>
+                            )}
                         </div>
                         <label htmlFor='password' className='mt-5'>
                             Password:
                         </label>
-                        <div className='relative mt-2'>
+                        <div className='flex flex-col'>
                             <input
                                 type='password'
                                 placeholder='password'
-                                className='w-full  pl-14  py-3 rounded-lg bg-gray-700 focus:outline-none    focus:ring-0 focus:border-textActive'
+                                {...register('password', {
+                                    required: 'Password is required',
+                                    minLength: {
+                                        value: 6,
+                                        message:
+                                            'Password must be at least 6 characters',
+                                    },
+                                })}
+                                className='w-full  pl-2  py-3 rounded-lg bg-gray-700 focus:outline-none    focus:ring-0 focus:border-textActive'
                             />
-                            <div className='absolute  inset-y-0  left-0 pr-3 flex items-center pointer-events-none  '>
-                                <div className=' bg-lightGold h-full flex items-center px-2.5 rounded'>
-                                    <MdLock className='  size-6 rounded  text-white' />
-                                </div>
-                            </div>
+                            {errors.password && (
+                                <p className='text-red-500'>
+                                    {errors.password.message}
+                                </p>
+                            )}
                         </div>
                         <div className='flex mt-3 items-center gap-x-2'>
                             <input
@@ -84,7 +141,7 @@ const Login = () => {
                         >
                             Login
                         </button>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>

@@ -11,9 +11,10 @@ body {
     overflow: hidden;
 }
 html {
-    scrollbar-color: #d2734f #ffff;
+    scrollbar-color: #ffbb2a #ffff;
     scrollbar-width: thin;
     scroll-behavior: smooth;
+    scrollbar-arrow-color: #ffbb2a;
 }
 
 .active {

@@ -4,8 +4,10 @@ import Wrapper from '../Layout/Wrapper'
 import Table from '../Components/Table'
 import Header from '../Components/Header'
 import { CgSearch } from 'react-icons/cg'
+import Add_Invoice from './Add_Invoice'
+import { Route, Routes, NavLink } from 'react-router-dom'
 
-const Invoice = () => {
+const HomePage = () => {
     return (
         <>
             <Wrapper title={'Latest Invoices'}>
@@ -25,12 +27,30 @@ const Invoice = () => {
                             completed
                         </span>
                     </div>
-                    <button className='text-white text-sm w-52 px-2 lg:py-1 lg:rounded-2xl bg-darkorange'>
-                        Add New Company
-                    </button>
+                    <NavLink
+                        to={'/invoice/add-invoice'}
+                        className='text-gray-900 font-bold text-sm  px-4 py-1 rounded-2xl bg-lightGold'
+                    >
+                        Add New Invoice
+                    </NavLink>
                 </div>
                 <Table />
             </Wrapper>
+        </>
+    )
+}
+
+const Invoice = () => {
+    return (
+        <>
+            <Routes>
+                <Route key={'invoice'} path='/' element={<HomePage />} />
+                <Route
+                    key={'add-invoice'}
+                    path='/add-invoice'
+                    element={<Add_Invoice />}
+                />
+            </Routes>
         </>
     )
 }

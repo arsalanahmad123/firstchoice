@@ -1,18 +1,19 @@
 import React, { useState } from 'react'
 import Wrapper from '../Layout/Wrapper'
+import { api } from '../API/api'
 
 import { FaCamera } from 'react-icons/fa'
 import { IoIosDocument } from 'react-icons/io'
 
 const NewCompany = () => {
     const [logo, setLogo] = useState(null)
-    const [documents, setDocuments] = useState(null)
 
     const handleLogoChange = (e) => {
         const file = e.target.files[0]
         setLogo(URL.createObjectURL(file))
     }
-    console.log(logo)
+
+    const createCompany = async (data) => {}
 
     return (
         <>
@@ -23,16 +24,16 @@ const NewCompany = () => {
                             <div className='flex flex-col justify-center items-center gap-y-1 w-full'>
                                 <label
                                     htmlFor='logo'
-                                    className='p-5 rounded-full bg-darkorange h-20 w-20 cursor-pointer flex justify-center items-center'
+                                    className='rounded-full bg-lightGold h-20 w-20 cursor-pointer flex justify-center items-center overflow-hidden'
                                 >
                                     {logo ? (
                                         <img
                                             src={logo}
-                                            className='w-full h-full'
+                                            className='w-full h-full object-cover'
                                             alt='Logo'
                                         />
                                     ) : (
-                                        <FaCamera className='text-white' />
+                                        <FaCamera className='text-gray-900 font-bold' />
                                     )}
                                     <input
                                         type='file'
@@ -48,10 +49,10 @@ const NewCompany = () => {
                             <div className='flex flex-col justify-center items-center gap-y-1 w-72'>
                                 <label
                                     htmlFor='documents'
-                                    className=' bg-darkorange w-full outline-dashed outline-4 outline-darkorange h-20 rounded-md cursor-pointer flex flex-col gap-y-2 justify-center items-center'
+                                    className=' bg-lightGold w-full outline-dashed outline-4 outline-lightGold h-20 rounded-md cursor-pointer flex flex-col gap-y-2 justify-center items-center font-bold'
                                 >
-                                    <IoIosDocument className='text-white text-2xl' />
-                                    <span className='text-sm text-white'>
+                                    <IoIosDocument className='text-gray-900 text-2xl' />
+                                    <span className='text-sm text-gray-900'>
                                         Upload Documents
                                     </span>
                                     <input

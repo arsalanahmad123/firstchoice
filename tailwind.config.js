@@ -6,8 +6,8 @@ export default {
             colors: {
                 darkorange: '#d2734f',
                 lightGold: '#ffbb2a',
-                bgDarkColor: '#1f1f1f',
-                bgLight: '#252525',
+                bgDarkColor: '#0F172A',
+                bgLight: '#172033',
                 card1: '#D2EFF3',
                 card2: '#FFFAC3',
                 card3: '#DBCAFF',
@@ -17,4 +17,7 @@ export default {
         },
     },
     plugins: [require('daisyui')],
+    daisyui: {
+        themes: ['night'],
+    },
 }

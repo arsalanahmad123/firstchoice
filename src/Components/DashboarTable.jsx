@@ -1,6 +1,6 @@
 import React from 'react'
 
-const DashboarTable = () => {
+const DashboarTable = ({ invoices }) => {
     return (
         <>
             <div className='overflow-x-auto  bg-bgLight max-h-[35vh] mt-1 rounded-xl w-full'>
@@ -9,7 +9,7 @@ const DashboarTable = () => {
                 </h4>
                 <table className='table table-md  text-white '>
                     <thead>
-                        <tr className='bg-darkorange text-white border-none text-[15px]'>
+                        <tr className='bg-lightGold text-gray-900 border-none text-[15px]'>
                             <th>Order ID</th>
                             <th>Company</th>
                             <th>Quantity</th>
@@ -18,83 +18,12 @@ const DashboarTable = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr className='border-none'>
-                            <td>839</td>
-                            <td>Star Bucks</td>
-                            <td>90</td>
-                            <td>$900</td>
-                            <td>
-                                <span className='badge badge-success text-white'>
-                                    Pending
-                                </span>
-                            </td>
-                        </tr>
-                        <tr className='border-none'>
-                            <td>839</td>
-                            <td>Star Bucks</td>
-                            <td>90</td>
-                            <td>$900</td>
-                            <td>
-                                <span className='badge badge-success text-white'>
-                                    Pending
-                                </span>
-                            </td>
-                        </tr>
-                        <tr className='border-none'>
-                            <td>839</td>
-                            <td>Star Bucks</td>
-                            <td>90</td>
-                            <td>$900</td>
-                            <td>
-                                <span className='badge badge-success text-white'>
-                                    Pending
-                                </span>
-                            </td>
-                        </tr>
-                        <tr className='border-none'>
-                            <td>839</td>
-                            <td>Star Bucks</td>
-                            <td>90</td>
-                            <td>$900</td>
-                            <td>
-                                <span className='badge badge-success text-white'>
-                                    Pending
-                                </span>
-                            </td>
-                        </tr>
-                        <tr className='border-none'>
-                            <td>839</td>
-                            <td>Star Bucks</td>
-                            <td>90</td>
-                            <td>$900</td>
-                            <td>
-                                <span className='badge badge-success text-white'>
-                                    Pending
-                                </span>
-                            </td>
-                        </tr>
-                        <tr className='border-none'>
-                            <td>839</td>
-                            <td>Star Bucks</td>
-                            <td>90</td>
-                            <td>$900</td>
-                            <td>
-                                <span className='badge badge-success text-white'>
-                                    Pending
-                                </span>
-                            </td>
-                        </tr>
-                        <tr className='border-none'>
-                            <td>839</td>
-                            <td>Star Bucks</td>
-                            <td>90</td>
-                            <td>$900</td>
-                            <td>
-                                <span className='badge badge-success text-white'>
-                                    Pending
-                                </span>
-                            </td>
-                        </tr>
+                        {invoices?.map((invoice) => (
+                            <tr className='border-none'>
+                                <td>{invoice._id}</td>
+                                <td>{invoice.company_id}</td>
+                            </tr>
+                        ))}
                     </tbody>
                 </table>
             </div>

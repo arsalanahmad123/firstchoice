@@ -96,10 +96,7 @@ const SideBar = () => {
                         title='Revenue'
                         link='/revenue'
                     />
-                    <button className='bg-red-500 w-[70%] mx-auto mt-5 px-4 py-2 rounded-2xl text-white flex justify-center items-center gap-x-2'>
-                        <FiLogOut className='text-lg' />
-                        Logout
-                    </button>
+                    
                 </ul>
             </div>
         </>

@@ -5,7 +5,7 @@ const Table = () => {
         <div className='overflow-x-auto bg-bgLight max-h-[70vh] mx-5 mt-5 rounded-md'>
             <table className='table table-md  text-white '>
                 <thead>
-                    <tr className='bg-darkorange text-white'>
+                    <tr className='bg-lightGold text-gray-900'>
                         <th>Invoice ID</th>
                         <th>Company</th>
                         <th>Quantity</th>

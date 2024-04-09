@@ -5,7 +5,13 @@ import { FaSortAmountUp } from 'react-icons/fa'
 import { HiBuildingOffice2 } from 'react-icons/hi2'
 import { FaFileInvoiceDollar } from 'react-icons/fa6'
 
-const DashboardCard = () => {
+const DashboardCard = ({
+    pendingInvoices,
+    totalCompanies,
+    dailyRevenue,
+    profit,
+    invoices,
+}) => {
     return (
         <>
             <div className='flex flex-row justify-between  items-center py-2 gap-x-3 w-full'>
@@ -16,7 +22,7 @@ const DashboardCard = () => {
                             Pending Works
                         </h2>
                         <p className='text-3xl font-bold text-darkorange italic  text-right'>
-                            0
+                            {pendingInvoices || 0}
                         </p>
                     </div>
                 </div>
@@ -27,7 +33,7 @@ const DashboardCard = () => {
                             Total Companies
                         </h2>
                         <p className='text-3xl font-bold text-darkorange italic text-right '>
-                            100
+                            {totalCompanies || 0}
                         </p>
                     </div>
                 </div>
@@ -38,7 +44,7 @@ const DashboardCard = () => {
                             Daily Revenue
                         </h2>
                         <p className='text-3xl font-bold text-darkorange italic text-right'>
-                            $1000
+                            {dailyRevenue || 0}
                         </p>
                     </div>
                 </div>
@@ -49,7 +55,7 @@ const DashboardCard = () => {
                             Monthly Profit
                         </h2>
                         <p className='text-3xl font-bold text-darkorange italic text-right'>
-                            $10000
+                            {profit || 0}
                         </p>
                     </div>
                 </div>
@@ -60,7 +66,7 @@ const DashboardCard = () => {
                             Total Invoices
                         </h2>
                         <p className='text-3xl font-bold text-darkorange italic text-right'>
-                            199
+                            {invoices || 0}
                         </p>
                     </div>
                 </div>

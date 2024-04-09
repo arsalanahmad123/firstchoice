@@ -41,7 +41,7 @@ const DashboardChart = () => {
                         },
                     },
                     fill: {
-                        colors: ['#d2734f'],
+                        colors: ['#ffbb2a'],
                         opacity: 0.9,
                     },
                     tooltip: {
