@@ -115,12 +115,11 @@ const Services = () => {
                     className='flex gap-x-6 flex-row flex-wrap mx-5 mt-3 gap-y-5
                 '
                 >
-                    {services.map((_, i) => (
+                    {services.map((service, i) => (
                         <Service_Card
                             key={i}
-                            serviceName='Phone Repair'
-                            costPrice={500}
-                            salePrice={1000}
+                            serviceName={service.name}
+                            costPrice={service.cost_price}
                         />
                     ))}
                 </div>
