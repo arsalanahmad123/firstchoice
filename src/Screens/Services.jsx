@@ -3,7 +3,6 @@ import AppLayout from '../Layout/AppLayout'
 import Wrapper from '../Layout/Wrapper'
 import Service_Card from '../Components/Service_Card'
 import { CgSearch } from 'react-icons/cg'
-import { useFetch } from '../Hooks/useFetch'
 import { api } from '../API/api'
 import toast from 'react-hot-toast'
 const BASE_URL = import.meta.env.VITE_BASE_URL

@@ -17,19 +17,20 @@ const Homepage = ({ id, company, employees, pending }) => {
     return (
         <>
             <Wrapper title={'Company'}>
-                <div className='flex flex-col mx-5'>
-                    <FaArrowLeft
-                        className='text-white text-2xl cursor-pointer m-3'
-                        onClick={() => navigate(-1)}
-                    />
-                    <div className='w-32 h-32 mt-8 py-3 mx-auto'>
-                        <img
-                            src={company?.logo.url}
-                            className='w-full h-full object-cover rounded-md filter grayscale'
-                            alt=''
+                <div className='flex flex-col  mx-5 '>
+                    <div className='flex flex-row justify-between items-center mt-2 mb-10'>
+                        <FaArrowLeft
+                            className='text-white text-2xl cursor-pointer m-3'
+                            onClick={() => navigate(-1)}
                         />
+                        <NavLink
+                            to={`/companies/company/${id}/add-employee`}
+                            className=' px-4 py-2 bg-lightGold text-gray-900 rounded-md'
+                        >
+                            Add Employee{' '}
+                        </NavLink>
                     </div>
-                    <div className='flex flex-col justify-start items-start mt-2 gap-y-3 border-t border-gray-600'>
+                    <div className='flex flex-col justify-start items-start mt-2 gap-y-3 '>
                         <div className='flex justify-between items-center w-full'>
                             <h1 className='text-xl font-bold text-center text-white italic'>
                                 Company Name :{' '}
@@ -90,12 +91,6 @@ const Homepage = ({ id, company, employees, pending }) => {
                                 </div>
                             </div>
                         </div>
-                        <NavLink
-                            to={`/companies/company/${id}/add-employee`}
-                            className=' px-4 py-2 bg-lightGold text-gray-900 rounded-md'
-                        >
-                            Add Employee{' '}
-                        </NavLink>
                     </div>
                 </div>
             </Wrapper>

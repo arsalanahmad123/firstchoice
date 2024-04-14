@@ -1,7 +1,7 @@
 import React from 'react'
 import { CgSearch } from 'react-icons/cg'
 import { Link } from 'react-router-dom'
-const Header = () => {
+const Header = ({ handleCompanySearchInput }) => {
     return (
         <>
             <div className='flex  justify-between items-center  gap-x-20 lg:pt-4 px-5'>
@@ -9,6 +9,7 @@ const Header = () => {
                     <input
                         type='text'
                         className='w-full lg:py-1 pl-5 lg:rounded-2xl bg-bgLight border-2 border-gray-700 text-white'
+                        onChange={handleCompanySearchInput}
                     />
                     <CgSearch className='text-slate-700 m-auto absolute lg:right-5 lg:top-3  ' />
                 </div>

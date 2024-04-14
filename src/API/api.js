@@ -8,5 +8,6 @@ export const api = axios.create({
         'Content-Type': 'application/json',
         Authorization: `Bearer ${sessionStorage.getItem('token')}`,
         company_id: companyID,
+        'Access-Control-Allow-Origin': '*',
     },
 })
