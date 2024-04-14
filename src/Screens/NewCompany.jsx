@@ -332,7 +332,11 @@ const NewCompany = () => {
                             disabled={isSubmitting}
                             className='px-4 py-2 bg-lightGold mt-auto text-gray-900 rounded-md'
                         >
-                            Submit
+                            {isSubmitting ? (
+                                <span className='loading loading-spinner loading-xs'></span>
+                            ) : (
+                                'Submit'
+                            )}
                         </button>
                     </form>
                 </div>

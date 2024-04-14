@@ -237,7 +237,11 @@ const NewEmployee = () => {
                             disabled={isSubmitting}
                             className=' bg-lightGold mt-auto px-4 py-2 rounded-md text-gray-900'
                         >
-                            Create
+                            {isSubmitting ? (
+                                <span className='loading loading-spinner loading-xs'></span>
+                            ) : (
+                                'Submit'
+                            )}
                         </button>
                     </form>
                 </div>

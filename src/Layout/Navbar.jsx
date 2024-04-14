@@ -2,15 +2,17 @@ import { useState } from 'react'
 import { BiChevronDown, BiChevronUp } from 'react-icons/bi'
 import toast from 'react-hot-toast'
 import { api } from '../API/api.js'
+import { useNavigate } from 'react-router-dom'
 const Navbar = ({ title }) => {
     const [show, setShow] = useState(false)
+    const navigate = useNavigate()
 
     const handleLogout = async () => {
         await api.delete('/auth/logout')
         sessionStorage.removeItem('token')
         sessionStorage.removeItem('company')
         sessionStorage.removeItem('loggedIn')
-        window.location.href = '/login'
+        navigate('/login')
         toast.success('Logout Successful')
     }
 
