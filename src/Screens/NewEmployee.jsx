@@ -11,6 +11,7 @@ import { useAuth } from '../Context/AuthContext'
 const BASE_URL = import.meta.env.VITE_BASE_URL
 const NewEmployee = () => {
     const [documents, setDocuments] = useState([])
+    const [isSubmitting, setIsSubmitting] = useState(false)
     const { id } = useParams()
     const {
         register,
@@ -25,6 +26,7 @@ const NewEmployee = () => {
     }
 
     const createEmployee = async (data) => {
+        setIsSubmitting(true)
         try {
             const formData = new FormData()
 
@@ -52,12 +54,14 @@ const NewEmployee = () => {
                 },
             )
             if (response.status === 201) {
+                setIsSubmitting(false)
                 toast.success(response.data.message)
                 navigate(`/companies/company/${id}/employees`)
             }
         } catch (error) {
             console.log(error)
             toast.error(error.response.data.message)
+            setIsSubmitting(false)
         }
     }
 
@@ -230,6 +234,7 @@ const NewEmployee = () => {
                         </div>
                         <button
                             type='submit'
+                            disabled={isSubmitting}
                             className=' bg-lightGold mt-auto px-4 py-2 rounded-md text-gray-900'
                         >
                             Create
