@@ -9,6 +9,7 @@ import { useAuth } from '../Context/AuthContext'
 import { useNavigate } from 'react-router-dom'
 import { FaEye, FaEyeSlash } from 'react-icons/fa'
 
+const BASE_URL = import.meta.env.VITE_BASE_URL
 const NewCompany = () => {
     const [logo, setLogo] = useState(null)
     const [updateLogo, setUpdateLogo] = useState(null)
@@ -49,7 +50,7 @@ const NewCompany = () => {
             }
 
             const response = await axios.post(
-                'http://localhost:3000/companies/create-company',
+                `${BASE_URL}/companies/create-company`,
                 formData,
                 {
                     headers: {
