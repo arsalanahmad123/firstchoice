@@ -1,26 +1,83 @@
 import React, { useState } from 'react'
 import Wrapper from '../Layout/Wrapper'
-import { api } from '../API/api'
-
 import { FaCamera } from 'react-icons/fa'
 import { IoIosDocument } from 'react-icons/io'
+import { useForm } from 'react-hook-form'
+import axios from 'axios'
+import toast from 'react-hot-toast'
+import { useAuth } from '../Context/AuthContext'
+import { useNavigate } from 'react-router-dom'
+import { FaEye, FaEyeSlash } from 'react-icons/fa'
 
 const NewCompany = () => {
     const [logo, setLogo] = useState(null)
-
+    const [updateLogo, setUpdateLogo] = useState(null)
+    const [showPassword, setShowPassword] = useState(false)
+    const [documents, setDocuments] = useState([])
+    const { company } = useAuth()
+    const navigate = useNavigate()
+    const {
+        handleSubmit,
+        register,
+        formState: { errors },
+    } = useForm()
     const handleLogoChange = (e) => {
         const file = e.target.files[0]
+        setUpdateLogo(file)
         setLogo(URL.createObjectURL(file))
     }
 
-    const createCompany = async (data) => {}
+    const handleDocuments = (e) => {
+        setDocuments(Array.from(e.target.files))
+    }
+
+    const createCompany = async (data) => {
+        try {
+            const formData = new FormData()
+            formData.append('username', data.username)
+            formData.append('email', data.email)
+            formData.append('password', data.password)
+            formData.append('phone', data.phone)
+            formData.append('licence_expiry', data.licence_expiry)
+            formData.append('img_card_expiry', data.img_card_expiry)
+            formData.append('role', 'company')
+            formData.append('logo', updateLogo)
+            for (let i = 0; i < documents.length; i++) {
+                formData.append('documents', documents[i])
+            }
+
+            const response = await axios.post(
+                'http://localhost:3000/companies/create-company',
+                formData,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        Authorization: `Bearer ${sessionStorage.getItem(
+                            'token',
+                        )}`,
+                        company_id: company._id,
+                    },
+                },
+            )
+
+            if (response.status === 201) {
+                toast.success(response.data.message)
+                navigate('/companies')
+            }
+        } catch (error) {
+            toast.error(error.response.data.message)
+        }
+    }
 
     return (
         <>
             <Wrapper title={'Add Company'}>
                 <div className='flex justify-center items-start h-full p-2 mx-5 mt-10'>
-                    <div className='bg-bgLight p-5 flex flex-row justify-between gap-x-28 items-start rounded-lg text-white '>
-                        <form className='flex flex-col justify-center items-center pt-5 px-3 gap-y-10 w-full'>
+                    <form
+                        onSubmit={handleSubmit(createCompany)}
+                        className='bg-bgLight p-5 flex flex-row justify-between gap-x-28 items-start rounded-lg text-white '
+                    >
+                        <div className='flex flex-col justify-center items-center pt-5 px-3 gap-y-10 w-full'>
                             <div className='flex flex-col justify-center items-center gap-y-1 w-full'>
                                 <label
                                     htmlFor='logo'
@@ -38,108 +95,240 @@ const NewCompany = () => {
                                     <input
                                         type='file'
                                         id='logo'
+                                        name='logo'
                                         className='hidden'
+                                        {...register('logo', {
+                                            required: 'Logo is required',
+                                        })}
                                         onChange={handleLogoChange}
                                     />
                                 </label>
                                 <span className='text-sm text-white'>
                                     Upload Logo
                                 </span>
+                                {errors.logo && (
+                                    <p className='text-red-500 text-sm'>
+                                        {errors.logo.message}
+                                    </p>
+                                )}
                             </div>
                             <div className='flex flex-col justify-center items-center gap-y-1 w-72'>
-                                <label
-                                    htmlFor='documents'
-                                    className=' bg-lightGold w-full outline-dashed outline-4 outline-lightGold h-20 rounded-md cursor-pointer flex flex-col gap-y-2 justify-center items-center font-bold'
-                                >
-                                    <IoIosDocument className='text-gray-900 text-2xl' />
-                                    <span className='text-sm text-gray-900'>
-                                        Upload Documents
-                                    </span>
+                                <div className='flex justify-center items-center flex-col gap-y-3 bg-lightGold p-5 rounded-md'>
+                                    <div className='flex flex-col text-gray-900 justify-center items-center'>
+                                        <IoIosDocument className='text-2xl' />
+                                        <span className='text-sm '>
+                                            Upload Documents
+                                        </span>
+                                    </div>
                                     <input
                                         type='file'
                                         id='documents'
+                                        name='documents'
+                                        className='input-xs text-gray-900'
                                         multiple
-                                        className='hidden'
+                                        {...register('documents', {
+                                            required: 'Documents are required',
+                                            validate: (value) =>
+                                                (value && value.length > 0) ||
+                                                'At least one document is required',
+                                        })}
+                                        onChange={handleDocuments}
                                     />
-                                </label>
+                                    {errors.documents && (
+                                        <p className='text-red-500 text-sm mt-2'>
+                                            {errors.documents.message}
+                                        </p>
+                                    )}
+                                </div>
                             </div>
-                        </form>
+                        </div>
                         <div className='flex flex-col gap-y-5 '>
                             <div className='flex flex-col gap-y-1'>
-                                <label htmlFor='username' className='text-sm'>
-                                    Username
-                                </label>
+                                <div className='flex flex-row justify-between items-center'>
+                                    <label
+                                        htmlFor='username'
+                                        className='text-sm'
+                                    >
+                                        Username
+                                    </label>
+                                    {errors.username && (
+                                        <span className='text-red-500 text-sm'>
+                                            {errors.username.message}
+                                        </span>
+                                    )}
+                                </div>
                                 <input
                                     type='text'
                                     name='username'
                                     placeholder='Company Name'
-                                    autoComplete='false'
+                                    {...register('username', {
+                                        required: "Username can't be empty",
+                                    })}
                                     className='input-sm bg-bgLight border border-gray-700 text-white focus:outline-none focus:ring-0 rounded-md w-96 text-[17px]'
                                 />
                             </div>
                             <div className='flex flex-col gap-y-1'>
-                                <label htmlFor='email' className='text-sm'>
-                                    Email
-                                </label>
+                                <div className='flex flex-row justify-between items-center'>
+                                    <label htmlFor='email' className='text-sm'>
+                                        Email
+                                    </label>
+                                    {errors.email && (
+                                        <span className='text-red-500 text-sm'>
+                                            {errors.email.message}
+                                        </span>
+                                    )}
+                                </div>
                                 <input
                                     type='email'
                                     name='email'
                                     placeholder='Email '
-                                    autoComplete='false'
+                                    {...register('email', {
+                                        required: "Email can't be empty",
+                                        pattern: {
+                                            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                                            message: 'Invalid email address',
+                                        },
+                                    })}
                                     className='input-sm bg-bgLight border border-gray-700 text-white focus:outline-none focus:ring-0 rounded-md w-96 text-[17px]'
                                 />
                             </div>
                             <div className='flex flex-col gap-y-1'>
-                                <label htmlFor='password' className='text-sm'>
-                                    Password
-                                </label>
-                                <input
-                                    type='password'
-                                    name='password'
-                                    autoComplete='false'
-                                    placeholder='Password'
-                                    className='input-sm bg-bgLight border border-gray-700 text-white focus:outline-none focus:ring-0 rounded-md w-96 text-[17px]'
-                                />
+                                <div className='flex justify-between items-center'>
+                                    <label
+                                        htmlFor='password'
+                                        className='text-sm'
+                                    >
+                                        Password
+                                    </label>
+                                    {errors.password && (
+                                        <span className='text-red-500 text-sm'>
+                                            {errors.password.message}
+                                        </span>
+                                    )}
+                                </div>
+                                <div className='relative'>
+                                    <input
+                                        type={
+                                            showPassword ? 'text' : 'password'
+                                        }
+                                        name='password'
+                                        placeholder='Password'
+                                        {...register('password', {
+                                            required: "Password can't be empty",
+                                        })}
+                                        className='input-sm bg-bgLight border border-gray-700 text-white focus:outline-none focus:ring-0 rounded-md w-96 text-[17px]'
+                                    />
+                                    {showPassword ? (
+                                        <FaEye
+                                            onClick={() =>
+                                                setShowPassword(!showPassword)
+                                            }
+                                            className='absolute  top-2 right-3 cursor-pointer'
+                                        />
+                                    ) : (
+                                        <FaEyeSlash
+                                            onClick={() =>
+                                                setShowPassword(!showPassword)
+                                            }
+                                            className='absolute  top-2 right-3 cursor-pointer'
+                                        />
+                                    )}
+                                </div>
                             </div>
                             <div className='flex flex-col gap-y-1'>
-                                <label htmlFor='Contact No' className='text-sm'>
-                                    Contact
-                                </label>
+                                <div className='flex justify-between items-center'>
+                                    <label
+                                        htmlFor='Contact No'
+                                        className='text-sm'
+                                    >
+                                        Contact
+                                    </label>
+                                    {errors.phone && (
+                                        <span className='text-red-500 text-sm'>
+                                            {errors.phone.message}
+                                        </span>
+                                    )}
+                                </div>
                                 <input
                                     type='tel'
                                     name='phone'
                                     placeholder='Contact No'
+                                    {...register('phone', {
+                                        required: "Contact No can't be empty",
+                                    })}
                                     className='input-sm bg-bgLight border border-gray-700 text-white focus:outline-none focus:ring-0 rounded-md w-96 text-[17px]'
                                 />
                             </div>
                             <div className='flex flex-col gap-y-1'>
-                                <label
-                                    htmlFor='licence_expiry'
-                                    className='text-sm'
-                                >
-                                    Licence Expiry
-                                </label>
+                                <div className='flex justify-between items-center'>
+                                    <label
+                                        htmlFor='licence_expiry'
+                                        className='text-sm'
+                                    >
+                                        Licence Expiry
+                                    </label>
+                                    {errors.licence_expiry && (
+                                        <span className='text-red-500 text-sm'>
+                                            {errors.licence_expiry.message}
+                                        </span>
+                                    )}
+                                </div>
                                 <input
                                     type='date'
                                     name='licence_expiry'
+                                    {...register('licence_expiry', {
+                                        required:
+                                            "Licence Expiry can't be empty",
+                                        validate: (value) => {
+                                            const today = new Date()
+                                            const date = new Date(value)
+                                            if (date < today) {
+                                                return 'Licence Expiry cannot be in the past'
+                                            }
+                                        },
+                                    })}
                                     className='input-sm bg-bgLight border border-gray-700 text-white focus:outline-none focus:ring-0 rounded-md w-96 text-[17px]'
                                 />
                             </div>
                             <div className='flex flex-col gap-y-1'>
-                                <label
-                                    htmlFor='img_card_expiry'
-                                    className='text-sm'
-                                >
-                                    Img_Card Expiry
-                                </label>
+                                <div className='flex justify-between items-center'>
+                                    <label
+                                        htmlFor='img_card_expiry'
+                                        className='text-sm'
+                                    >
+                                        Img_Card Expiry
+                                    </label>
+                                    {errors.img_card_expiry && (
+                                        <span className='text-red-500 text-sm'>
+                                            {errors.img_card_expiry.message}
+                                        </span>
+                                    )}
+                                </div>
                                 <input
                                     type='date'
                                     name='img_card_expiry'
+                                    {...register('img_card_expiry', {
+                                        required:
+                                            "Img_Card Expiry can't be empty",
+                                        validate: (value) => {
+                                            const today = new Date()
+                                            const date = new Date(value)
+                                            if (date < today) {
+                                                return 'Img_Card Expiry cannot be in the past'
+                                            }
+                                        },
+                                    })}
                                     className='input-sm bg-bgLight border border-gray-700 text-white focus:outline-none focus:ring-0 rounded-md w-96 text-[17px]'
                                 />
                             </div>
                         </div>
-                    </div>
+                        <button
+                            type='submit'
+                            className='px-4 py-2 bg-lightGold mt-auto text-gray-900 rounded-md'
+                        >
+                            Submit
+                        </button>
+                    </form>
                 </div>
             </Wrapper>
         </>

@@ -1,8 +1,8 @@
 import React from 'react'
 import Wrapper from '../Layout/Wrapper'
 import { CgSearch } from 'react-icons/cg'
-import { Link } from 'react-router-dom'
 import image from '../assets/lifeline.png'
+import { useFetch } from '../Hooks/useFetch'
 
 const ViewEmployee = () => {
     return (
@@ -33,10 +33,12 @@ const ViewEmployee = () => {
     )
 }
 
-const Employees = ({ employees }) => {
+const Employees = ({ id }) => {
     const toggleModal = () => {
         document.getElementById('my_modal_2').showModal()
     }
+
+    const { data: employees } = useFetch(`employee/${id}`)
 
     return (
         <Wrapper title='Employees'>

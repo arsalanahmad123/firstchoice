@@ -1,6 +1,8 @@
 import React from 'react'
+import { useFetch } from '../Hooks/useFetch'
 
 const Table = () => {
+    const { data: invoices } = useFetch('invoices')
     return (
         <div className='overflow-x-auto bg-bgLight max-h-[70vh] mx-5 mt-5 rounded-md'>
             <table className='table table-md  text-white '>
@@ -16,7 +18,7 @@ const Table = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {Array.from({ length: 10 }).map((_, i) => (
+                    {invoices?.map((_, i) => (
                         <tr className='border-gray-700'>
                             <th>10</th>
                             <td>Cy Ganderton</td>

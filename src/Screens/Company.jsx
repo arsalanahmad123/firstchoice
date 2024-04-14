@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Wrapper from '../Layout/Wrapper'
 import { FaMoneyBillAlt } from 'react-icons/fa'
 import { FaMoneyBillTrendUp } from 'react-icons/fa6'
@@ -6,20 +6,30 @@ import { NavLink, Routes, Route, useParams } from 'react-router-dom'
 import Employees from './Employees'
 import NewEmployee from './NewEmployee'
 import { useFetch } from '../Hooks/useFetch'
+import { FaArrowLeft } from 'react-icons/fa'
+import { useNavigate } from 'react-router-dom'
+import { api } from '../API/api'
 
-const Homepage = ({ id, company, employees }) => {
+const BASE_URL = import.meta.env.VITE_BASE_URL
+const Homepage = ({ id, company, employees, pending }) => {
+    const navigate = useNavigate()
+
     return (
         <>
             <Wrapper title={'Company'}>
                 <div className='flex flex-col mx-5'>
-                    <div className='w-full max-h-[20vh] mt-8 py-3 border-b border-gray-600'>
+                    <FaArrowLeft
+                        className='text-white text-2xl cursor-pointer m-3'
+                        onClick={() => navigate(-1)}
+                    />
+                    <div className='w-32 h-32 mt-8 py-3 mx-auto'>
                         <img
                             src={company?.logo.url}
                             className='w-full h-full object-cover rounded-md filter grayscale'
                             alt=''
                         />
                     </div>
-                    <div className='flex flex-col justify-start items-start mt-2 gap-y-3'>
+                    <div className='flex flex-col justify-start items-start mt-2 gap-y-3 border-t border-gray-600'>
                         <div className='flex justify-between items-center w-full'>
                             <h1 className='text-xl font-bold text-center text-white italic'>
                                 Company Name :{' '}
@@ -75,7 +85,7 @@ const Homepage = ({ id, company, employees }) => {
                                         PENDING AMOUNT
                                     </h2>
                                     <p className='text-3xl font-bold text-darkorange italic text-right '>
-                                        $200
+                                        {pending}
                                     </p>
                                 </div>
                             </div>
@@ -94,9 +104,27 @@ const Homepage = ({ id, company, employees }) => {
 }
 
 const Company = () => {
+    const [company, setCompany] = useState(null)
+    const [pending, setPending] = useState(null)
     const { id } = useParams()
-    const { data: company } = useFetch(`companies/get-company/${id}`)
     const { data: employees } = useFetch(`employee/${id}`)
+    useEffect(() => {
+        const getCompany = async () => {
+            try {
+                const response = await api.get(
+                    `${BASE_URL}/companies/get-company/${id}`,
+                )
+                const data = response.data.data
+                if (response.status === 200) {
+                    setCompany(data.company)
+                    setPending(data.invoices)
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        getCompany()
+    }, [])
     return (
         <>
             <Routes>
@@ -107,6 +135,7 @@ const Company = () => {
                         <Homepage
                             id={id}
                             company={company}
+                            pending={pending}
                             employees={employees}
                         />
                     }
@@ -114,7 +143,7 @@ const Company = () => {
                 <Route
                     key={'employees'}
                     path='/employees/*'
-                    element={<Employees employees={employees} />}
+                    element={<Employees id={id} />}
                 />
                 <Route
                     key={'add-employee'}

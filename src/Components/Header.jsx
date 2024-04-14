@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 const Header = () => {
     return (
         <>
-            <div className='flex  justify-between  gap-x-20 lg:pt-4 px-5'>
+            <div className='flex  justify-between items-center  gap-x-20 lg:pt-4 px-5'>
                 <div className='relative w-full'>
                     <input
                         type='text'

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Logo from '../assets/logo.png'
 import backgroundVideo from '../assets/background.mp4'
 import axios from 'axios'
@@ -6,7 +6,9 @@ const BASE_URL = import.meta.env.VITE_BASE_URL
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import { useAuth } from '../Context/AuthContext'
+import { FaEye, FaEyeSlash } from 'react-icons/fa'
 const Login = () => {
+    const [showPassword, setShowPassword] = useState(false)
     const {
         register,
         handleSubmit,
@@ -105,19 +107,40 @@ const Login = () => {
                             Password:
                         </label>
                         <div className='flex flex-col'>
-                            <input
-                                type='password'
-                                placeholder='password'
-                                {...register('password', {
-                                    required: 'Password is required',
-                                    minLength: {
-                                        value: 6,
-                                        message:
-                                            'Password must be at least 6 characters',
-                                    },
-                                })}
-                                className='w-full  pl-2  py-3 rounded-lg bg-gray-700 focus:outline-none    focus:ring-0 focus:border-textActive'
-                            />
+                            <div className='relative '>
+                                <input
+                                    type={showPassword ? 'text' : 'password'}
+                                    placeholder='password'
+                                    {...register('password', {
+                                        required: 'Password is required',
+                                        minLength: {
+                                            value: 6,
+                                            message:
+                                                'Password must be at least 6 characters',
+                                        },
+                                    })}
+                                    className='w-full  pl-2  py-3 rounded-lg bg-gray-700 focus:outline-none    focus:ring-0 focus:border-textActive'
+                                />
+                                {showPassword ? (
+                                    <span
+                                        className='absolute right-3 top-4 cursor-pointer'
+                                        onClick={() =>
+                                            setShowPassword(!showPassword)
+                                        }
+                                    >
+                                        <FaEye />
+                                    </span>
+                                ) : (
+                                    <span
+                                        className='absolute top-4 right-3 cursor-pointer'
+                                        onClick={() =>
+                                            setShowPassword(!showPassword)
+                                        }
+                                    >
+                                        <FaEyeSlash />
+                                    </span>
+                                )}
+                            </div>
                             {errors.password && (
                                 <p className='text-red-500'>
                                     {errors.password.message}

@@ -1,14 +1,14 @@
 import React, { useState } from 'react'
 import Wrapper from '../Layout/Wrapper'
-import { useFetch } from '../Hooks/useFetch'
-import { api } from '../API/api'
 import { toast } from 'react-hot-toast'
 import { useForm } from 'react-hook-form'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 
 import { IoIosDocument } from 'react-icons/io'
 import axios from 'axios'
+import { useAuth } from '../Context/AuthContext'
 
+const BASE_URL = import.meta.env.VITE_BASE_URL
 const NewEmployee = () => {
     const [documents, setDocuments] = useState([])
     const { id } = useParams()
@@ -17,7 +17,9 @@ const NewEmployee = () => {
         handleSubmit,
         formState: { errors },
     } = useForm()
+    const { company } = useAuth()
 
+    const navigate = useNavigate()
     const handleDocuments = (e) => {
         setDocuments(Array.from(e.target.files))
     }
@@ -35,10 +37,9 @@ const NewEmployee = () => {
             formData.append('company_id', id)
             for (let i = 0; i < documents.length; i++) {
                 formData.append('documents', documents[i])
-                console.log(documents[i])
             }
             const response = await axios.post(
-                'http://localhost:3000/employee/create-employee',
+                `${BASE_URL}/employee/create-employee`,
                 formData,
                 {
                     headers: {
@@ -46,11 +47,14 @@ const NewEmployee = () => {
                         Authorization: `Bearer ${sessionStorage.getItem(
                             'token',
                         )}`,
-                        company_id: id,
+                        company_id: company._id,
                     },
                 },
             )
-            console.log(response)
+            if (response.status === 201) {
+                toast.success(response.data.message)
+                navigate(`/companies/company/${id}/employees`)
+            }
         } catch (error) {
             console.log(error)
             toast.error(error.response.data.message)
@@ -98,7 +102,7 @@ const NewEmployee = () => {
                                 <input
                                     type='text'
                                     name='name'
-                                    placeholder='Company Name'
+                                    placeholder='Name'
                                     {...register('name', {
                                         required: 'Name is required',
                                     })}

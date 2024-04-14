@@ -6,8 +6,8 @@ import DashboarTable from '../Components/DashboarTable'
 import DashboardChart from '../Components/DashboardChart'
 import { useFetch } from '../Hooks/useFetch'
 const Dashboard = () => {
-    const { data: pendingInvoices } = useFetch('company/pending-invoices')
-    const { data: totalCompanies } = useFetch('company/total-companies')
+    const { data: pendingInvoices } = useFetch('invoices/pending')
+    const { data: totalCompanies } = useFetch('companies')
     const { data: dailyRevenue } = useFetch('revenue')
     const { data: profit } = useFetch('profit')
     const { data: invoices } = useFetch('invoices')
@@ -18,8 +18,8 @@ const Dashboard = () => {
                 <div className='flex flex-col justify-center items-start px-5 rounded-md mt-1 gap-y-2'>
                     <div className='flex flex-col justify-start items-start gap-x-4  min-h-screen w-full'>
                         <DashboardCard
-                            pendingInvoices={pendingInvoices}
-                            totalCompanies={totalCompanies}
+                            pendingInvoices={pendingInvoices?.length}
+                            totalCompanies={totalCompanies?.length}
                             dailyRevenue={dailyRevenue}
                             profit={profit}
                             invoices={invoicesLength}

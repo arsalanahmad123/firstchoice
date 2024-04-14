@@ -2,34 +2,12 @@ import React from 'react'
 import AppLayout from '../Layout/AppLayout'
 import Wrapper from '../Layout/Wrapper'
 import { CgSearch } from 'react-icons/cg'
-
-const dummData = [
-    {
-        id: 1,
-        name: 'KFC',
-        quantity: 10,
-        total_price: 2000,
-        status: 'pending',
-    },
-    {
-        id: 2,
-        name: 'Burger King',
-        quantity: 20,
-        total_price: 4000,
-        status: 'completed',
-    },
-    {
-        id: 3,
-        name: 'Pizza Hut',
-        quantity: 30,
-        total_price: 6000,
-        status: 'submitted',
-    },
-]
+import { useFetch } from '../Hooks/useFetch'
 
 const selectedOption = 'bg-lightGold text-black'
 
 const Orders = () => {
+    const { data: orders } = useFetch('invoices')
     return (
         <>
             <Wrapper title={'All Orders'}>
@@ -62,7 +40,7 @@ const Orders = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {dummData.map((item) => (
+                            {orders?.map((item) => (
                                 <tr key={item.id}>
                                     <td className='text-white'>{item.id}</td>
                                     <td className='text-white'>{item.name}</td>
