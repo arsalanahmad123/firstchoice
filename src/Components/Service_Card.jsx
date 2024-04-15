@@ -1,15 +1,13 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { api } from '../API/api'
 import toast from 'react-hot-toast'
 
-const EditModal = ({ costprice, Name, id, getServices }) => {
-    const [name, setName] = React.useState(Name)
-    const [costPrice, setCostPrice] = React.useState(costprice)
-
+const EditModal = ({ selectedService, id, getServices }) => {
     const editService = async (e) => {
         e.preventDefault()
         try {
-            const data = { name, cost_price: costPrice }
+            const name = e.target.name.value
+            const cost_price = e.target.cost_price.value
             const response = await api.put(`/services/service/${id}`, data)
             if (response.status === 200) {
                 getServices()
@@ -31,7 +29,7 @@ const EditModal = ({ costprice, Name, id, getServices }) => {
                         className='flex flex-col gap-y-3'
                     >
                         <h3 className='text-2xl text-lightGold font-bold text-center'>
-                            Create Service
+                            Edit Service
                         </h3>
                         <div className='flex flex-col'>
                             <label htmlFor='name'>Name</label>
@@ -39,7 +37,7 @@ const EditModal = ({ costprice, Name, id, getServices }) => {
                                 type='text'
                                 name='name'
                                 id='name'
-                                value={name}
+                                value={selectedService?.name}
                                 onChange={(e) => setName(e.target.value)}
                                 required
                                 className='w-full lg:py-1 pl-5 lg:rounded-xl bg-bgLight border-2 border-gray-700 text-white'
@@ -51,7 +49,7 @@ const EditModal = ({ costprice, Name, id, getServices }) => {
                                 type='number'
                                 name='cost_price'
                                 id='cost_price'
-                                value={costPrice}
+                                value={selectedService?.cost_price}
                                 onChange={(e) => setCostPrice(e.target.value)}
                                 required
                                 className='w-full lg:py-1 pl-5 lg:rounded-xl bg-bgLight border-2 border-gray-700 text-white'
@@ -74,6 +72,7 @@ const EditModal = ({ costprice, Name, id, getServices }) => {
 }
 
 const Service_Card = ({ service, getServices }) => {
+    const [selectedService, setSelectedService] = useState(null)
     const handleDeleteService = async (id) => {
         try {
             const confirm = window.confirm('Are you sure you want to delete?')
@@ -90,6 +89,18 @@ const Service_Card = ({ service, getServices }) => {
 
     const handleEdit = () => {
         document.getElementById('my_modal_2').showModal()
+        const id = service._id
+        const getService = async () => {
+            try {
+                const response = await api.get(`/services/${id}`)
+                if (response.status === 200) {
+                    setSelectedService(response.data.data)
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        getService()
     }
 
     return (
@@ -115,12 +126,14 @@ const Service_Card = ({ service, getServices }) => {
                     Delete Service
                 </button>
             </div>
-            <EditModal
-                id={service._id}
-                costprice={service.cost_price}
-                Name={service.name}
-                getServices={getServices}
-            />
+
+            {selectedService && (
+                <EditModal
+                    selectedService={selectedService}
+                    getServices={getServices}
+                    id={service._id}
+                />
+            )}
         </div>
     )
 }

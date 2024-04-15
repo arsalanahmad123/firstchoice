@@ -18,7 +18,6 @@ const Dashboard = () => {
             invoices?.filter((invoice) => invoice.pending_amount > 0),
         )
     }, [invoices])
-    console.log(pendingInvoices)
     return (
         <>
             <Wrapper title={'Dashboard'}>
