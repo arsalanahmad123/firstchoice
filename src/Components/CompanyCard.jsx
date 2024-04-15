@@ -19,6 +19,23 @@ const CompanyCard = ({ company, fetchData }) => {
             console.log(error)
         }
     }
+
+    const blockCompany = async (id) => {
+        try {
+            const confirm = window.confirm('Are you sure you want to block?')
+            if (!confirm) return
+            const response = await api.patch(`/companies/${id}`)
+            if (response.status === 200) {
+                toast.success(response.data.message)
+                fetchData()
+            } else {
+                toast.error('Something went wrong')
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     return (
         <>
             <div className='flex flex-col justify-center items-start gap-y-2 text-white rounded-xl  bg-bgLight p-5 max-w-fit'>
@@ -57,6 +74,14 @@ const CompanyCard = ({ company, fetchData }) => {
                         onClick={() => deleteCompany(company._id)}
                     >
                         Delete Company
+                    </button>
+                    <button
+                        className='btn btn-xs text-white bg-red-400 border-none hover:bg-red-500'
+                        onClick={() => blockCompany(company._id)}
+                    >
+                        {company.is_blocked
+                            ? 'Unblock Company'
+                            : 'Block Company'}
                     </button>
                 </div>
             </div>

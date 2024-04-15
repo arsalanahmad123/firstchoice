@@ -19,7 +19,7 @@ const Navbar = ({ title }) => {
 
     return (
         <>
-            <div className='flex justify-between items-center px-5 pt-7 pb-1 border-b border-gray-700'>
+            <div className='flex justify-between items-center px-5 pt-7 pb-1 border-b border-gray-700 sticky top-0 bg-bgLight z-50'>
                 <h3 className='text-3xl text-white'>{title}</h3>
                 <div
                     className='relative flex justify-center items-center  hover:bg-bgLight px-6 py-2 rounded-md'

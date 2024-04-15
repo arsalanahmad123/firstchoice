@@ -39,6 +39,9 @@ const Homepage = () => {
                                 fetchData={fetchData}
                             />
                         ))}
+                        {companies?.length === 0 && (
+                            <p className='text-3xl'>No Companies Found</p>
+                        )}
                     </div>
                 </div>
             </Wrapper>
