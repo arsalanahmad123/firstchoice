@@ -79,7 +79,7 @@ const Services = () => {
     const getServices = async () => {
         const response = await api.get(`${BASE_URL}/services`)
         const data = response.data.data
-        if (response.status === 201) {
+        if (response.status === 200) {
             setServices(data)
         }
     }
@@ -117,10 +117,15 @@ const Services = () => {
                     {services.map((service, i) => (
                         <Service_Card
                             key={i}
-                            serviceName={service.name}
-                            costPrice={service.cost_price}
+                            service={service}
+                            getServices={getServices}
                         />
                     ))}
+                    {services.length === 0 && (
+                        <p className='text-center text-xl mt-5'>
+                            No Services Found
+                        </p>
+                    )}
                 </div>
                 <ServiceModal getServices={getServices} />
             </Wrapper>

@@ -8,6 +8,7 @@ const Header = ({ handleCompanySearchInput }) => {
                 <div className='relative w-full'>
                     <input
                         type='text'
+                        placeholder='Search Company'
                         className='w-full lg:py-1 pl-5 lg:rounded-2xl bg-bgLight border-2 border-gray-700 text-white'
                         onChange={handleCompanySearchInput}
                     />

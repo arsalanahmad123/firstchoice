@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom'
 const Navbar = ({ title }) => {
     const [show, setShow] = useState(false)
     const navigate = useNavigate()
+    const companyName = JSON.parse(sessionStorage.getItem('company'))?.username
 
     const handleLogout = async () => {
         await api.delete('/auth/logout')
@@ -24,7 +25,7 @@ const Navbar = ({ title }) => {
                     className='relative flex justify-center items-center  hover:bg-bgLight px-6 py-2 rounded-md'
                     onClick={() => setShow(!show)}
                 >
-                    <span className='cursor-pointer'>Admin</span>
+                    <span className='cursor-pointer'>{companyName}</span>
                     {show ? (
                         <BiChevronUp className='text-white cursor-pointer' />
                     ) : (

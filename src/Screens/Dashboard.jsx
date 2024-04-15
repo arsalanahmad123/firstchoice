@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import AppLayout from '../Layout/AppLayout'
 import Wrapper from '../Layout/Wrapper'
 import DashboardCard from '../Components/DashboardCard'
@@ -6,12 +6,19 @@ import DashboarTable from '../Components/DashboarTable'
 import DashboardChart from '../Components/DashboardChart'
 import { useFetch } from '../Hooks/useFetch'
 const Dashboard = () => {
-    const { data: pendingInvoices } = useFetch('invoices/pending')
+    const [pendingInvoices, setPendingInvoices] = useState(null)
     const { data: totalCompanies } = useFetch('companies')
     const { data: dailyRevenue } = useFetch('revenue')
     const { data: profit } = useFetch('profit')
     const { data: invoices } = useFetch('invoices')
     const invoicesLength = invoices?.length
+
+    useEffect(() => {
+        setPendingInvoices(
+            invoices?.filter((invoice) => invoice.pending_amount > 0),
+        )
+    }, [invoices])
+    console.log(pendingInvoices)
     return (
         <>
             <Wrapper title={'Dashboard'}>

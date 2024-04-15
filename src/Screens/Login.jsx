@@ -9,6 +9,7 @@ import { useAuth } from '../Context/AuthContext'
 import { FaEye, FaEyeSlash } from 'react-icons/fa'
 const Login = () => {
     const [showPassword, setShowPassword] = useState(false)
+    const [isSubmitting, setIsSubmitting] = useState(false)
     const {
         register,
         handleSubmit,
@@ -18,11 +19,13 @@ const Login = () => {
     const { loggedIn } = useAuth()
 
     const login = async (data) => {
+        setIsSubmitting(true)
         try {
             const response = await axios.post(`${BASE_URL}/auth/login`, data)
 
             if (response.status === 200) {
                 toast.success('Login Successful')
+                setIsSubmitting(false)
                 sessionStorage.setItem('loggedIn', true)
                 sessionStorage.setItem(
                     'company',
@@ -33,6 +36,7 @@ const Login = () => {
             }
         } catch (error) {
             toast.error(error.response.data.message)
+            setIsSubmitting(false)
         }
     }
 
@@ -160,9 +164,14 @@ const Login = () => {
                         </div>
                         <button
                             type='submit'
+                            disabled={isSubmitting}
                             className=' m-auto bg-lightGold    rounded-xl  py-3 w-full mt-5 text-gray-700'
                         >
-                            Login
+                            {isSubmitting ? (
+                                <span className='loading loading-spinner loading-xs'></span>
+                            ) : (
+                                'Login'
+                            )}
                         </button>
                     </form>
                 </div>

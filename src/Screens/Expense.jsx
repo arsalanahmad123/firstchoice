@@ -6,6 +6,7 @@ import { FaMoneyBillTrendUp } from 'react-icons/fa6'
 import { CgSearch } from 'react-icons/cg'
 import { api } from '../API/api'
 import toast from 'react-hot-toast'
+import { useFetch } from '../Hooks/useFetch'
 
 const BASE_URL = import.meta.env.VITE_BASE_URL
 
@@ -20,7 +21,7 @@ const ExpenseModal = ({ fetchData }) => {
             const company_id = JSON.parse(sessionStorage.getItem('company'))._id
             const data = { name, description, used_by, amount, company_id }
             const response = await api.post('/expenses/create-expense', data)
-            if (response.status === 201) {
+            if (response.status === 200) {
                 toast.success(response.data.message)
                 fetchData()
                 document.getElementById('my_modal_2').close()
@@ -99,31 +100,26 @@ const ExpenseModal = ({ fetchData }) => {
 }
 
 const Expense = () => {
-    const [dailyExpenses, setDailyExpenses] = useState(null)
-    const [monthlyExpenses, setMonthlyExpenses] = useState(null)
-    const [expenses, setExpenses] = useState(null)
+    const { data: expenses, fetchData } = useFetch('expenses')
+    const { data: dailyExpenses, fetchData: fetchDataDaily } =
+        useFetch('Expenses/daily')
+    const { data: monthlyExpenses } = useFetch('Expenses/monthly')
 
-    const fetchData = async () => {
-        const expenses = await api.get(`${BASE_URL}/expenses`)
-        const dailyExpenses = await api.get(`${BASE_URL}/daily-expenses/today`)
-        const monthlyExpenses = await api.get(
-            `${BASE_URL}/daily-expenses/monthly`,
-        )
-
-        if (expenses.status === 201) {
-            setExpenses(expenses.data.data)
-        }
-        if (dailyExpenses.status === 201) {
-            setDailyExpenses(dailyExpenses.data.data)
-        }
-        if (monthlyExpenses.status === 201) {
-            setMonthlyExpenses(monthlyExpenses.data.data)
+    const deleteExpense = async (id) => {
+        try {
+            const confirm = window.confirm('Are you sure you want to delete?')
+            if (!confirm) return
+            const response = await api.delete(`/expenses/${id}`)
+            if (response.status === 200) {
+                toast.success(response.data.message)
+                fetchData()
+                fetchDataDaily()
+            }
+        } catch (error) {
+            console.log(error)
+            toast.error(error.response.data.message)
         }
     }
-
-    useEffect(() => {
-        fetchData()
-    }, [])
 
     return (
         <>
@@ -153,7 +149,7 @@ const Expense = () => {
                                 DAILY EXPENSE
                             </h2>
                             <p className='text-3xl font-bold text-darkorange italic  text-right'>
-                                ${dailyExpenses || 0}
+                                AED {dailyExpenses || 0}
                             </p>
                         </div>
                     </div>
@@ -164,7 +160,7 @@ const Expense = () => {
                                 Monthly Expenses
                             </h2>
                             <p className='text-3xl font-bold text-darkorange italic text-right '>
-                                ${monthlyExpenses || 0}
+                                AED {monthlyExpenses || 0}
                             </p>
                         </div>
                     </div>
@@ -178,6 +174,7 @@ const Expense = () => {
                                 <th>Amount</th>
                                 <th>Used By</th>
                                 <th>Date</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -191,6 +188,16 @@ const Expense = () => {
                                         {new Date(
                                             expense.updatedAt,
                                         ).toLocaleDateString()}
+                                    </td>
+                                    <td>
+                                        <button
+                                            className='btn btn-xs btn-outline btn-error'
+                                            onClick={() =>
+                                                deleteExpense(expense._id)
+                                            }
+                                        >
+                                            Remove
+                                        </button>
                                     </td>
                                 </tr>
                             ))}

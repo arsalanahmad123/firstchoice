@@ -1,13 +1,31 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import AppLayout from '../Layout/AppLayout'
 import Wrapper from '../Layout/Wrapper'
 import Table from '../Components/Table'
-import Header from '../Components/Header'
 import { CgSearch } from 'react-icons/cg'
 import Add_Invoice from './Add_Invoice'
 import { Route, Routes, NavLink } from 'react-router-dom'
+import { useFetch } from '../Hooks/useFetch'
 
 const HomePage = () => {
+    const { data: Invoices, fetchData } = useFetch('invoices')
+    const [filteredInvoices, setFilteredInvoices] = useState(null)
+
+    const handleSearch = (e) => {
+        const query = e.target.value
+        if (query) {
+            const filtered = Invoices?.filter((invoice) =>
+                invoice.company.toLowerCase().includes(query.toLowerCase()),
+            )
+            setFilteredInvoices(filtered)
+        } else {
+            setFilteredInvoices(Invoices)
+        }
+    }
+
+    useEffect(() => {
+        setFilteredInvoices(Invoices)
+    }, [Invoices])
     return (
         <>
             <Wrapper title={'Latest Invoices'}>
@@ -16,6 +34,7 @@ const HomePage = () => {
                         <input
                             type='text'
                             className='w-full lg:py-1 pl-5 lg:rounded-2xl bg-bgLight border-2 border-gray-700 text-white'
+                            onChange={handleSearch}
                         />
                         <CgSearch className='text-slate-700 m-auto absolute lg:right-5 lg:top-3  ' />
                     </div>
@@ -34,7 +53,7 @@ const HomePage = () => {
                         Add New Invoice
                     </NavLink>
                 </div>
-                <Table />
+                <Table invoices={filteredInvoices} fetchData={fetchData} />
             </Wrapper>
         </>
     )
