@@ -234,6 +234,7 @@ const Orders = () => {
                                                 }}
                                                 className='p-2 bg-bgLight border-2 border-gray-700'
                                             >
+                                                <option value=''>Select</option>
                                                 {item.services.map((service) =>
                                                     service.employees.map(
                                                         (employee) => (
