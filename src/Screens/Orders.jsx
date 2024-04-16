@@ -112,7 +112,10 @@ const Orders = () => {
                         `${BASE_URL}/invoices/${selectedInvoice}/${selectedEmployee}`,
                     )
                     const data = response.data.data[0]
-                    setCurrentStatus(data.status)
+                    setCurrentStatus({
+                        status: data.status,
+                        id: data.invoice_id,
+                    })
                 } catch (error) {
                     console.log(error)
                 }
@@ -140,7 +143,11 @@ const Orders = () => {
                     if (response.status === 200) {
                         toast.success('Status updated successfully')
                         fetchData()
-                        setCurrentStatus(updateStatus)
+                        setCurrentStatus({
+                            status: updateStatus,
+                            id: invoiceID,
+                        })
+                        console.log(currentStatus)
                     }
                 } catch (error) {
                     console.log(error)
@@ -249,8 +256,8 @@ const Orders = () => {
                                             </select>
                                         </td>
                                         <td>
-                                            {currentStatus
-                                                ? currentStatus
+                                            {currentStatus?.id === item._id
+                                                ? currentStatus.status
                                                 : 'Select any employee'}
                                         </td>
                                         <td>
