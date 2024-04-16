@@ -14,7 +14,10 @@ const Table = ({ invoices, fetchData }) => {
                 if (data.length <= 0) {
                     toast.error('No employees found')
                 }
-                setSelectedInvoice(data)
+                setSelectedInvoice({
+                    id,
+                    employees: data,
+                })
             }
         } catch (error) {
             console.log(error)
@@ -88,16 +91,18 @@ const Table = ({ invoices, fetchData }) => {
                                 ).toLocaleDateString()}
                             </td>
                             <td>
-                                {selectedInvoice?.length > 0 ? (
+                                {selectedInvoice?.id === invoice._id ? (
                                     <span className='flex flex-row flex-wrap gap-x-1 gap-y-1'>
-                                        {selectedInvoice.map((employee) => (
-                                            <span
-                                                className='badge badge-outline badge-secondary'
-                                                key={employee._id}
-                                            >
-                                                {employee.employee}
-                                            </span>
-                                        ))}
+                                        {selectedInvoice.employees.map(
+                                            (employee) => (
+                                                <span
+                                                    className='badge badge-outline badge-secondary'
+                                                    key={employee._id}
+                                                >
+                                                    {employee.employee}
+                                                </span>
+                                            ),
+                                        )}
                                     </span>
                                 ) : (
                                     <button
