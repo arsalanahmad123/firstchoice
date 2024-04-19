@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import AppLayout from '../Layout/AppLayout'
 import Wrapper from '../Layout/Wrapper'
 import { useFetch } from '../Hooks/useFetch'
 import { api } from '../API/api'
 import toast from 'react-hot-toast'
-import { MdDelete } from 'react-icons/md'
 
 const RefWorkModal = ({ fetchData }) => {
     const createRefWork = async (e) => {
@@ -87,25 +86,14 @@ const RefWorkModal = ({ fetchData }) => {
 
 const Work = () => {
     const { data: refworks, fetchData } = useFetch('refworks')
-    const [filteredWorks, setFilteredWorks] = useState(null)
+    const [searchQuery, setSearchQuery] = useState('')
 
-    const handleInputChange = (e) => {
-        const query = e.target.value
-        if (query) {
-            const filtered = refworks?.filter((work) =>
-                work.title.toLowerCase().includes(query.toLowerCase()),
-            )
-            if (filtered) {
-                setFilteredWorks(filtered)
-            } else {
-                setFilteredWorks(refworks)
-            }
-        }
-    }
-
-    useEffect(() => {
-        setFilteredWorks(refworks)
-    }, [refworks])
+    const filteredWorks = useMemo(() => {
+        if (!searchQuery) return refworks
+        return refworks.filter((work) =>
+            work.name.toLowerCase().includes(searchQuery.toLowerCase()),
+        )
+    }, [refworks, searchQuery])
 
     const showRefWorkModal = () => {
         document.getElementById('my_modal_2').showModal()
@@ -135,7 +123,7 @@ const Work = () => {
                         <input
                             type='text'
                             placeholder='Search Reference Work'
-                            onChange={handleInputChange}
+                            onChange={(e) => setSearchQuery(e.target.value)}
                             className='w-full lg:py-1 pl-5 lg:rounded-2xl bg-bgLight border-2 border-gray-700 text-white'
                         />
                     </div>

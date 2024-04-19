@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import AppLayout from '../Layout/AppLayout'
 import Wrapper from '../Layout/Wrapper'
 import { FaMoneyBillAlt } from 'react-icons/fa'
@@ -10,27 +10,33 @@ import { useFetch } from '../Hooks/useFetch'
 
 const BASE_URL = import.meta.env.VITE_BASE_URL
 
-const ExpenseModal = ({ fetchData }) => {
-    const createExpense = async (e) => {
-        e.preventDefault()
-        try {
-            const name = document.getElementById('name').value
-            const description = document.getElementById('description').value
-            const used_by = document.getElementById('used_by').value
-            const amount = document.getElementById('amount').value
-            const company_id = JSON.parse(sessionStorage.getItem('company'))._id
-            const data = { name, description, used_by, amount, company_id }
-            const response = await api.post('/expenses/create-expense', data)
-            if (response.status === 200) {
-                toast.success(response.data.message)
-                fetchData()
-                document.getElementById('my_modal_2').close()
+const ExpenseModal = ({ fetchData, fetchDataDaily }) => {
+    const createExpense = useMemo(
+        () => async (e) => {
+            e.preventDefault()
+            try {
+                const name = document.getElementById('name').value
+                const description = document.getElementById('description').value
+                const used_by = document.getElementById('used_by').value
+                const amount = document.getElementById('amount').value
+                const data = { name, description, used_by, amount }
+                const response = await api.post(
+                    '/expenses/create-expense',
+                    data,
+                )
+                if (response.status === 200) {
+                    toast.success(response.data.message)
+                    fetchData()
+                    fetchDataDaily()
+                    document.getElementById('my_modal_2').close()
+                }
+            } catch (error) {
+                console.log(error)
+                toast.error(error.response.data.message)
             }
-        } catch (error) {
-            console.log(error)
-            toast.error(error.response.data.message)
-        }
-    }
+        },
+        [fetchData, fetchDataDaily],
+    )
 
     return (
         <>
@@ -121,6 +127,15 @@ const Expense = () => {
         }
     }
 
+    const memoizedDailyExpenses = useMemo(
+        () => dailyExpenses || 0,
+        [dailyExpenses],
+    )
+    const memoizedMonthlyExpenses = useMemo(
+        () => monthlyExpenses || 0,
+        [monthlyExpenses],
+    )
+
     return (
         <>
             <Wrapper title={'Expenses'}>
@@ -149,7 +164,7 @@ const Expense = () => {
                                 DAILY EXPENSE
                             </h2>
                             <p className='text-3xl font-bold text-darkorange italic  text-right'>
-                                AED {dailyExpenses || 0}
+                                AED {memoizedDailyExpenses || 0}
                             </p>
                         </div>
                     </div>
@@ -160,7 +175,7 @@ const Expense = () => {
                                 Monthly Expenses
                             </h2>
                             <p className='text-3xl font-bold text-darkorange italic text-right '>
-                                AED {monthlyExpenses || 0}
+                                AED {memoizedMonthlyExpenses || 0}
                             </p>
                         </div>
                     </div>
@@ -204,7 +219,10 @@ const Expense = () => {
                         </tbody>
                     </table>
                 </div>
-                <ExpenseModal fetchData={fetchData} />
+                <ExpenseModal
+                    fetchData={fetchData}
+                    fetchDataDaily={fetchDataDaily}
+                />
             </Wrapper>
         </>
     )

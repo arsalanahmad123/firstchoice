@@ -50,13 +50,17 @@ const CompanyCard = ({ company, fetchData }) => {
                 <p className='flex flex-row justify-between items-center gap-x-5'>
                     <span>Licence Expiry: </span>
                     <span>
-                        {new Date(company.licence_expiry).toLocaleDateString()}
+                        {new Date(company?.licence_expiry).getDate()}/
+                        {new Date(company?.licence_expiry).getMonth() + 1}/
+                        {new Date(company?.licence_expiry).getFullYear()}
                     </span>
                 </p>
                 <p className='flex flex-row justify-between items-center gap-x-5'>
                     <span>Img Card Expiry: </span>
                     <span>
-                        {new Date(company.img_card_expiry).toLocaleDateString()}
+                        {new Date(company?.img_card_expiry).getDate()}/
+                        {new Date(company?.img_card_expiry).getMonth() + 1}/
+                        {new Date(company?.img_card_expiry).getFullYear()}
                     </span>
                 </p>
                 <div className='flex justify-between items-center mx-2 gap-x-2'>

@@ -6,23 +6,6 @@ const BASE_URL = import.meta.env.VITE_BASE_URL
 
 const Table = ({ invoices, fetchData }) => {
     const [selectedInvoice, setSelectedInvoice] = useState(null)
-    const fetchInvoiceEmployees = async (id) => {
-        try {
-            const response = await api.get(`${BASE_URL}/invoices/${id}`)
-            const data = response.data.data
-            if (response.status === 200) {
-                if (data.length <= 0) {
-                    toast.error('No employees found')
-                }
-                setSelectedInvoice({
-                    id,
-                    employees: data,
-                })
-            }
-        } catch (error) {
-            console.log(error)
-        }
-    }
 
     const deleteInvoice = async (id) => {
         try {
@@ -47,11 +30,12 @@ const Table = ({ invoices, fetchData }) => {
                 <thead>
                     <tr className='bg-lightGold text-gray-900'>
                         <th>Invoice ID</th>
+                        <th>Title</th>
                         <th>Company</th>
                         <th>Service</th>
                         <th>Quantity</th>
                         <th>Pending Amount</th>
-                        <th>Total Amount</th>
+                        <th>Paid</th>
                         <th>Date</th>
                         <th>Employees</th>
                         <th>Action</th>
@@ -61,6 +45,7 @@ const Table = ({ invoices, fetchData }) => {
                     {invoices?.map((invoice, i) => (
                         <tr className='border-gray-700' key={i}>
                             <td>{i + 1}</td>
+                            <td>{invoice.title}</td>
                             <td>{invoice.company}</td>
                             <td>
                                 {invoice.services.map((service) => (
@@ -86,35 +71,35 @@ const Table = ({ invoices, fetchData }) => {
                             </td>
                             <td>AED {invoice.total_price}</td>
                             <td>
-                                {new Date(
-                                    invoice.createdAt,
-                                ).toLocaleDateString()}
+                                {new Date(invoice.createdAt).getDate()}/
+                                {new Date(invoice.createdAt).getMonth() + 1}/
+                                {new Date(invoice.createdAt).getFullYear()}
                             </td>
                             <td>
-                                {selectedInvoice?.id === invoice._id ? (
-                                    <span className='flex flex-row flex-wrap gap-x-1 gap-y-1'>
-                                        {selectedInvoice.employees.map(
-                                            (employee) => (
+                                <span className='flex flex-row flex-wrap gap-x-1 gap-y-1'>
+                                    {invoice.services.map((service) =>
+                                        service.employees.map((employee) => (
+                                            <span
+                                                className='badge badge-outline badge-secondary'
+                                                key={employee.name}
+                                            >
+                                                {employee.name}
+                                            </span>
+                                        )),
+                                    )}
+                                    {invoice.services.map((service) => {
+                                        if (service.employees.length === 0) {
+                                            return (
                                                 <span
                                                     className='badge badge-outline badge-secondary'
-                                                    key={employee._id}
+                                                    key={service.service}
                                                 >
-                                                    {employee.employee}
+                                                    No employees
                                                 </span>
-                                            ),
-                                        )}
-                                    </span>
-                                ) : (
-                                    <button
-                                        type='button'
-                                        className='btn btn-xs btn-ghost'
-                                        onClick={() =>
-                                            fetchInvoiceEmployees(invoice._id)
+                                            )
                                         }
-                                    >
-                                        View
-                                    </button>
-                                )}
+                                    })}
+                                </span>
                             </td>
                             <td>
                                 <button

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import AppLayout from '../Layout/AppLayout'
 import Wrapper from '../Layout/Wrapper'
 import CompanyCard from '../Components/CompanyCard'
@@ -26,13 +26,18 @@ const Homepage = () => {
         setFilteredCompanies(companies)
     }, [companies])
 
+    const memoizedFilteredCompanies = useMemo(
+        () => filteredCompanies,
+        [filteredCompanies],
+    )
+
     return (
         <>
             <Wrapper title={'Companies'}>
                 <Header handleCompanySearchInput={handleCompanySearchInput} />
                 <div className='flex'>
                     <div className='flex gap-x-3 gap-y-3 px-5 flex-row flex-wrap  pt-10 text-center'>
-                        {filteredCompanies?.map((company) => (
+                        {memoizedFilteredCompanies?.map((company) => (
                             <CompanyCard
                                 key={company._id}
                                 company={company}

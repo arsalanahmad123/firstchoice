@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import Wrapper from '../Layout/Wrapper'
 import Logo from '../assets/logo.png'
 import { useFetch } from '../Hooks/useFetch'
@@ -8,7 +8,7 @@ import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 
 const BASE_URL = import.meta.env.VITE_BASE_URL
-const ServiceRow = ({ Service, handleRemoveService, employees }) => {
+const ServiceRow = ({ Service, handleRemoveService }) => {
     return (
         <>
             <tr>
@@ -17,10 +17,18 @@ const ServiceRow = ({ Service, handleRemoveService, employees }) => {
                 <td>
                     <div className='flex flex-row gap-x-2'>
                         {Service.employees.map((employee) => (
-                            <div className='badge badge-primary' key={employee}>
-                                {employee}
+                            <div
+                                className='badge badge-primary'
+                                key={employee.name}
+                            >
+                                {employee.name}
                             </div>
                         ))}
+                        {Service.employees.length === 0 && (
+                            <div className='badge badge-primary'>
+                                No employees
+                            </div>
+                        )}
                     </div>
                 </td>
                 <td className='relative'>AED {Service.sale_price}</td>
@@ -37,18 +45,20 @@ const ServiceRow = ({ Service, handleRemoveService, employees }) => {
         </>
     )
 }
-const Add_Invoice = () => {
+const AddInvoice = () => {
     const { data: Companies } = useFetch('companies')
     const { data: Services } = useFetch('services')
     const [selectedCompany, setSelectedCompany] = useState(null)
     const [filteredCompanies, setFilteredCompanies] = useState(null)
     const [costPrice, setCostPrice] = useState(0)
     const [service, setService] = useState(null)
-    const [quantity, setQuantity] = useState(0)
+    const [quantity, setQuantity] = useState('')
     const [companyEmployees, setCompanyEmployees] = useState(null)
     const [filteredEmployees, setFilteredEmployees] = useState(null)
     const [selectedEmployees, setSelectedEmployees] = useState([])
     const [selectedServices, setSelectedServices] = useState([])
+    const [pendingAmount, setPendingAmount] = useState(0)
+    const [title, setTitle] = useState('')
     const [salePrice, setSalePrice] = useState('')
     const [totalPrice, setTotalPrice] = useState(0)
     const employeeRef = useRef(null)
@@ -115,14 +125,21 @@ const Add_Invoice = () => {
     }
 
     const handleEmployeeChange = (employee) => {
-        const isSelected = selectedEmployees.includes(employee.name)
+        const isSelected = selectedEmployees.some(
+            (em) => em.name === employee.name,
+        )
 
         if (isSelected) {
             setSelectedEmployees(
-                selectedEmployees.filter((em) => em !== employee.name),
+                selectedEmployees.filter((em) => em.name !== employee.name),
             )
         } else {
-            setSelectedEmployees([...selectedEmployees, employee.name])
+            setSelectedEmployees([
+                ...selectedEmployees,
+                {
+                    name: employee.name,
+                },
+            ])
         }
     }
 
@@ -150,7 +167,7 @@ const Add_Invoice = () => {
     }
 
     const handleAddService = () => {
-        if (!service || !quantity || !salePrice || !selectedEmployees.length) {
+        if (!service || !quantity || !salePrice) {
             toast.error('Please fill all the fields')
             return
         }
@@ -160,6 +177,7 @@ const Add_Invoice = () => {
             return
         }
 
+        setPendingAmount(Number(pendingAmount) + Number(salePrice))
         setSelectedServices([
             ...selectedServices,
             {
@@ -188,6 +206,11 @@ const Add_Invoice = () => {
             return
         }
 
+        if (!title) {
+            toast.error('Please add a title')
+            return
+        }
+
         if (selectedServices.length === 0) {
             toast.error('Please add at least one service')
             return
@@ -197,22 +220,26 @@ const Add_Invoice = () => {
             return
         }
 
+        let pending = 0
         const calculateTotalPrice = () => {
             let total = 0
             selectedServices.forEach((service) => {
                 total += service.sale_price * service.quantity
+                pending += costPrice * service.quantity
             })
             return Number(total)
         }
         setSubmitting(true)
         try {
             const dataToSend = {
+                title,
                 company: selectedCompany.username,
                 services: selectedServices,
                 total_price: calculateTotalPrice(),
-                pending_amount: costPrice - calculateTotalPrice(),
+                pending_amount: pending - pendingAmount,
             }
 
+            console.log(dataToSend)
             const response = await api.post(
                 `${BASE_URL}/invoices/generate-invoice`,
                 dataToSend,
@@ -346,6 +373,14 @@ const Add_Invoice = () => {
                             </div>
                         </div>
                     </div>
+                    <input
+                        type='text'
+                        name='title'
+                        id='title'
+                        placeholder='Invoice Title'
+                        className=' bg-bgDarkColor  text-white  py-2.5  px-5 focus:outline-none  ring-0 border-0 w-full'
+                        onChange={(e) => setTitle(e.target.value)}
+                    />
                     {selectedServices.length > 0 && selectedCompany && (
                         <div className='w-full max-h-[50vh] overflow-auto'>
                             <table className='table'>
@@ -377,164 +412,177 @@ const Add_Invoice = () => {
                         </div>
                     )}
                     {selectedCompany && (
-                        <div className='w-full max-h-[30vh] bg-lightGold rounded-md shadow-2xl'>
-                            <span className='text-2xl font-semibold text-gray-900 mx-5 pt-3 border-b border-dashed border-gray-900'>
-                                Add Service
-                            </span>
-                            <table className='table'>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <div className='flex flex-col'>
-                                                <label
-                                                    htmlFor='service'
-                                                    className='text-gray-900 font-semibold'
-                                                >
-                                                    Select Service
-                                                </label>
-                                                <select
-                                                    name='service'
-                                                    id='service'
-                                                    className=' bg-bgDarkColor  text-white rounded-md  py-1  px-5 focus:outline-none  ring-0 border-0'
-                                                    onChange={
-                                                        handleServiceChange
-                                                    }
-                                                >
-                                                    {Services?.map(
-                                                        (service) => (
-                                                            <option
-                                                                value={
-                                                                    service.name
-                                                                }
-                                                                key={
-                                                                    service._id
-                                                                }
-                                                            >
-                                                                {service.name}
-                                                            </option>
-                                                        ),
-                                                    )}
-                                                </select>
-                                            </div>
-                                        </td>
-                                        <td className='flex flex-col'>
-                                            <label
-                                                htmlFor='quantity'
-                                                className='text-gray-900 font-semibold'
-                                            >
-                                                Quantity
-                                            </label>
-                                            <input
-                                                type='number'
-                                                name='quantity'
-                                                id='quantity'
-                                                placeholder='Quantity'
-                                                onChange={handleQuantityChange}
-                                                value={quantity}
-                                                className=' bg-bgDarkColor  text-white rounded-md  py-1 w-20 pl-1 focus:outline-none  ring-0 border-0'
-                                            />
-                                        </td>
-                                        <td>
-                                            <div className='flex flex-col relative'>
-                                                <label
-                                                    htmlFor='employee'
-                                                    className='text-gray-900 font-semibold'
-                                                >
-                                                    Select Employees
-                                                </label>
-                                                <input
-                                                    type='text'
-                                                    name='searchEmployee'
-                                                    id='searchEmployee'
-                                                    placeholder='Search Employee'
-                                                    onChange={
-                                                        handleEmployeeSearch
-                                                    }
-                                                    onClick={() => {
-                                                        document
-                                                            .getElementById(
-                                                                'employeeDropdown',
-                                                            )
-                                                            .classList.remove(
-                                                                'hidden',
-                                                            )
-                                                    }}
-                                                    className=' bg-bgDarkColor  text-white rounded-md  py-1 w-fit pl-1 focus:outline-none  ring-0 border-0'
-                                                />
-                                                <div
-                                                    className='absolute top-10 left-0 bg-bgDarkColor w-fit text-lightGold p-3 rounded-lg max-h-60 overflow-y-auto hidden'
-                                                    id='employeeDropdown'
-                                                    ref={employeeRef}
-                                                >
-                                                    {filteredEmployees?.map(
-                                                        (employee) => (
-                                                            <div
-                                                                className='flex flex-row justify-between gap-x-5 items-center'
-                                                                key={
-                                                                    employee._id
-                                                                }
-                                                            >
-                                                                <input
-                                                                    type='checkbox'
-                                                                    name='employee'
-                                                                    checked={selectedEmployees?.includes(
-                                                                        employee.name,
-                                                                    )}
-                                                                    onChange={() =>
-                                                                        handleEmployeeChange(
-                                                                            employee,
-                                                                        )
+                        <div className='flex flex-col gap-y-3 w-full'>
+                            <div className='w-full max-h-[30vh] bg-lightGold  shadow-2xl'>
+                                <span className='text-2xl font-semibold text-gray-900 mx-5 pt-3 border-b border-dashed border-gray-900'>
+                                    Add Service
+                                </span>
+                                <table className='table'>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <div className='flex flex-col'>
+                                                    <label
+                                                        htmlFor='service'
+                                                        className='text-gray-900 font-semibold'
+                                                    >
+                                                        Select Service
+                                                    </label>
+                                                    <select
+                                                        name='service'
+                                                        id='service'
+                                                        className=' bg-bgDarkColor  text-white rounded-md  py-1  px-5 focus:outline-none  ring-0 border-0'
+                                                        onChange={
+                                                            handleServiceChange
+                                                        }
+                                                    >
+                                                        <option value=''>
+                                                            Select Service
+                                                        </option>
+                                                        {Services?.map(
+                                                            (service) => (
+                                                                <option
+                                                                    value={
+                                                                        service.name
                                                                     }
-                                                                />
-                                                                <span>
+                                                                    key={
+                                                                        service._id
+                                                                    }
+                                                                >
                                                                     {
-                                                                        employee.name
+                                                                        service.name
                                                                     }
-                                                                </span>
-                                                            </div>
-                                                        ),
-                                                    )}
+                                                                </option>
+                                                            ),
+                                                        )}
+                                                    </select>
                                                 </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div className='flex flex-col'>
+                                            </td>
+                                            <td className='flex flex-col'>
                                                 <label
-                                                    htmlFor='sale_price'
+                                                    htmlFor='quantity'
                                                     className='text-gray-900 font-semibold'
                                                 >
-                                                    Price
+                                                    Quantity
                                                 </label>
                                                 <input
                                                     type='number'
-                                                    name='sale_price'
-                                                    id='sale_price'
-                                                    placeholder='Price'
-                                                    value={salePrice}
+                                                    name='quantity'
+                                                    id='quantity'
+                                                    placeholder='Quantity'
                                                     onChange={
-                                                        handleSalePriceChange
+                                                        handleQuantityChange
                                                     }
+                                                    value={quantity}
                                                     className=' bg-bgDarkColor  text-white rounded-md  py-1 w-20 pl-1 focus:outline-none  ring-0 border-0'
                                                 />
-                                            </div>
-                                        </td>
-                                        <td className='flex flex-col'>
-                                            <label
-                                                htmlFor='action'
-                                                className='text-gray-900 font-semibold'
-                                            >
-                                                Actions
-                                            </label>
-                                            <button
-                                                className='px-4 py-1 bg-bgDarkColor text-lightGold rounded-md font-semibold'
-                                                onClick={handleAddService}
-                                            >
-                                                Add
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                                            </td>
+                                            <td>
+                                                <div className='flex flex-col relative'>
+                                                    <label
+                                                        htmlFor='employee'
+                                                        className='text-gray-900 font-semibold'
+                                                    >
+                                                        Select Employees
+                                                    </label>
+                                                    <input
+                                                        type='text'
+                                                        name='searchEmployee'
+                                                        id='searchEmployee'
+                                                        placeholder='Search Employee'
+                                                        onChange={
+                                                            handleEmployeeSearch
+                                                        }
+                                                        onClick={() => {
+                                                            document
+                                                                .getElementById(
+                                                                    'employeeDropdown',
+                                                                )
+                                                                .classList.remove(
+                                                                    'hidden',
+                                                                )
+                                                        }}
+                                                        className=' bg-bgDarkColor  text-white rounded-md  py-1 w-fit pl-1 focus:outline-none  ring-0 border-0'
+                                                    />
+                                                    <div
+                                                        className='absolute top-10 left-0 bg-bgDarkColor w-fit text-lightGold p-3 rounded-lg max-h-60 overflow-y-auto hidden'
+                                                        id='employeeDropdown'
+                                                        ref={employeeRef}
+                                                    >
+                                                        {filteredEmployees?.map(
+                                                            (employee) => (
+                                                                <div
+                                                                    className='flex flex-row justify-between gap-x-5 items-center'
+                                                                    key={
+                                                                        employee._id
+                                                                    }
+                                                                >
+                                                                    <input
+                                                                        type='checkbox'
+                                                                        name='employee'
+                                                                        checked={selectedEmployees.some(
+                                                                            (
+                                                                                em,
+                                                                            ) =>
+                                                                                em.name ===
+                                                                                employee.name,
+                                                                        )}
+                                                                        onChange={() =>
+                                                                            handleEmployeeChange(
+                                                                                employee,
+                                                                            )
+                                                                        }
+                                                                    />
+                                                                    <span>
+                                                                        {
+                                                                            employee.name
+                                                                        }
+                                                                    </span>
+                                                                </div>
+                                                            ),
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div className='flex flex-col'>
+                                                    <label
+                                                        htmlFor='sale_price'
+                                                        className='text-gray-900 font-semibold'
+                                                    >
+                                                        Price
+                                                    </label>
+                                                    <input
+                                                        type='number'
+                                                        name='sale_price'
+                                                        id='sale_price'
+                                                        placeholder='Price'
+                                                        value={salePrice}
+                                                        onChange={
+                                                            handleSalePriceChange
+                                                        }
+                                                        className=' bg-bgDarkColor  text-white rounded-md  py-1 w-20 pl-1 focus:outline-none  ring-0 border-0'
+                                                    />
+                                                </div>
+                                            </td>
+                                            <td className='flex flex-col'>
+                                                <label
+                                                    htmlFor='action'
+                                                    className='text-gray-900 font-semibold'
+                                                >
+                                                    Actions
+                                                </label>
+                                                <button
+                                                    className='px-4 py-1 bg-bgDarkColor text-lightGold rounded-md font-semibold'
+                                                    onClick={handleAddService}
+                                                >
+                                                    Add
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     )}
                     <button
@@ -549,4 +597,4 @@ const Add_Invoice = () => {
     )
 }
 
-export default Add_Invoice
+export default AddInvoice

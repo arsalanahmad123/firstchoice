@@ -9,10 +9,10 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }) => {
     const [loggedIn, setLoggedIn] = useState(
-        sessionStorage.getItem('loggedIn') === 'true',
+        localStorage.getItem('loggedIn') === 'true',
     )
     const [company, setCompany] = useState(
-        JSON.parse(sessionStorage.getItem('company')),
+        JSON.parse(localStorage.getItem('company')),
     )
 
     useEffect(() => {
@@ -36,11 +36,11 @@ export const AuthProvider = ({ children }) => {
     }, [loggedIn])
 
     useEffect(() => {
-        sessionStorage.setItem('loggedIn', loggedIn)
+        localStorage.setItem('loggedIn', loggedIn)
     }, [loggedIn])
 
     useEffect(() => {
-        sessionStorage.setItem('company', JSON.stringify(company))
+        localStorage.setItem('company', JSON.stringify(company))
     }, [company])
 
     return (

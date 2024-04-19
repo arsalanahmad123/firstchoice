@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import AppLayout from '../Layout/AppLayout'
 import Wrapper from '../Layout/Wrapper'
 import DashboardCard from '../Components/DashboardCard'
@@ -18,6 +18,17 @@ const Dashboard = () => {
             invoices?.filter((invoice) => invoice.pending_amount > 0),
         )
     }, [invoices])
+
+    const memoizedData = useMemo(
+        () => ({
+            totalCompanies,
+            dailyRevenue,
+            profit,
+            invoicesLength,
+        }),
+        [totalCompanies, dailyRevenue, profit, invoicesLength],
+    )
+
     return (
         <>
             <Wrapper title={'Dashboard'}>
@@ -25,10 +36,10 @@ const Dashboard = () => {
                     <div className='flex flex-col justify-start items-start gap-x-4  min-h-screen w-full'>
                         <DashboardCard
                             pendingInvoices={pendingInvoices?.length}
-                            totalCompanies={totalCompanies?.length}
-                            dailyRevenue={dailyRevenue}
-                            profit={profit}
-                            invoices={invoicesLength}
+                            totalCompanies={memoizedData.totalCompanies}
+                            dailyRevenue={memoizedData.dailyRevenue}
+                            profit={memoizedData.profit}
+                            invoices={memoizedData.invoicesLength}
                         />
                         <DashboarTable invoices={invoices} />
                         <div className='flex justify-center items-center mt-2 bg-bgLight rounded-lg w-full py-2'>

@@ -1,8 +1,9 @@
 import React from 'react'
 import Wrapper from '../Layout/Wrapper'
 import { CgSearch } from 'react-icons/cg'
-import image from '../assets/lifeline.png'
 import { useFetch } from '../Hooks/useFetch'
+import { api } from '../API/api'
+import toast from 'react-hot-toast'
 
 const ViewEmployee = ({ employee }) => {
     return (
@@ -44,7 +45,25 @@ const Employees = ({ id }) => {
         document.getElementById('my_modal_2').showModal()
     }
 
-    const { data: employees } = useFetch(`employee/${id}`)
+    const { data: employees, fetchData } = useFetch(`employee/${id}`)
+
+    const deleteEmployee = async (employeeId) => {
+        const confirm = window.confirm('Are you sure you want to delete?')
+        if (!confirm) return
+
+        try {
+            const response = await api.delete(
+                `/employee/delete-employee/${employeeId}`,
+            )
+
+            if (response.status === 200) {
+                toast.success(response.data.message)
+                fetchData()
+            }
+        } catch (error) {
+            toast.error(error.response.data.message)
+        }
+    }
 
     return (
         <Wrapper title='Employees'>
@@ -65,7 +84,7 @@ const Employees = ({ id }) => {
                     <>
                         <div
                             className=' bg-gradient-to-r from-bgLight to-bgDarkColor text-white shadow-2xl  flex justify-center flex-col p-5 gap-y-5  min-h-36 min-w-80'
-                            key={i}
+                            key={employee?._id}
                         >
                             <h2 className='font-extrabold text-2xl flex flex-row justify-between items-center'>
                                 <span>Name: </span>
@@ -85,7 +104,15 @@ const Employees = ({ id }) => {
                                     <span className='border-b border-dashed'>
                                         {new Date(
                                             employee?.labor_card_expiry,
-                                        ).toLocaleDateString()}
+                                        ).getDate()}
+                                        /
+                                        {new Date(
+                                            employee?.labor_card_expiry,
+                                        ).getMonth() + 1}
+                                        /
+                                        {new Date(
+                                            employee?.labor_card_expiry,
+                                        ).getFullYear()}
                                     </span>
                                 </p>
                                 <p className='flex flex-row justify-between items-center'>
@@ -105,7 +132,15 @@ const Employees = ({ id }) => {
                                     <span className='border-b border-dashed'>
                                         {new Date(
                                             employee?.eid_expiry,
-                                        ).toLocaleDateString()}
+                                        ).getDate()}
+                                        /
+                                        {new Date(
+                                            employee?.eid_expiry,
+                                        ).getMonth() + 1}
+                                        /
+                                        {new Date(
+                                            employee?.eid_expiry,
+                                        ).getFullYear()}
                                     </span>
                                 </p>
                             </div>
@@ -116,7 +151,12 @@ const Employees = ({ id }) => {
                                 >
                                     View Employee
                                 </button>
-                                <button className='btn btn-xs text-white bg-red-400 border-none hover:bg-red-500'>
+                                <button
+                                    className='btn btn-xs text-white bg-red-400 border-none hover:bg-red-500'
+                                    onClick={() =>
+                                        deleteEmployee(employee?._id)
+                                    }
+                                >
                                     Delete Employee
                                 </button>
                             </div>

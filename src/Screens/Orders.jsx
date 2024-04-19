@@ -3,159 +3,176 @@ import AppLayout from '../Layout/AppLayout'
 import Wrapper from '../Layout/Wrapper'
 import { CgSearch } from 'react-icons/cg'
 import { useFetch } from '../Hooks/useFetch'
-import { FaPencilAlt } from 'react-icons/fa'
 import { api } from '../API/api'
-import { useEffect } from 'react'
 import toast from 'react-hot-toast'
+import { FaPencil } from 'react-icons/fa6'
 
 const BASE_URL = import.meta.env.VITE_BASE_URL
-const EditStatus = ({ fetchData, invoice, toggle }) => {
-    const [updateStatus, setUpdateStatus] = useState(null)
-    const [selectedOrder, setSelectedOrder] = useState(null)
 
-    const handleStatusChange = (id, employee, status) => {
-        setUpdateStatus({
-            id,
-            employee,
-            status: status,
+const EditModal = ({ invoice, fetchData, setSelectedOrder }) => {
+    const employees = () => {
+        let count = 0
+        invoice.services.forEach((service) => {
+            service.employees.forEach((employee) => {
+                count++
+            })
         })
+        return count
     }
 
-    useEffect(() => {
-        const updateStatusHandler = async () => {
-            try {
-                if (updateStatus) {
-                    const dataToSend = {
-                        employee: updateStatus.employee,
-                        status: updateStatus.status,
-                    }
-                    const response = await api.put(
-                        `${BASE_URL}/invoices/${invoiceId}`,
-                        dataToSend,
-                    )
-                    if (response.status === 201) {
-                        toast.success('Status updated successfully')
-                        fetchData()
-                        setUpdateStatus(null)
-                        document.getElementById('my_modal_2').close()
-                    }
-                }
-            } catch (error) {
-                console.log(error)
+    const handleChangeStatus = async (e, service, employee) => {
+        try {
+            const response = await api.put(`/invoices/${invoice._id}`, {
+                status: e,
+                employee: employee.name,
+                serviceName: service.service,
+            })
+            if (response.status === 200) {
+                toast.success(response.data.message)
+                fetchData()
+                setSelectedOrder(null)
             }
+        } catch (error) {
+            console.log(error)
         }
-        updateStatusHandler()
-    }, [updateStatus])
+    }
+
+    const handleInvoiceStatus = async (e) => {
+        try {
+            const response = await api.patch(`/invoices/${invoice._id}`, {
+                status: e,
+            })
+            if (response.status === 200) {
+                toast.success(response.data.message)
+                fetchData()
+                setSelectedOrder(null)
+            }
+        } catch (error) {
+            toast.error(error.response.data.message)
+        }
+    }
 
     return (
         <>
-            {toggle && (
-                <dialog id='my_modal_2' className='modal'>
-                    <div className='modal-box  max-w-3xl'>
-                        <h3 className='text-2xl text-lightGold font-bold text-center mb-6'>
-                            Update Order Status
-                        </h3>
-                        {selectedOrder?.map((order) => (
-                            <div
-                                className='flex flex-row justify-between items-center gap-x-10'
-                                key={order?._id}
-                            >
-                                <p className='text-lg text-lightGold font-semibold'>
-                                    {order?.employee}
-                                </p>
-                                <p className='flex flex-col -mt-4'>
-                                    <span className='text-xs text-lightGold'>
-                                        Current Status:
-                                    </span>
-                                    <span>{order?.status}</span>
-                                </p>
-                                <select
-                                    id={`status_${order?._id}`}
-                                    onChange={(e) =>
-                                        handleStatusChange(
-                                            order?.invoice_id,
-                                            order?.employee,
-                                            e.target.value,
-                                        )
-                                    }
-                                    className='p-2 bg-bgLight border-2 border-gray-700'
-                                ></select>
+            <dialog id='my_modal_2' className='modal'>
+                <div className='modal-box'>
+                    <h3 className='font-bold text-2xl text-center'>
+                        {invoice.title}
+                    </h3>
+
+                    {employees() > 0 && (
+                        <div className='flex flex-col  mt-3 gap-y-3'>
+                            <div className='flex flex-col gap-y-2'>
+                                {invoice.services.map((service) => (
+                                    <div
+                                        key={service.id}
+                                        className='flex flex-col gap-y-2'
+                                    >
+                                        {service.employees.map((employee) => (
+                                            <div
+                                                key={employee.name}
+                                                className='flex flex-row justify-between gap-x-5 items-center'
+                                            >
+                                                <span className='badge badge-primary'>
+                                                    {employee.name}
+                                                </span>
+                                                <span>{employee.status}</span>
+                                                <select
+                                                    name='changeStatus'
+                                                    id='changeStatus'
+                                                    className='select select-bordered select-sm'
+                                                    onChange={(e) =>
+                                                        handleChangeStatus(
+                                                            e.target.value,
+                                                            service,
+                                                            employee,
+                                                        )
+                                                    }
+                                                >
+                                                    <option value=''>
+                                                        Update Status
+                                                    </option>
+                                                    <option value='waiting for payment'>
+                                                        Waiting For Payment
+                                                    </option>
+                                                    <option value='documents received'>
+                                                        Documents Received
+                                                    </option>
+                                                    <option value='in process'>
+                                                        In Process
+                                                    </option>
+                                                    <option value='approved'>
+                                                        Approved
+                                                    </option>
+                                                    <option value='return for modification'>
+                                                        Return For Modification
+                                                    </option>
+                                                    <option value='rejected'>
+                                                        Rejected
+                                                    </option>
+                                                    <option value='completed'>
+                                                        Completed
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        ))}
+                                    </div>
+                                ))}
                             </div>
-                        ))}
+                        </div>
+                    )}
+                    <div className='flex flex-col gap-y-2'>
+                        {employees() === 0 && (
+                            <div className='flex flex-row justify-between items-center'>
+                                <span>Invoice Status</span>
+                                <span>{invoice.status}</span>
+                                <select
+                                    name='invoiceStatus'
+                                    onChange={(e) =>
+                                        handleInvoiceStatus(e.target.value)
+                                    }
+                                    className='select select-bordered select-sm'
+                                >
+                                    <option value=''>Update Status</option>
+                                    <option value='waiting for payment'>
+                                        Waiting For Payment
+                                    </option>
+                                    <option value='documents received'>
+                                        Documents Received
+                                    </option>
+                                    <option value='in process'>
+                                        In Process
+                                    </option>
+                                    <option value='approved'>Approved</option>
+                                    <option value='return for modification'>
+                                        Return For Modification
+                                    </option>
+                                    <option value='rejected'>Rejected</option>
+                                    <option value='completed'>Completed</option>
+                                </select>
+                            </div>
+                        )}
                     </div>
-                    <form method='dialog' className='modal-backdrop'>
-                        <button>close</button>
-                    </form>
-                </dialog>
-            )}
+                </div>
+                <form method='dialog' className='modal-backdrop'>
+                    <button>close</button>
+                </form>
+            </dialog>
         </>
     )
 }
 
 const Orders = () => {
     const { data: orders, fetchData } = useFetch('invoices')
-    const [selectedEmployee, setSelectedEmployee] = useState(null)
-    const [selectedInvoice, setSelectedInvoice] = useState(null)
-    const [currentStatus, setCurrentStatus] = useState(null)
-    const [updateStatus, setUpdateStatus] = useState(null)
+    const [selectedOrder, setSelectedOrder] = useState(null)
 
-    const handleEmployeeChange = (e, invoiceID) => {
-        setSelectedEmployee(e.target.value)
-        setSelectedInvoice(invoiceID)
+    const showModal = () => {
+        document.getElementById('my_modal_2').showModal()
     }
-
-    useEffect(() => {
-        const getInvoiceDetails = async () => {
-            if (selectedInvoice && selectedEmployee) {
-                try {
-                    const response = await api.get(
-                        `${BASE_URL}/invoices/${selectedInvoice}/${selectedEmployee}`,
-                    )
-                    const data = response.data.data[0]
-                    setCurrentStatus({
-                        status: data.status,
-                        id: data.invoice_id,
-                    })
-                } catch (error) {
-                    console.log(error)
-                }
-            }
-        }
-        getInvoiceDetails()
-    }, [selectedEmployee, selectedInvoice])
-
-    const handleUpdateStatusChange = (e) => {
-        setUpdateStatus(e.target.value)
+    const handleOrderChange = (order) => {
+        setSelectedOrder(order)
+        showModal()
     }
-
-    useEffect(() => {
-        const changeEmployeeStatus = async (invoiceID) => {
-            if (currentStatus && selectedEmployee) {
-                try {
-                    const dataToSend = {
-                        employee: selectedEmployee,
-                        status: updateStatus,
-                    }
-                    const response = await api.put(
-                        `${BASE_URL}/invoices/${invoiceID}`,
-                        dataToSend,
-                    )
-                    if (response.status === 200) {
-                        toast.success('Status updated successfully')
-                        fetchData()
-                        setCurrentStatus({
-                            status: updateStatus,
-                            id: invoiceID,
-                        })
-                        console.log(currentStatus)
-                    }
-                } catch (error) {
-                    console.log(error)
-                }
-            }
-        }
-        changeEmployeeStatus(selectedInvoice)
-    }, [updateStatus])
 
     return (
         <>
@@ -219,7 +236,11 @@ const Orders = () => {
                                             <div className='flex flex-col'>
                                                 {item.services.map(
                                                     (service) => (
-                                                        <span key={service}>
+                                                        <span
+                                                            key={
+                                                                service.service
+                                                            }
+                                                        >
                                                             {service.quantity}
                                                         </span>
                                                     ),
@@ -229,88 +250,46 @@ const Orders = () => {
                                         <td className='text-white'>
                                             {item.total_price}
                                         </td>
-                                        <td>
-                                            <select
-                                                name='employee'
-                                                id='employee'
-                                                onChange={(e) => {
-                                                    handleEmployeeChange(
-                                                        e,
-                                                        item._id,
-                                                    )
-                                                }}
-                                                className='p-2 bg-bgLight border-2 border-gray-700'
-                                            >
-                                                <option value=''>Select</option>
-                                                {item.services.map((service) =>
-                                                    service.employees.map(
-                                                        (employee) => (
-                                                            <option
-                                                                key={employee}
-                                                            >
-                                                                {employee}
-                                                            </option>
-                                                        ),
+                                        <td className='flex gap-x-1 flex-wrap'>
+                                            {item.services.map((service) =>
+                                                service.employees?.map(
+                                                    (employee) => (
+                                                        <span
+                                                            key={employee.name}
+                                                            className='badge'
+                                                        >
+                                                            {employee.name}
+                                                        </span>
                                                     ),
-                                                )}
-                                            </select>
-                                        </td>
-                                        <td>
-                                            {currentStatus?.id === item._id
-                                                ? currentStatus.status
-                                                : 'Select any employee'}
-                                        </td>
-                                        <td>
-                                            {selectedEmployee &&
-                                            currentStatus ? (
-                                                <select
-                                                    name='updatedStatus'
-                                                    id='updatedStatus'
-                                                    className='p-2 bg-bgLight border-2 border-gray-700'
-                                                    onChange={(e) => {
-                                                        handleUpdateStatusChange(
-                                                            e,
-                                                        )
-                                                    }}
-                                                >
-                                                    <option value='waiting for payment'>
-                                                        Waiting For Payment
-                                                    </option>
-                                                    <option value='documents received'>
-                                                        {' '}
-                                                        Documents Received
-                                                    </option>
-                                                    <option value='in process'>
-                                                        In Process
-                                                    </option>
-                                                    <option value='approved'>
-                                                        Approved
-                                                    </option>
-                                                    <option value='return for modification'>
-                                                        Return For Modification
-                                                    </option>
-                                                    <option value='rejected'>
-                                                        Rejected
-                                                    </option>
-                                                    <option value='completed'>
-                                                        Completed
-                                                    </option>
-                                                </select>
-                                            ) : (
-                                                'Select any employee to change status'
+                                                ),
                                             )}
+                                        </td>
+                                        <td>
+                                            {item.status !==
+                                            'waiting for payment'
+                                                ? item.status
+                                                : ''}
+                                        </td>
+                                        <td>
+                                            <FaPencil
+                                                className='cursor-pointer'
+                                                onClick={() =>
+                                                    handleOrderChange(item)
+                                                }
+                                            />
                                         </td>
                                     </tr>
                                 </>
                             ))}
                         </tbody>
                     </table>
-
-                    {/* <EditStatus
-                        fetchData={fetchData}
-                        invoice={selectedInvoice}
-                        toggle={toggle}
-                    /> */}
+                    {selectedOrder && (
+                        <EditModal
+                            invoice={selectedOrder}
+                            fetchData={fetchData}
+                            setSelectedOrder={setSelectedOrder}
+                        />
+                    )}
                 </div>
             </Wrapper>
         </>

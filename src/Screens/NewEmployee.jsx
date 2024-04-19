@@ -198,6 +198,7 @@ const NewEmployee = () => {
                                         </span>
                                     )}
                                 </div>
+
                                 <input
                                     type='date'
                                     name='labor_card_expiry'
@@ -205,6 +206,9 @@ const NewEmployee = () => {
                                         required:
                                             'Labor Card Expiry is required',
                                     })}
+                                    onChange={(e) => {
+                                        console.log(e.target.value)
+                                    }}
                                     className='input-sm bg-bgLight border border-gray-700 text-white focus:outline-none focus:ring-0 rounded-md w-96 text-[17px]'
                                 />
                             </div>

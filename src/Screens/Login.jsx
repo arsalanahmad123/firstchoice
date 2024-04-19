@@ -26,12 +26,12 @@ const Login = () => {
             if (response.status === 200) {
                 toast.success('Login Successful')
                 setIsSubmitting(false)
-                sessionStorage.setItem('loggedIn', true)
-                sessionStorage.setItem(
+                localStorage.setItem('loggedIn', true)
+                localStorage.setItem(
                     'company',
                     JSON.stringify(response.data.data),
                 )
-                sessionStorage.setItem('token', response.data.data.token)
+                localStorage.setItem('token', response.data.data.token)
                 window.location.href = '/'
             }
         } catch (error) {

@@ -12,6 +12,7 @@ const DashboardCard = ({
     profit,
     invoices,
 }) => {
+    const companiesLength = totalCompanies?.length
     return (
         <>
             <div className='flex flex-row justify-between  items-center py-2 gap-x-3 w-full'>
@@ -33,7 +34,7 @@ const DashboardCard = ({
                             Total Companies
                         </h2>
                         <p className='text-3xl font-bold text-darkorange italic text-right '>
-                            {totalCompanies || 0}
+                            {companiesLength || 0}
                         </p>
                     </div>
                 </div>

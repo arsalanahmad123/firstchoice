@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import AppLayout from '../Layout/AppLayout'
 import Wrapper from '../Layout/Wrapper'
 import Service_Card from '../Components/Service_Card'
@@ -75,6 +75,7 @@ const ServiceModal = ({ getServices }) => {
 
 const Services = () => {
     const [services, setServices] = useState([])
+    const [searchQuery, setSearchQuery] = useState('')
 
     const getServices = async () => {
         const response = await api.get(`${BASE_URL}/services`)
@@ -88,6 +89,13 @@ const Services = () => {
         getServices()
     }, [])
 
+    const filteredServices = useMemo(() => {
+        if (!searchQuery) return services
+        return services.filter((service) =>
+            service.name.toLowerCase().includes(searchQuery.toLowerCase()),
+        )
+    }, [services, searchQuery])
+
     const showServiceModal = () => {
         document.getElementById('my_modal_2').showModal()
     }
@@ -100,6 +108,8 @@ const Services = () => {
                         <input
                             type='text'
                             className='w-full lg:py-1 pl-5 lg:rounded-2xl bg-bgLight border-2 border-gray-700 text-white'
+                            placeholder='Search Service'
+                            onChange={(e) => setSearchQuery(e.target.value)}
                         />
                         <CgSearch className='text-slate-700 m-auto absolute lg:right-5 lg:top-3  ' />
                     </div>
@@ -114,7 +124,7 @@ const Services = () => {
                     className='flex gap-x-6 flex-row flex-wrap mx-5 mt-3 gap-y-5
                 '
                 >
-                    {services.map((service, i) => (
+                    {filteredServices?.map((service, i) => (
                         <Service_Card
                             key={i}
                             service={service}

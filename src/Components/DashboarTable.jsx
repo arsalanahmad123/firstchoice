@@ -40,6 +40,11 @@ const DashboarTable = ({ invoices }) => {
                                 <td>{invoice.company}</td>
                                 <td>{totalQuantity}</td>
                                 <td>{invoice.total_price}</td>
+                                <td>
+                                    {invoice.status !== 'waiting for payment'
+                                        ? invoice.status
+                                        : ''}
+                                </td>
                             </tr>
                         ))}
                     </tbody>

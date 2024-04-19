@@ -12,7 +12,7 @@ const Expense = lazy(() => import('./Screens/Expense'))
 const Revenue = lazy(() => import('./Screens/Revenue'))
 const Services = lazy(() => import('./Screens/Services'))
 const Admin = lazy(() => import('./Screens/Admin'))
-const Add_Invoice = lazy(() => import('./Screens/Add_Invoice'))
+const AddInvoice = lazy(() => import('./Screens/AddInvoice'))
 import Loader from './Components/Loader'
 import { Toaster } from 'react-hot-toast'
 
@@ -45,7 +45,7 @@ function App() {
                             <Route path='/services' element={<Services />} />
                             <Route
                                 path='/add_invoice'
-                                element={<Add_Invoice />}
+                                element={<AddInvoice />}
                             />
                         </Route>
                         <Route path='/login' element={<Login />} />
