@@ -1,0 +1,5 @@
+Card Redirection 
+Dashboard Table 
+after adding expense , daily revenue must be minused 
+Company info on card, also documents 
+Order ID removal 

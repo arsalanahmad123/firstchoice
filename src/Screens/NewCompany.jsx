@@ -43,6 +43,7 @@ const NewCompany = () => {
             formData.append('phone', data.phone)
             formData.append('licence_expiry', data.licence_expiry)
             formData.append('img_card_expiry', data.img_card_expiry)
+            formData.append('least_contract_expiry', data.least_contract_expiry)
             formData.append('role', 'company')
             formData.append('logo', updateLogo)
             for (let i = 0; i < documents.length; i++) {
@@ -320,6 +321,40 @@ const NewCompany = () => {
                                             const date = new Date(value)
                                             if (date < today) {
                                                 return 'Img_Card Expiry cannot be in the past'
+                                            }
+                                        },
+                                    })}
+                                    className='input-sm bg-bgLight border border-gray-700 text-white focus:outline-none focus:ring-0 rounded-md w-96 text-[17px]'
+                                />
+                            </div>
+                            <div className='flex flex-col gap-y-1'>
+                                <div className='flex justify-between items-center'>
+                                    <label
+                                        htmlFor='least_contract_expiry'
+                                        className='text-sm'
+                                    >
+                                        Least Contract Expiry
+                                    </label>
+                                    {errors.least_contract_expiry && (
+                                        <span className='text-red-500 text-sm'>
+                                            {
+                                                errors.least_contract_expiry
+                                                    .message
+                                            }
+                                        </span>
+                                    )}
+                                </div>
+                                <input
+                                    type='date'
+                                    name='least_contract_expiry'
+                                    {...register('least_contract_expiry', {
+                                        required:
+                                            "Img_Card Expiry can't be empty",
+                                        validate: (value) => {
+                                            const today = new Date()
+                                            const date = new Date(value)
+                                            if (date < today) {
+                                                return 'Least Contract Expiry cannot be in the past'
                                             }
                                         },
                                     })}

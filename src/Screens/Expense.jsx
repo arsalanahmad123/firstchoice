@@ -200,9 +200,14 @@ const Expense = () => {
                                     <td>${expense.amount}</td>
                                     <td>{expense.used_by}</td>
                                     <td>
+                                        {new Date(expense.updatedAt).getDate()}/
                                         {new Date(
                                             expense.updatedAt,
-                                        ).toLocaleDateString()}
+                                        ).getMonth() + 1}
+                                        /
+                                        {new Date(
+                                            expense.updatedAt,
+                                        ).getFullYear()}
                                     </td>
                                     <td>
                                         <button

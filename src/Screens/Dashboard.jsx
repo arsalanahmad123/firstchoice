@@ -6,18 +6,13 @@ import DashboarTable from '../Components/DashboarTable'
 import DashboardChart from '../Components/DashboardChart'
 import { useFetch } from '../Hooks/useFetch'
 const Dashboard = () => {
-    const [pendingInvoices, setPendingInvoices] = useState(null)
     const { data: totalCompanies } = useFetch('companies')
     const { data: dailyRevenue } = useFetch('revenue')
     const { data: profit } = useFetch('profit')
-    const { data: invoices } = useFetch('invoices')
+    const { data: invoices, fetchData } = useFetch('invoices')
     const invoicesLength = invoices?.length
-
-    useEffect(() => {
-        setPendingInvoices(
-            invoices?.filter((invoice) => invoice.pending_amount > 0),
-        )
-    }, [invoices])
+    const { data: pendingInvoices, fetchData: fetchPendingInvoices } =
+        useFetch('invoices/pending')
 
     const memoizedData = useMemo(
         () => ({
@@ -41,7 +36,10 @@ const Dashboard = () => {
                             profit={memoizedData.profit}
                             invoices={memoizedData.invoicesLength}
                         />
-                        <DashboarTable invoices={invoices} />
+                        <DashboarTable
+                            invoices={pendingInvoices}
+                            fetchData={fetchPendingInvoices}
+                        />
                         <div className='flex justify-center items-center mt-2 bg-bgLight rounded-lg w-full py-2'>
                             <DashboardChart />
                         </div>

@@ -139,7 +139,6 @@ const Work = () => {
                         <table className='table table-md shadow-2xl'>
                             <thead className='bg-lightGold text-gray-900'>
                                 <tr className='border-none'>
-                                    <th>ID</th>
                                     <th>Name</th>
                                     <th>Service Name</th>
                                     <th>Cost Price</th>
@@ -149,7 +148,6 @@ const Work = () => {
                             <tbody>
                                 {filteredWorks?.map((refwork) => (
                                     <tr key={refwork._id}>
-                                        <td>{refwork._id}</td>
                                         <td>{refwork.name}</td>
                                         <td>{refwork.service_name}</td>
                                         <td>{refwork.cost_price}</td>

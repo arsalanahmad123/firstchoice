@@ -25,11 +25,10 @@ const Table = ({ invoices, fetchData }) => {
     }
 
     return (
-        <div className='overflow-x-auto bg-bgLight max-h-[70vh] mx-5 mt-5 rounded-md'>
+        <div className='overflow-x-auto bg-bgLight max-h-[70vh] w-full mt-5 '>
             <table className='table table-md  text-white '>
                 <thead>
                     <tr className='bg-lightGold text-gray-900'>
-                        <th>Invoice ID</th>
                         <th>Title</th>
                         <th>Company</th>
                         <th>Service</th>
@@ -44,7 +43,6 @@ const Table = ({ invoices, fetchData }) => {
                 <tbody>
                     {invoices?.map((invoice, i) => (
                         <tr className='border-gray-700' key={i}>
-                            <td>{i + 1}</td>
                             <td>{invoice.title}</td>
                             <td>{invoice.company}</td>
                             <td>

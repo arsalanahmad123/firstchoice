@@ -2,13 +2,13 @@ import React, { useEffect, useState, useMemo } from 'react'
 import AppLayout from '../Layout/AppLayout'
 import Wrapper from '../Layout/Wrapper'
 import Table from '../Components/Table'
-import { CgSearch } from 'react-icons/cg'
 import AddInvoice from './AddInvoice'
 import { Route, Routes, NavLink } from 'react-router-dom'
 import { useFetch } from '../Hooks/useFetch'
 
 const HomePage = () => {
     const { data: invoices, fetchData } = useFetch('invoices')
+    const [filter, setFilter] = useState(null)
     const [filteredInvoices, setFilteredInvoices] = useState(null)
 
     const handleSearch = (e) => {
@@ -27,7 +27,21 @@ const HomePage = () => {
         setFilteredInvoices(invoices)
     }, [invoices])
 
-    const memoizedInvoices = useMemo(() => invoices, [invoices])
+    useEffect(() => {
+        if (filter === 'pending') {
+            setFilteredInvoices(
+                invoices?.filter((invoice) => invoice.pending_amount > 0),
+            )
+        } else if (filter === 'completed') {
+            setFilteredInvoices(
+                invoices?.filter((invoice) => invoice.pending_amount === 0),
+            )
+        }
+    }, [filter])
+
+    const activeFilter = (filter) => {
+        setFilter(filter)
+    }
 
     return (
         <>
@@ -36,19 +50,40 @@ const HomePage = () => {
                     <div className='relative'>
                         <input
                             type='text'
-                            className='w-full lg:py-1 pl-5 lg:rounded-2xl bg-bgLight border-2 border-gray-700 text-white'
+                            className='w-full p-2 lg:rounded-2xl bg-bgLight border-2 border-gray-700 text-white text-sm'
                             onChange={handleSearch}
                             placeholder='Search by company name...'
                         />
-                        <CgSearch className='text-slate-700 m-auto absolute lg:right-5 lg:top-3  ' />
                     </div>
                     <div className='flex justify-center items-center gap-x-3'>
-                        <span className='badge badge-neutral py-3 cursor-pointer'>
+                        <span
+                            className={`badge py-3 cursor-pointer ${
+                                filter === 'pending'
+                                    ? 'badge-primary'
+                                    : 'badge-neutral'
+                            }`}
+                            onClick={() => activeFilter('pending')}
+                        >
                             pending
                         </span>
-                        <span className='badge badge-neutral py-3  cursor-pointer'>
+                        <span
+                            className={`badge py-3 cursor-pointer ${
+                                filter === 'completed'
+                                    ? 'badge-primary'
+                                    : 'badge-neutral'
+                            }`}
+                            onClick={() => activeFilter('completed')}
+                        >
                             completed
                         </span>
+                        {filter !== null && (
+                            <span
+                                className='badge py-3 cursor-pointer'
+                                onClick={() => setFilter(null)}
+                            >
+                                Remove Filters
+                            </span>
+                        )}
                     </div>
                     <NavLink
                         to={'/invoice/add-invoice'}

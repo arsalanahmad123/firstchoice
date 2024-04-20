@@ -198,7 +198,7 @@ const Orders = () => {
                     <table className='table table-md   '>
                         <thead>
                             <tr className='bg-lightGold text-gray-900 border-gray-700'>
-                                <th>Order ID</th>
+                                <th>Order Title</th>
                                 <th>Company</th>
                                 <th>Services</th>
                                 <th>Quantity</th>
@@ -213,7 +213,7 @@ const Orders = () => {
                                 <>
                                     <tr key={item._id}>
                                         <td className='text-white'>
-                                            {item._id}
+                                            {item.title}
                                         </td>
                                         <td className='text-white'>
                                             {item.company}

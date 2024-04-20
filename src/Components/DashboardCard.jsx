@@ -4,6 +4,7 @@ import { GiProfit } from 'react-icons/gi'
 import { FaSortAmountUp } from 'react-icons/fa'
 import { HiBuildingOffice2 } from 'react-icons/hi2'
 import { FaFileInvoiceDollar } from 'react-icons/fa6'
+import { Link } from 'react-router-dom'
 
 const DashboardCard = ({
     pendingInvoices,
@@ -16,7 +17,10 @@ const DashboardCard = ({
     return (
         <>
             <div className='flex flex-row justify-between  items-center py-2 gap-x-3 w-full'>
-                <div className='rounded-lg bg-card1 text-black relative h-32 w-52 px-4'>
+                <Link
+                    to='/invoice'
+                    className='rounded-lg bg-card1 text-black relative h-32 w-52 px-4'
+                >
                     <MdGroupWork className='size-12 text-card1 absolute -top-2 -right-2 bg-bgDarkColor rounded-full border-[10px] border-bgDarkColor' />
                     <div className='flex flex-col justify-center  h-full pt-2'>
                         <h2 className='text-xl font-semibold uppercase w-28'>
@@ -26,8 +30,11 @@ const DashboardCard = ({
                             {pendingInvoices || 0}
                         </p>
                     </div>
-                </div>
-                <div className=' bg-card2 text-black relative h-32 w-52 px-4 rounded-lg'>
+                </Link>
+                <Link
+                    to={'/companies'}
+                    className=' bg-card2 text-black relative h-32 w-52 px-4 rounded-lg'
+                >
                     <HiBuildingOffice2 className='size-12 text-card2 absolute -top-2 -right-2 bg-bgDarkColor rounded-full border-[10px] border-bgDarkColor' />
                     <div className='flex flex-col justify-center h-full pt-2'>
                         <h2 className='text-xl font-semibold uppercase w-10'>
@@ -37,8 +44,11 @@ const DashboardCard = ({
                             {companiesLength || 0}
                         </p>
                     </div>
-                </div>
-                <div className=' bg-card3 text-black relative h-32 w-52 px-4 rounded-lg'>
+                </Link>
+                <Link
+                    to={'/revenue'}
+                    className=' bg-card3 text-black relative h-32 w-52 px-4 rounded-lg'
+                >
                     <FaSortAmountUp className='size-12 text-card3 absolute -top-2 -right-2 bg-bgDarkColor rounded-full border-[10px] border-bgDarkColor' />
                     <div className='flex flex-col justify-center  h-full pt-2'>
                         <h2 className=' text-xl font-semibold uppercase w-28'>
@@ -48,7 +58,7 @@ const DashboardCard = ({
                             {dailyRevenue || 0}
                         </p>
                     </div>
-                </div>
+                </Link>
                 <div className=' bg-card4 text-black relative h-32 w-52 px-4 rounded-lg'>
                     <GiProfit className='size-12 text-card4 absolute -top-2 -right-2 bg-bgDarkColor rounded-full border-[10px] border-bgDarkColor' />
                     <div className='flex flex-col justify-center  h-full pt-2 '>
@@ -60,7 +70,10 @@ const DashboardCard = ({
                         </p>
                     </div>
                 </div>
-                <div className=' bg-card5 text-black relative h-32 w-52 px-4 rounded-lg'>
+                <Link
+                    to={'/invoice'}
+                    className=' bg-card5 text-black relative h-32 w-52 px-4 rounded-lg'
+                >
                     <FaFileInvoiceDollar className='size-12 text-card4 absolute -top-2 -right-2 bg-bgDarkColor rounded-full border-[10px] border-bgDarkColor' />
                     <div className='flex flex-col justify-center h-full pt-2'>
                         <h2 className='text-xl font-semibold uppercase w-28'>
@@ -70,7 +83,7 @@ const DashboardCard = ({
                             {invoices || 0}
                         </p>
                     </div>
-                </div>
+                </Link>
             </div>
         </>
     )
