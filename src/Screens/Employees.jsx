@@ -77,6 +77,7 @@ const Employees = ({ id }) => {
     const [editModal, setEditModal] = React.useState(false)
 
     const { data: employees, fetchData } = useFetch(`employee/${id}`)
+    const [selectedEmployee, setSelectedEmployee] = React.useState(null)
 
     const deleteEmployee = async (employeeId) => {
         const confirm = window.confirm('Are you sure you want to delete?')
@@ -94,6 +95,11 @@ const Employees = ({ id }) => {
         } catch (error) {
             toast.error(error.response.data.message)
         }
+    }
+
+    const handleEdit = (employee) => {
+        setSelectedEmployee(employee)
+        setEditModal(true)
     }
 
     return (
@@ -192,7 +198,7 @@ const Employees = ({ id }) => {
                                 </button>
                                 <button
                                     className='btn btn-xs'
-                                    onClick={() => setEditModal(true)}
+                                    onClick={() => handleEdit(employee)}
                                 >
                                     Edit Employee
                                 </button>
@@ -208,9 +214,10 @@ const Employees = ({ id }) => {
                             createPortal(
                                 <EditEmployee
                                     id={id}
-                                    data={employee}
+                                    data={selectedEmployee}
                                     fetchData={fetchData}
                                     setEditModal={setEditModal}
+                                    setSelectedEmployee={setSelectedEmployee}
                                 />,
                                 document.getElementById('modal'),
                             )}

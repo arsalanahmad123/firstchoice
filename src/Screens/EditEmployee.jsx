@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { useForm } from 'react-hook-form'
-import { useNavigate } from 'react-router-dom'
 import { IoClose } from 'react-icons/io5'
 
 import { IoIosDocument } from 'react-icons/io'
@@ -9,18 +8,19 @@ import axios from 'axios'
 import { useAuth } from '../Context/AuthContext'
 
 const BASE_URL = import.meta.env.VITE_BASE_URL
-const EditEmployee = ({ id, data, fetchData, setEditModal }) => {
+const EditEmployee = ({
+    id,
+    data,
+    fetchData,
+    setEditModal,
+    setSelectedEmployee,
+}) => {
     const [documents, setDocuments] = useState([])
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [newdata, setNewData] = useState(data)
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-    } = useForm()
+    const { handleSubmit } = useForm()
     const { company } = useAuth()
 
-    const navigate = useNavigate()
     const handleDocuments = (e) => {
         setDocuments(Array.from(e.target.files))
     }
@@ -62,12 +62,14 @@ const EditEmployee = ({ id, data, fetchData, setEditModal }) => {
                 toast.success(response.data.message)
                 fetchData()
                 setEditModal(false)
+                setSelectedEmployee(null)
             }
         } catch (error) {
             console.log(error)
             toast.error(error.response.data.message)
             setIsSubmitting(false)
             setEditModal(false)
+            setSelectedEmployee(null)
         }
     }
 
