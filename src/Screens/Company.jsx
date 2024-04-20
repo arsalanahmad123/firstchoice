@@ -143,7 +143,7 @@ const Company = () => {
                 <Route
                     key={'add-employee'}
                     path='/add-employee'
-                    element={<NewEmployee />}
+                    element={<NewEmployee id={id} />}
                 />
             </Routes>
         </>

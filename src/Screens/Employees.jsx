@@ -4,8 +4,28 @@ import { CgSearch } from 'react-icons/cg'
 import { useFetch } from '../Hooks/useFetch'
 import { api } from '../API/api'
 import toast from 'react-hot-toast'
+import EditEmployee from './EditEmployee'
+import { createPortal } from 'react-dom'
 
-const ViewEmployee = ({ employee }) => {
+const ViewEmployee = ({ employee, fetchData, hideModal }) => {
+    const deleteDocument = async (doc) => {
+        try {
+            const confirm = window.confirm('Are you sure you want to delete?')
+            if (!confirm) return
+            const response = await api.put(`/employee/delete-file`, {
+                employee_id: employee?._id,
+                document: doc.fileName,
+            })
+            if (response.status === 200) {
+                toast.success(response.data.message)
+                fetchData()
+                hideModal()
+            }
+        } catch (error) {
+            toast.error(error.response.data.message)
+        }
+    }
+
     return (
         <>
             <dialog id='my_modal_2' className='modal bg-black/50'>
@@ -14,11 +34,11 @@ const ViewEmployee = ({ employee }) => {
                         Remove Employee Documents
                     </h3>
                     <div className='py-3 flex justify-center items-center gap-x-2'>
-                        <div className='flex flex-row justify-center items-center gap-x-3 flex-wrap'>
+                        <div className='flex flex-col justify-start items-start gap-y-2 flex-wrap'>
                             {employee?.documents?.map((doc) => (
                                 <div
                                     key={doc?._id}
-                                    className='flex flex-col justify-center items-center gap-y-1'
+                                    className='flex flex-row justify-between items-center gap-x-4'
                                 >
                                     <a
                                         href={doc?.url}
@@ -27,6 +47,12 @@ const ViewEmployee = ({ employee }) => {
                                     >
                                         {doc?.fileName}
                                     </a>
+                                    <button
+                                        className='btn btn-xs btn-error'
+                                        onClick={() => deleteDocument(doc)}
+                                    >
+                                        Delete Document
+                                    </button>
                                 </div>
                             ))}
                         </div>
@@ -44,6 +70,11 @@ const Employees = ({ id }) => {
     const toggleModal = () => {
         document.getElementById('my_modal_2').showModal()
     }
+    const hideModal = () => {
+        document.getElementById('my_modal_2').close()
+    }
+
+    const [editModal, setEditModal] = React.useState(false)
 
     const { data: employees, fetchData } = useFetch(`employee/${id}`)
 
@@ -86,9 +117,9 @@ const Employees = ({ id }) => {
                             className=' bg-gradient-to-r from-bgLight to-bgDarkColor text-white shadow-2xl  flex justify-center flex-col p-5 gap-y-5  min-h-36 min-w-80'
                             key={employee?._id}
                         >
-                            <h2 className='font-extrabold text-2xl flex flex-row justify-between items-center'>
+                            <h2 className='font-extrabold text-xl flex flex-row justify-between items-center'>
                                 <span>Name: </span>
-                                <span className='text-lightGold'>
+                                <span className='text-lightGold text-wrap'>
                                     {employee?.name}
                                 </span>
                             </h2>
@@ -144,12 +175,12 @@ const Employees = ({ id }) => {
                                     </span>
                                 </p>
                             </div>
-                            <div className='flex justify-between items-center '>
+                            <div className='flex justify-between items-center gap-x-3'>
                                 <button
                                     className='btn btn-xs btn-outline text-white'
                                     onClick={toggleModal}
                                 >
-                                    View Employee
+                                    View Documents
                                 </button>
                                 <button
                                     className='btn btn-xs text-white bg-red-400 border-none hover:bg-red-500'
@@ -159,9 +190,30 @@ const Employees = ({ id }) => {
                                 >
                                     Delete Employee
                                 </button>
+                                <button
+                                    className='btn btn-xs'
+                                    onClick={() => setEditModal(true)}
+                                >
+                                    Edit Employee
+                                </button>
                             </div>
                         </div>
-                        <ViewEmployee key={i} employee={employee} />
+                        <ViewEmployee
+                            key={i}
+                            employee={employee}
+                            fetchData={fetchData}
+                            hideModal={hideModal}
+                        />
+                        {editModal &&
+                            createPortal(
+                                <EditEmployee
+                                    id={id}
+                                    data={employee}
+                                    fetchData={fetchData}
+                                    setEditModal={setEditModal}
+                                />,
+                                document.getElementById('modal'),
+                            )}
                     </>
                 ))}
                 {employees?.length === 0 && (

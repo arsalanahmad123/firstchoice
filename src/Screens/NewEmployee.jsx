@@ -36,6 +36,8 @@ const NewEmployee = () => {
             formData.append('labor_card_no', data.labor_card_no)
             formData.append('labor_card_expiry', data.labor_card_expiry)
             formData.append('eid_expiry', data.eid_expiry)
+            formData.append('passport_no', data.passport_no)
+            formData.append('passport_expiry', data.passport_expiry)
             formData.append('company_id', id)
             for (let i = 0; i < documents.length; i++) {
                 formData.append('documents', documents[i])
@@ -231,6 +233,52 @@ const NewEmployee = () => {
                                     name='eid_expiry'
                                     {...register('eid_expiry', {
                                         required: 'EID Expiry is required',
+                                    })}
+                                    className='input-sm bg-bgLight border border-gray-700 text-white focus:outline-none focus:ring-0 rounded-md w-96 text-[17px]'
+                                />
+                            </div>
+                            <div className='flex flex-col gap-y-1'>
+                                <div className='flex flex-row justify-between items-center'>
+                                    <label
+                                        htmlFor='Passport No'
+                                        className='text-sm'
+                                    >
+                                        Passport No
+                                    </label>
+                                    {errors.passport_no && (
+                                        <span className='text-red-500 text-xs'>
+                                            {errors.passport_no.message}
+                                        </span>
+                                    )}
+                                </div>
+                                <input
+                                    type='text'
+                                    name='passport_no'
+                                    {...register('passport_no', {
+                                        required: 'Passport No is required',
+                                    })}
+                                    className='input-sm bg-bgLight border border-gray-700 text-white focus:outline-none focus:ring-0 rounded-md w-96 text-[17px]'
+                                />
+                            </div>
+                            <div className='flex flex-col gap-y-1'>
+                                <div className='flex flex-row justify-between items-center'>
+                                    <label
+                                        htmlFor='Passport Expiry'
+                                        className='text-sm'
+                                    >
+                                        Passport Expiry
+                                    </label>
+                                    {errors.passport_expiry && (
+                                        <span className='text-red-500 text-xs'>
+                                            {errors.passport_expiry.message}
+                                        </span>
+                                    )}
+                                </div>
+                                <input
+                                    type='date'
+                                    name='passport_expiry'
+                                    {...register('passport_expiry', {
+                                        required: 'Passport Expiry is required',
                                     })}
                                     className='input-sm bg-bgLight border border-gray-700 text-white focus:outline-none focus:ring-0 rounded-md w-96 text-[17px]'
                                 />
