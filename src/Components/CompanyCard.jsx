@@ -48,7 +48,7 @@ const CompanyCard = ({ company, fetchData }) => {
             const confirm = window.confirm('Are you sure you want to delete?')
             if (!confirm) return
             const response = await api.delete(`/companies/${id}`)
-            if (response.status === 201) {
+            if (response.status === 200) {
                 toast.success(response.data.message)
                 fetchData()
             } else {
@@ -110,6 +110,14 @@ const CompanyCard = ({ company, fetchData }) => {
                             1}
                         /
                         {new Date(company?.least_contract_expiry).getFullYear()}
+                    </span>
+                </p>
+                <p className='flex flex-row justify-between items-center gap-x-5'>
+                    <span>E Channel Expiry: </span>
+                    <span>
+                        {new Date(company?.e_channel_expiry).getDate()}/
+                        {new Date(company?.e_channel_expiry).getMonth() + 1}/
+                        {new Date(company?.e_channel_expiry).getFullYear()}
                     </span>
                 </p>
                 <div className='flex justify-between items-center  gap-x-2'>

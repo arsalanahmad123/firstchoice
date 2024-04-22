@@ -3,6 +3,7 @@ import { api } from '../API/api'
 import { useState } from 'react'
 import toast from 'react-hot-toast'
 const BASE_URL = import.meta.env.VITE_BASE_URL
+import { Link } from 'react-router-dom'
 
 const Table = ({ invoices, fetchData }) => {
     const [selectedInvoice, setSelectedInvoice] = useState(null)
@@ -107,6 +108,14 @@ const Table = ({ invoices, fetchData }) => {
                                 >
                                     Delete
                                 </button>
+                            </td>
+                            <td>
+                                <Link
+                                    to={`/invoice/view-invoice/${invoice._id}`}
+                                    target='_blank'
+                                >
+                                    View
+                                </Link>
                             </td>
                         </tr>
                     ))}

@@ -13,7 +13,7 @@ import logo from '../assets/Logo.png'
 const SideBar = () => {
     return (
         <>
-            <div className='max-w-[20%] bg-bgLight min-h-screen flex flex-col pt-8 px-3 '>
+            <div className='max-w-[20%] bg-bgLight min-h-screen flex flex-col pt-8 px-3 ' id="sidebar">
                 <img src={logo} alt='Logo' />
                 <ul className='flex flex-col justify-center items-center w-full gap-y-2 mt-5'>
                     <NavList

@@ -44,6 +44,7 @@ const NewCompany = () => {
             formData.append('licence_expiry', data.licence_expiry)
             formData.append('img_card_expiry', data.img_card_expiry)
             formData.append('least_contract_expiry', data.least_contract_expiry)
+            formData.append('e_channel_expiry', data.e_channel_expiry)
             formData.append('role', 'company')
             formData.append('logo', updateLogo)
             for (let i = 0; i < documents.length; i++) {
@@ -355,6 +356,37 @@ const NewCompany = () => {
                                             const date = new Date(value)
                                             if (date < today) {
                                                 return 'Least Contract Expiry cannot be in the past'
+                                            }
+                                        },
+                                    })}
+                                    className='input-sm bg-bgLight border border-gray-700 text-white focus:outline-none focus:ring-0 rounded-md w-96 text-[17px]'
+                                />
+                            </div>
+                            <div className='flex flex-col gap-y-1'>
+                                <div className='flex justify-between items-center'>
+                                    <label
+                                        htmlFor='e_channel_expiry'
+                                        className='text-sm'
+                                    >
+                                        E-Channel Expiry
+                                    </label>
+                                    {errors.e_channel_expiry && (
+                                        <span className='text-red-500 text-sm'>
+                                            {errors.e_channel_expiry.message}
+                                        </span>
+                                    )}
+                                </div>
+                                <input
+                                    type='date'
+                                    name='e_channel_expiry'
+                                    {...register('e_channel_expiry', {
+                                        required:
+                                            "E-Channel Expiry can't be empty",
+                                        validate: (value) => {
+                                            const today = new Date()
+                                            const date = new Date(value)
+                                            if (date < today) {
+                                                return 'E-Channel Expiry cannot be in the past'
                                             }
                                         },
                                     })}

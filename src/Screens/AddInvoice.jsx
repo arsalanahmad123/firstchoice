@@ -224,7 +224,7 @@ const AddInvoice = () => {
         const calculateTotalPrice = () => {
             let total = 0
             selectedServices.forEach((service) => {
-                total += service.sale_price
+                total += service.sale_price * service.quantity
                 pending += costPrice * service.quantity
             })
             return Number(total)
