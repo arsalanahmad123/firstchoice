@@ -117,7 +117,7 @@ const Table = ({ invoices, fetchData }) => {
                             <td>
                                 <Link
                                     to={`/invoice/view-invoice/${invoice._id}`}
-                                    target='_blank'
+                                    target='_top'
                                 >
                                     View
                                 </Link>
