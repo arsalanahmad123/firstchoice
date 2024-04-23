@@ -13,10 +13,14 @@ import { createPortal } from 'react-dom'
 import EditCompany from './EditCompany'
 
 const BASE_URL = import.meta.env.VITE_BASE_URL
-const Homepage = ({ id, company, employees, pending }) => {
+const Homepage = ({ id, company, employees }) => {
     const navigate = useNavigate()
 
     const [companyModal, setCompanyModal] = useState(false)
+
+    const { data: pendingAmount } = useFetch(
+        `companies/total-pending-amount/${company?.username}`,
+    )
 
     return (
         <>
@@ -124,7 +128,7 @@ const Homepage = ({ id, company, employees, pending }) => {
                                         PENDING AMOUNT
                                     </h2>
                                     <p className='text-3xl font-bold text-darkorange italic text-right '>
-                                        {pending}
+                                        {pendingAmount || 0} AED
                                     </p>
                                 </div>
                             </div>
@@ -146,7 +150,6 @@ const Homepage = ({ id, company, employees, pending }) => {
 
 const Company = () => {
     const [company, setCompany] = useState(null)
-    const [pending, setPending] = useState(null)
     const { id } = useParams()
     const { data: employees } = useFetch(`employee/${id}`)
     useEffect(() => {
@@ -158,7 +161,6 @@ const Company = () => {
                 const data = response.data.data
                 if (response.status === 200) {
                     setCompany(data.company)
-                    setPending(data.invoices)
                 }
             } catch (error) {
                 console.log(error)
@@ -176,7 +178,6 @@ const Company = () => {
                         <Homepage
                             id={id}
                             company={company}
-                            pending={pending}
                             employees={employees}
                         />
                     }

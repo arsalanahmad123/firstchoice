@@ -160,7 +160,7 @@ const NewCompany = () => {
                                             htmlFor='username'
                                             className='text-sm'
                                         >
-                                            Username
+                                            Company Name
                                         </label>
                                         {errors.username && (
                                             <span className='text-red-500 text-sm'>

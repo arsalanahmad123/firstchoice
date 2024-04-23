@@ -180,6 +180,28 @@ const Employees = ({ id }) => {
                                         ).getFullYear()}
                                     </span>
                                 </p>
+                                <p className='flex flex-row justify-between items-center'>
+                                    <span>Passport No</span>
+                                    <span className='border-b border-dashed'>
+                                        {employee?.passport_no}
+                                    </span>
+                                </p>
+                                <p className='flex flex-row justify-between items-center'>
+                                    <span>Passport Expiry</span>
+                                    <span className='border-b border-dashed'>
+                                        {new Date(
+                                            employee?.passport_expiry,
+                                        ).getDate()}
+                                        /
+                                        {new Date(
+                                            employee?.passport_expiry,
+                                        ).getMonth() + 1}
+                                        /
+                                        {new Date(
+                                            employee?.passport_expiry,
+                                        ).getFullYear()}
+                                    </span>
+                                </p>
                             </div>
                             <div className='flex justify-between items-center gap-x-3'>
                                 <button
