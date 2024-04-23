@@ -3,7 +3,26 @@ import { Link } from 'react-router-dom'
 import { api } from '../API/api'
 import toast from 'react-hot-toast'
 
-const ViewCompany = ({ company }) => {
+const ViewCompany = ({ company, fetchData }) => {
+    const deleteFile = async (file) => {
+        try {
+            const confirm = window.confirm('Are you sure you want to delete?')
+            if (!confirm) return
+            const response = await api.put(`/companies/delete-file`, {
+                company_id: company?._id,
+                document: file,
+            })
+            if (response.status === 200) {
+                toast.success(response.data.message)
+                fetchData()
+            } else {
+                toast.error('Something went wrong')
+            }
+        } catch (error) {
+            toast.error(error.response.data.message)
+        }
+    }
+
     return (
         <>
             <dialog id='my_modal_2' className='modal bg-black/50'>
@@ -12,21 +31,30 @@ const ViewCompany = ({ company }) => {
                         View Company Documents
                     </h3>
                     <div className='py-3 flex justify-center items-center gap-x-2'>
-                        <div className='flex flex-row justify-center items-center gap-x-3 flex-wrap'>
-                            {company?.documents?.map((doc) => (
-                                <div
-                                    key={doc?._id}
-                                    className='flex flex-col justify-center items-center gap-y-1'
-                                >
-                                    <a
-                                        href={doc?.url}
-                                        target='_blank'
-                                        className='btn btn-xs btn-warning btn-outline text-gray-900 ml-auto'
+                        <div className='flex flex-col justify-center items-center gap-y-2 flex-wrap'>
+                            {company?.documents.length > 0 &&
+                                company?.documents?.map((doc) => (
+                                    <div
+                                        key={doc?.fileName}
+                                        className='flex flex-row justify-center items-center gap-x-5'
                                     >
-                                        {doc?.fileName}
-                                    </a>
-                                </div>
-                            ))}
+                                        <a
+                                            href={doc?.url}
+                                            target='_blank'
+                                            className='btn btn-xs btn-warning btn-outline text-gray-900 ml-auto'
+                                        >
+                                            {doc?.fileName}
+                                        </a>
+                                        <button
+                                            className='btn btn-xs btn-error'
+                                            onClick={() =>
+                                                deleteFile(doc.fileName)
+                                            }
+                                        >
+                                            Remove Document
+                                        </button>
+                                    </div>
+                                ))}
                         </div>
                     </div>
                 </div>
@@ -151,7 +179,11 @@ const CompanyCard = ({ company, fetchData }) => {
                     </button>
                 </div>
             </div>
-            <ViewCompany key={company._id} company={company} />
+            <ViewCompany
+                key={company._id}
+                company={company}
+                fetchData={fetchData}
+            />
         </>
     )
 }

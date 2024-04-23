@@ -86,7 +86,7 @@ const ViewInvoice = () => {
                 </div>
             </div>
             <div className='w-full p-5 text-black'>
-                <table className='table table-zebra w-full'>
+                <table className='table  w-full'>
                     <thead>
                         <tr>
                             <th className='text-black font-bold'>Service</th>

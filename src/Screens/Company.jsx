@@ -9,10 +9,14 @@ import { useFetch } from '../Hooks/useFetch'
 import { FaArrowLeft } from 'react-icons/fa'
 import { useNavigate } from 'react-router-dom'
 import { api } from '../API/api'
+import { createPortal } from 'react-dom'
+import EditCompany from './EditCompany'
 
 const BASE_URL = import.meta.env.VITE_BASE_URL
 const Homepage = ({ id, company, employees, pending }) => {
     const navigate = useNavigate()
+
+    const [companyModal, setCompanyModal] = useState(false)
 
     return (
         <>
@@ -23,41 +27,75 @@ const Homepage = ({ id, company, employees, pending }) => {
                             className='text-white text-2xl cursor-pointer m-3'
                             onClick={() => navigate(-1)}
                         />
+                        <button
+                            className=' px-4 py-2 bg-lightGold text-gray-900 rounded-md'
+                            onClick={() => setCompanyModal(true)}
+                        >
+                            Edit Company
+                        </button>
                         <NavLink
                             to={`/companies/company/${id}/add-employee`}
                             className=' px-4 py-2 bg-lightGold text-gray-900 rounded-md'
                         >
-                            Add Employee{' '}
+                            Add Employee
                         </NavLink>
                     </div>
                     <div className='flex flex-col justify-start items-start mt-2 gap-y-3 '>
-                        <div className='flex justify-between items-center w-full'>
-                            <h1 className='text-xl font-bold text-center text-white italic'>
-                                Company Name :{' '}
-                                <span className='text-lightGold text-[18px]'>
-                                    {company?.username}
+                        <div className='flex flex-col bg-bgLight p-5 rounded-md justify-center items-center w-full'>
+                            <div className='flex justify-between items-center w-full'>
+                                <h1 className='text-lg font-bold text-center text-white italic'>
+                                    Company Name :
+                                    <span className='text-lightGold text-[18px]'>
+                                        {company?.username}
+                                    </span>
+                                </h1>
+                                <h1 className='text-lg font-bold text-center text-white italic'>
+                                    Email:{' '}
+                                    <span className='text-lightGold text-[18px]'>
+                                        {company?.email}
+                                    </span>
+                                </h1>
+                            </div>
+                            <div className='flex justify-between items-center w-full'>
+                                <h1 className='text-lg font-bold text-center text-white italic'>
+                                    Phone:{' '}
+                                    <span className='text-lightGold text-[18px]'>
+                                        {company?.phone}
+                                    </span>
+                                </h1>
+                                <h1 className='text-lg font-bold text-center text-white italic'>
+                                    Role:{' '}
+                                    <span className='text-lightGold text-[18px]'>
+                                        {company?.role}
+                                    </span>
+                                </h1>
+                            </div>
+                            <div className='flex flex-col justify-center items-start  bg-bgDarkColor p-4'>
+                                <span className='flex flex-row justify-start items-center gap-x-4'>
+                                    <span className='font-bold'>
+                                        E-Channel Username
+                                    </span>
+                                    <span className='badge badge-secondary'>
+                                        {company?.e_channel_username}
+                                    </span>
                                 </span>
-                            </h1>
-                            <h1 className='text-xl font-bold text-center text-white italic'>
-                                Email:{' '}
-                                <span className='text-lightGold text-[18px]'>
-                                    {company?.email}
+                                <span className='flex flex-row justify-start items-center gap-x-4'>
+                                    <span className='font-bold'>
+                                        MS Username
+                                    </span>
+                                    <span className='badge badge-secondary'>
+                                        {company?.ms_username}
+                                    </span>
                                 </span>
-                            </h1>
-                        </div>
-                        <div className='flex justify-between items-center w-full'>
-                            <h1 className='text-xl font-bold text-center text-white italic'>
-                                Phone:{' '}
-                                <span className='text-lightGold text-[18px]'>
-                                    {company?.phone}
+                                <span className='flex flex-row justify-start items-center gap-x-4'>
+                                    <span className='font-bold'>
+                                        Gmail Username
+                                    </span>
+                                    <span className='badge badge-secondary'>
+                                        {company?.gmail_username}
+                                    </span>
                                 </span>
-                            </h1>
-                            <h1 className='text-xl font-bold text-center text-white italic'>
-                                Role:{' '}
-                                <span className='text-lightGold text-[18px]'>
-                                    {company?.role}
-                                </span>
-                            </h1>
+                            </div>
                         </div>
                         <div className='flex justify-between items-center mt-4 w-full'>
                             <div className='rounded-lg bg-card1 text-black relative w-96 h-32 px-4'>
@@ -93,6 +131,14 @@ const Homepage = ({ id, company, employees, pending }) => {
                         </div>
                     </div>
                 </div>
+                {companyModal &&
+                    createPortal(
+                        <EditCompany
+                            setCompanyModal={setCompanyModal}
+                            Company={company}
+                        />,
+                        document.getElementById('modal'),
+                    )}
             </Wrapper>
         </>
     )

@@ -3,7 +3,7 @@ import { MdGroupWork } from 'react-icons/md'
 import { GiProfit } from 'react-icons/gi'
 import { FaSortAmountUp } from 'react-icons/fa'
 import { HiBuildingOffice2 } from 'react-icons/hi2'
-import { FaFileInvoiceDollar } from 'react-icons/fa6'
+import { FaFileInvoiceDollar, FaUser } from 'react-icons/fa6'
 import { Link } from 'react-router-dom'
 
 const DashboardCard = ({
@@ -12,6 +12,7 @@ const DashboardCard = ({
     dailyRevenue,
     profit,
     invoices,
+    totalPendingAmount,
 }) => {
     const companiesLength = totalCompanies?.length
     return (
@@ -84,6 +85,16 @@ const DashboardCard = ({
                         </p>
                     </div>
                 </Link>
+                <div className=' bg-bgLight h-32 w-52 px-4 rounded-lg'>
+                    <div className='flex flex-col justify-center h-full pt-2 w-full'>
+                        <h2 className='text-lg font-semibold uppercase '>
+                            Total Pending Amount
+                        </h2>
+                        <p className='text-2xl font-bold text-darkorange italic text-right'>
+                            {totalPendingAmount || 0} AED
+                        </p>
+                    </div>
+                </div>
             </div>
         </>
     )

@@ -50,20 +50,19 @@ const AddInvoice = () => {
     const { data: Services } = useFetch('services')
     const [selectedCompany, setSelectedCompany] = useState(null)
     const [filteredCompanies, setFilteredCompanies] = useState(null)
-    const [costPrice, setCostPrice] = useState(0)
     const [service, setService] = useState(null)
     const [quantity, setQuantity] = useState('')
     const [companyEmployees, setCompanyEmployees] = useState(null)
     const [filteredEmployees, setFilteredEmployees] = useState(null)
     const [selectedEmployees, setSelectedEmployees] = useState([])
     const [selectedServices, setSelectedServices] = useState([])
-    const [pendingAmount, setPendingAmount] = useState(0)
     const [title, setTitle] = useState('')
     const [salePrice, setSalePrice] = useState('')
     const [totalPrice, setTotalPrice] = useState(0)
     const employeeRef = useRef(null)
     const companyRef = useRef(null)
     const [submitting, setSubmitting] = useState(false)
+    const [paidAmount, setPaidAmount] = useState(0)
     const navigate = useNavigate()
     const handleCompanySearchInput = useCallback((e) => {
         const query = e.target.value
@@ -77,9 +76,6 @@ const AddInvoice = () => {
         }
     }, [])
 
-    useEffect(() => {
-        setTotalPrice(Number(salePrice * quantity))
-    }, [salePrice, quantity])
     useEffect(() => {
         setFilteredCompanies(Companies)
     }, [Companies])
@@ -105,7 +101,6 @@ const AddInvoice = () => {
     const handleServiceChange = (e) => {
         const serviceFind = Services?.find((s) => s.name === e.target.value)
         setService(serviceFind.name)
-        setCostPrice(Number(costPrice) + Number(serviceFind.cost_price))
     }
 
     const handleQuantityChange = (e) => {
@@ -177,7 +172,6 @@ const AddInvoice = () => {
             return
         }
 
-        setPendingAmount(Number(pendingAmount) + Number(salePrice))
         setSelectedServices([
             ...selectedServices,
             {
@@ -187,6 +181,7 @@ const AddInvoice = () => {
                 employees: selectedEmployees,
             },
         ])
+        setTotalPrice(Number(totalPrice) + Number(salePrice * quantity))
         setService(null)
         setQuantity(0)
         setSalePrice(0)
@@ -194,7 +189,7 @@ const AddInvoice = () => {
     }
     const handleRemoveService = (service) => {
         const findService = Services.find((s) => s.name === service)
-        setCostPrice(Number(costPrice) - Number(findService.cost_price))
+
         setSelectedServices(
             selectedServices.filter((s) => s.service !== service),
         )
@@ -220,23 +215,15 @@ const AddInvoice = () => {
             return
         }
 
-        let pending = 0
-        const calculateTotalPrice = () => {
-            let total = 0
-            selectedServices.forEach((service) => {
-                total += service.sale_price * service.quantity
-                pending += costPrice * service.quantity
-            })
-            return Number(total)
-        }
         setSubmitting(true)
         try {
             const dataToSend = {
                 title,
                 company: selectedCompany.username,
                 services: selectedServices,
-                total_price: calculateTotalPrice(),
-                pending_amount: pending - pendingAmount,
+                total_price: totalPrice,
+                pending_amount: totalPrice - paidAmount,
+                paid_amount: paidAmount,
             }
 
             const response = await api.post(
@@ -258,7 +245,7 @@ const AddInvoice = () => {
     return (
         <>
             <Wrapper title={'Add Invoice'}>
-                <div className='flex justify-start items-start  max-h-[100vh] flex-col mx-5 mt-2 shadow-2xl shadow-bgLight bg-bgLight'>
+                <div className='flex justify-start items-start  flex-col mx-5 mt-2 shadow-2xl shadow-bgLight bg-bgLight'>
                     <div className='w-full flex flex-row p-5 justify-between items-center rounded-md'>
                         <div className='flex flex-col justify-between items-start gap-y-3'>
                             <h1 className='text-4xl font-bold text-lightGold'>
@@ -278,6 +265,16 @@ const AddInvoice = () => {
                                                 className='text-lightGold cursor-pointer'
                                                 onClick={() =>
                                                     setSelectedCompany(null)
+                                                }
+                                            />
+                                            <input
+                                                type='text'
+                                                name='title'
+                                                id='title'
+                                                placeholder='Invoice Title'
+                                                className=' bg-bgDarkColor  text-white  py-2.5  px-5 focus:outline-none  ring-0 border-0 w-full'
+                                                onChange={(e) =>
+                                                    setTitle(e.target.value)
                                                 }
                                             />
                                         </div>
@@ -372,14 +369,7 @@ const AddInvoice = () => {
                             </div>
                         </div>
                     </div>
-                    <input
-                        type='text'
-                        name='title'
-                        id='title'
-                        placeholder='Invoice Title'
-                        className=' bg-bgDarkColor  text-white  py-2.5  px-5 focus:outline-none  ring-0 border-0 w-full'
-                        onChange={(e) => setTitle(e.target.value)}
-                    />
+
                     {selectedServices.length > 0 && selectedCompany && (
                         <div className='w-full max-h-[50vh] overflow-auto'>
                             <table className='table'>
@@ -582,6 +572,36 @@ const AddInvoice = () => {
                                     </tbody>
                                 </table>
                             </div>
+                        </div>
+                    )}
+                    {selectedCompany && totalPrice > 0 && (
+                        <div className='bg-bgDarkColor p-4 rounded-lg flex flex-col justify-end w-[300px] gap-y-3 mt-5'>
+                            <div className='flex flex-row justify-between items-center gap-x-2'>
+                                <span className='font-bold'>NET TOTAL: </span>
+                                <span>{totalPrice} AED</span>
+                            </div>
+                            <div className='flex flex-row justify-between items-center gap-x-2'>
+                                <span className='font-bold'>PAID NOW: </span>
+                                <input
+                                    type='number'
+                                    name='paid_
+                                amount'
+                                    id='paid_amount'
+                                    placeholder='Paid Amount'
+                                    className='input-xs input-bordered input bg-bgLight  text-white rounded-md  py-1 w-20 pl-1 focus:outline-none  ring-0 border-0'
+                                    onChange={(e) =>
+                                        setPaidAmount(e.target.value)
+                                    }
+                                />
+                            </div>
+                            {paidAmount && (
+                                <div className='border-t-2 border-lightGold border-dashed flex flex-row justify-between items-center gap-x-2'>
+                                    <span className='font-bold'>
+                                        PENDING AMOUNT:{' '}
+                                    </span>
+                                    <span>{totalPrice - paidAmount} AED</span>
+                                </div>
+                            )}
                         </div>
                     )}
                     <button

@@ -48,8 +48,11 @@ const Table = ({ invoices, fetchData }) => {
                             <td>{invoice.company}</td>
                             <td>
                                 {invoice.services.map((service) => (
-                                    <div className='' key={service.service}>
-                                        <span className='badge badge-outline badge-secondary'>
+                                    <div key={service.service} className='mb-2'>
+                                        <span
+                                            key={service.service}
+                                            className='badge badge-outline badge-secondary'
+                                        >
                                             {service.service}
                                         </span>
                                     </div>
@@ -57,8 +60,10 @@ const Table = ({ invoices, fetchData }) => {
                             </td>
                             <td>
                                 {invoice.services.map((service) => (
-                                    <div className='' key={service.service}>
-                                        <span>{service.quantity}</span>
+                                    <div className='mb-2' key={service.service}>
+                                        <span>
+                                            <span>{service.quantity}</span>
+                                        </span>
                                     </div>
                                 ))}
                             </td>

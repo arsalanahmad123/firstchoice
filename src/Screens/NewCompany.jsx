@@ -45,7 +45,10 @@ const NewCompany = () => {
             formData.append('img_card_expiry', data.img_card_expiry)
             formData.append('least_contract_expiry', data.least_contract_expiry)
             formData.append('e_channel_expiry', data.e_channel_expiry)
-            formData.append('role', 'company')
+            formData.append('e_channel_username', data.e_channel_username)
+            formData.append('ms_username', data.ms_username),
+                formData.append('gmail_username', data.gmail_username),
+                formData.append('role', 'company')
             formData.append('logo', updateLogo)
             for (let i = 0; i < documents.length; i++) {
                 formData.append('documents', documents[i])
@@ -150,254 +153,356 @@ const NewCompany = () => {
                             </div>
                         </div>
                         <div className='flex flex-col gap-y-5 '>
-                            <div className='flex flex-col gap-y-1'>
+                            <div className='flex flex-row justify-between items-center gap-x-2'>
+                                <div className='flex flex-col gap-y-1'>
+                                    <div className='flex flex-row justify-between items-center'>
+                                        <label
+                                            htmlFor='username'
+                                            className='text-sm'
+                                        >
+                                            Username
+                                        </label>
+                                        {errors.username && (
+                                            <span className='text-red-500 text-sm'>
+                                                {errors.username.message}
+                                            </span>
+                                        )}
+                                    </div>
+                                    <input
+                                        type='text'
+                                        name='username'
+                                        placeholder='Company Name'
+                                        {...register('username', {
+                                            required: "Username can't be empty",
+                                        })}
+                                        className='input-sm bg-bgLight border border-gray-700 text-white focus:outline-none focus:ring-0 rounded-md text-[17px]'
+                                    />
+                                </div>
+                                <div className='flex flex-col gap-y-1'>
+                                    <div className='flex flex-row justify-between items-center'>
+                                        <label
+                                            htmlFor='email'
+                                            className='text-sm'
+                                        >
+                                            Email
+                                        </label>
+                                        {errors.email && (
+                                            <span className='text-red-500 text-sm'>
+                                                {errors.email.message}
+                                            </span>
+                                        )}
+                                    </div>
+                                    <input
+                                        type='email'
+                                        name='email'
+                                        placeholder='Email '
+                                        {...register('email', {
+                                            required: "Email can't be empty",
+                                            pattern: {
+                                                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                                                message:
+                                                    'Invalid email address',
+                                            },
+                                        })}
+                                        className='input-sm bg-bgLight border border-gray-700 text-white focus:outline-none focus:ring-0 rounded-md text-[17px]'
+                                    />
+                                </div>
+                            </div>
+                            <div className='flex flex-row justify-between items-center gap-x-2'>
+                                <div className='flex flex-col gap-y-1'>
+                                    <div className='flex justify-between items-center'>
+                                        <label
+                                            htmlFor='password'
+                                            className='text-sm'
+                                        >
+                                            Password
+                                        </label>
+                                        {errors.password && (
+                                            <span className='text-red-500 text-sm'>
+                                                {errors.password.message}
+                                            </span>
+                                        )}
+                                    </div>
+                                    <div className='relative'>
+                                        <input
+                                            type={
+                                                showPassword
+                                                    ? 'text'
+                                                    : 'password'
+                                            }
+                                            name='password'
+                                            placeholder='Password'
+                                            {...register('password', {
+                                                required:
+                                                    "Password can't be empty",
+                                            })}
+                                            className='input-sm bg-bgLight border border-gray-700 text-white focus:outline-none focus:ring-0 rounded-md text-[17px]'
+                                        />
+                                        {showPassword ? (
+                                            <FaEye
+                                                onClick={() =>
+                                                    setShowPassword(
+                                                        !showPassword,
+                                                    )
+                                                }
+                                                className='absolute  top-2 right-3 cursor-pointer'
+                                            />
+                                        ) : (
+                                            <FaEyeSlash
+                                                onClick={() =>
+                                                    setShowPassword(
+                                                        !showPassword,
+                                                    )
+                                                }
+                                                className='absolute  top-2 right-3 cursor-pointer'
+                                            />
+                                        )}
+                                    </div>
+                                </div>
+                                <div className='flex flex-col gap-y-1'>
+                                    <div className='flex justify-between items-center'>
+                                        <label
+                                            htmlFor='Contact No'
+                                            className='text-sm'
+                                        >
+                                            Contact
+                                        </label>
+                                        {errors.phone && (
+                                            <span className='text-red-500 text-sm'>
+                                                {errors.phone.message}
+                                            </span>
+                                        )}
+                                    </div>
+                                    <input
+                                        type='tel'
+                                        name='phone'
+                                        placeholder='Contact No'
+                                        {...register('phone', {
+                                            required:
+                                                "Contact No can't be empty",
+                                        })}
+                                        className='input-sm bg-bgLight border border-gray-700 text-white focus:outline-none focus:ring-0 rounded-md  text-[17px]'
+                                    />
+                                </div>
+                            </div>
+                            <div className='flex flex-row justify-between items-center gap-x-2'>
+                                <div className='flex flex-col gap-y-1'>
+                                    <div className='flex flex-row justify-between items-center'>
+                                        <label
+                                            htmlFor='e_channel_username'
+                                            className='text-sm'
+                                        >
+                                            E-Channel Username
+                                        </label>
+                                        {errors.e_channel_username && (
+                                            <span className='text-red-500 text-sm'>
+                                                {
+                                                    errors.e_channel_username
+                                                        .message
+                                                }
+                                            </span>
+                                        )}
+                                    </div>
+                                    <input
+                                        type='text'
+                                        name='e_channel_username'
+                                        placeholder='E-Channel Username'
+                                        {...register('e_channel_username', {
+                                            required:
+                                                "E-Channel can't be empty",
+                                        })}
+                                        className='input-sm bg-bgLight border border-gray-700 text-white focus:outline-none focus:ring-0 rounded-md text-[17px]'
+                                    />
+                                </div>
+                                <div className='flex flex-col gap-y-1'>
+                                    <div className='flex flex-row justify-between items-center'>
+                                        <label
+                                            htmlFor='ms_username'
+                                            className='text-sm'
+                                        >
+                                            MS Username
+                                        </label>
+                                        {errors.ms_username && (
+                                            <span className='text-red-500 text-sm'>
+                                                {errors.ms_username.message}
+                                            </span>
+                                        )}
+                                    </div>
+                                    <input
+                                        type='text'
+                                        name='ms_username'
+                                        placeholder='MS Username'
+                                        {...register('ms_username', {
+                                            required:
+                                                "MS Username can't be empty",
+                                        })}
+                                        className='input-sm bg-bgLight border border-gray-700 text-white focus:outline-none focus:ring-0 rounded-md text-[17px]'
+                                    />
+                                </div>
+                            </div>
+                            <div className='w-full flex flex-col'>
                                 <div className='flex flex-row justify-between items-center'>
                                     <label
-                                        htmlFor='username'
+                                        htmlFor='gmail_username'
                                         className='text-sm'
                                     >
-                                        Username
+                                        Gmail Username
                                     </label>
-                                    {errors.username && (
+                                    {errors.gmail_username && (
                                         <span className='text-red-500 text-sm'>
-                                            {errors.username.message}
+                                            {errors.gmail_username.message}
                                         </span>
                                     )}
                                 </div>
                                 <input
                                     type='text'
-                                    name='username'
-                                    placeholder='Company Name'
-                                    {...register('username', {
-                                        required: "Username can't be empty",
+                                    name='gmail_username'
+                                    placeholder='Gmail Username'
+                                    {...register('gmail_username', {
+                                        required: "Gmail can't be empty",
                                     })}
-                                    className='input-sm bg-bgLight border border-gray-700 text-white focus:outline-none focus:ring-0 rounded-md w-96 text-[17px]'
+                                    className='input-sm bg-bgLight border border-gray-700 text-white focus:outline-none focus:ring-0 rounded-md text-[17px]'
                                 />
                             </div>
-                            <div className='flex flex-col gap-y-1'>
-                                <div className='flex flex-row justify-between items-center'>
-                                    <label htmlFor='email' className='text-sm'>
-                                        Email
-                                    </label>
-                                    {errors.email && (
-                                        <span className='text-red-500 text-sm'>
-                                            {errors.email.message}
-                                        </span>
-                                    )}
-                                </div>
-                                <input
-                                    type='email'
-                                    name='email'
-                                    placeholder='Email '
-                                    {...register('email', {
-                                        required: "Email can't be empty",
-                                        pattern: {
-                                            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                                            message: 'Invalid email address',
-                                        },
-                                    })}
-                                    className='input-sm bg-bgLight border border-gray-700 text-white focus:outline-none focus:ring-0 rounded-md w-96 text-[17px]'
-                                />
-                            </div>
-                            <div className='flex flex-col gap-y-1'>
-                                <div className='flex justify-between items-center'>
-                                    <label
-                                        htmlFor='password'
-                                        className='text-sm'
-                                    >
-                                        Password
-                                    </label>
-                                    {errors.password && (
-                                        <span className='text-red-500 text-sm'>
-                                            {errors.password.message}
-                                        </span>
-                                    )}
-                                </div>
-                                <div className='relative'>
+                            <div className='flex flex-row justify-between items-center gap-x-2'>
+                                <div className='flex flex-col gap-y-1'>
+                                    <div className='flex justify-between items-center'>
+                                        <label
+                                            htmlFor='licence_expiry'
+                                            className='text-sm'
+                                        >
+                                            Licence Expiry
+                                        </label>
+                                        {errors.licence_expiry && (
+                                            <span className='text-red-500 text-sm'>
+                                                {errors.licence_expiry.message}
+                                            </span>
+                                        )}
+                                    </div>
                                     <input
-                                        type={
-                                            showPassword ? 'text' : 'password'
-                                        }
-                                        name='password'
-                                        placeholder='Password'
-                                        {...register('password', {
-                                            required: "Password can't be empty",
+                                        type='date'
+                                        name='licence_expiry'
+                                        {...register('licence_expiry', {
+                                            required:
+                                                "Licence Expiry can't be empty",
+                                            validate: (value) => {
+                                                const today = new Date()
+                                                const date = new Date(value)
+                                                if (date < today) {
+                                                    return 'Licence Expiry cannot be in the past'
+                                                }
+                                            },
                                         })}
-                                        className='input-sm bg-bgLight border border-gray-700 text-white focus:outline-none focus:ring-0 rounded-md w-96 text-[17px]'
+                                        className='input-sm bg-bgLight border border-gray-700 text-white focus:outline-none focus:ring-0 rounded-md text-[17px]'
                                     />
-                                    {showPassword ? (
-                                        <FaEye
-                                            onClick={() =>
-                                                setShowPassword(!showPassword)
-                                            }
-                                            className='absolute  top-2 right-3 cursor-pointer'
-                                        />
-                                    ) : (
-                                        <FaEyeSlash
-                                            onClick={() =>
-                                                setShowPassword(!showPassword)
-                                            }
-                                            className='absolute  top-2 right-3 cursor-pointer'
-                                        />
-                                    )}
+                                </div>
+                                <div className='flex flex-col gap-y-1'>
+                                    <div className='flex justify-between items-center'>
+                                        <label
+                                            htmlFor='img_card_expiry'
+                                            className='text-sm'
+                                        >
+                                            Img_Card Expiry
+                                        </label>
+                                        {errors.img_card_expiry && (
+                                            <span className='text-red-500 text-sm'>
+                                                {errors.img_card_expiry.message}
+                                            </span>
+                                        )}
+                                    </div>
+                                    <input
+                                        type='date'
+                                        name='img_card_expiry'
+                                        {...register('img_card_expiry', {
+                                            required:
+                                                "Img_Card Expiry can't be empty",
+                                            validate: (value) => {
+                                                const today = new Date()
+                                                const date = new Date(value)
+                                                if (date < today) {
+                                                    return 'Img_Card Expiry cannot be in the past'
+                                                }
+                                            },
+                                        })}
+                                        className='input-sm bg-bgLight border border-gray-700 text-white focus:outline-none focus:ring-0 rounded-md text-[17px]'
+                                    />
                                 </div>
                             </div>
-                            <div className='flex flex-col gap-y-1'>
-                                <div className='flex justify-between items-center'>
-                                    <label
-                                        htmlFor='Contact No'
-                                        className='text-sm'
-                                    >
-                                        Contact
-                                    </label>
-                                    {errors.phone && (
-                                        <span className='text-red-500 text-sm'>
-                                            {errors.phone.message}
-                                        </span>
-                                    )}
+                            <div className='flex flex-row justify-between items-center gap-x-2 '>
+                                <div className='flex flex-col gap-y-1'>
+                                    <div className='flex justify-between items-center'>
+                                        <label
+                                            htmlFor='least_contract_expiry'
+                                            className='text-sm'
+                                        >
+                                            Least Contract Expiry
+                                        </label>
+                                        {errors.least_contract_expiry && (
+                                            <span className='text-red-500 text-sm'>
+                                                {
+                                                    errors.least_contract_expiry
+                                                        .message
+                                                }
+                                            </span>
+                                        )}
+                                    </div>
+                                    <input
+                                        type='date'
+                                        name='least_contract_expiry'
+                                        {...register('least_contract_expiry', {
+                                            required:
+                                                "Img_Card Expiry can't be empty",
+                                            validate: (value) => {
+                                                const today = new Date()
+                                                const date = new Date(value)
+                                                if (date < today) {
+                                                    return 'Least Contract Expiry cannot be in the past'
+                                                }
+                                            },
+                                        })}
+                                        className='input-sm bg-bgLight border border-gray-700 text-white focus:outline-none focus:ring-0 rounded-md text-[17px]'
+                                    />
                                 </div>
-                                <input
-                                    type='tel'
-                                    name='phone'
-                                    placeholder='Contact No'
-                                    {...register('phone', {
-                                        required: "Contact No can't be empty",
-                                    })}
-                                    className='input-sm bg-bgLight border border-gray-700 text-white focus:outline-none focus:ring-0 rounded-md w-96 text-[17px]'
-                                />
-                            </div>
-                            <div className='flex flex-col gap-y-1'>
-                                <div className='flex justify-between items-center'>
-                                    <label
-                                        htmlFor='licence_expiry'
-                                        className='text-sm'
-                                    >
-                                        Licence Expiry
-                                    </label>
-                                    {errors.licence_expiry && (
-                                        <span className='text-red-500 text-sm'>
-                                            {errors.licence_expiry.message}
-                                        </span>
-                                    )}
+                                <div className='flex flex-col gap-y-1'>
+                                    <div className='flex justify-between items-center'>
+                                        <label
+                                            htmlFor='e_channel_expiry'
+                                            className='text-sm'
+                                        >
+                                            E-Channel Expiry
+                                        </label>
+                                        {errors.e_channel_expiry && (
+                                            <span className='text-red-500 text-sm'>
+                                                {
+                                                    errors.e_channel_expiry
+                                                        .message
+                                                }
+                                            </span>
+                                        )}
+                                    </div>
+                                    <input
+                                        type='date'
+                                        name='e_channel_expiry'
+                                        {...register('e_channel_expiry', {
+                                            required:
+                                                "E-Channel Expiry can't be empty",
+                                            validate: (value) => {
+                                                const today = new Date()
+                                                const date = new Date(value)
+                                                if (date < today) {
+                                                    return 'E-Channel Expiry cannot be in the past'
+                                                }
+                                            },
+                                        })}
+                                        className='input-sm bg-bgLight border border-gray-700 text-white focus:outline-none focus:ring-0 rounded-md text-[17px]'
+                                    />
                                 </div>
-                                <input
-                                    type='date'
-                                    name='licence_expiry'
-                                    {...register('licence_expiry', {
-                                        required:
-                                            "Licence Expiry can't be empty",
-                                        validate: (value) => {
-                                            const today = new Date()
-                                            const date = new Date(value)
-                                            if (date < today) {
-                                                return 'Licence Expiry cannot be in the past'
-                                            }
-                                        },
-                                    })}
-                                    className='input-sm bg-bgLight border border-gray-700 text-white focus:outline-none focus:ring-0 rounded-md w-96 text-[17px]'
-                                />
-                            </div>
-                            <div className='flex flex-col gap-y-1'>
-                                <div className='flex justify-between items-center'>
-                                    <label
-                                        htmlFor='img_card_expiry'
-                                        className='text-sm'
-                                    >
-                                        Img_Card Expiry
-                                    </label>
-                                    {errors.img_card_expiry && (
-                                        <span className='text-red-500 text-sm'>
-                                            {errors.img_card_expiry.message}
-                                        </span>
-                                    )}
-                                </div>
-                                <input
-                                    type='date'
-                                    name='img_card_expiry'
-                                    {...register('img_card_expiry', {
-                                        required:
-                                            "Img_Card Expiry can't be empty",
-                                        validate: (value) => {
-                                            const today = new Date()
-                                            const date = new Date(value)
-                                            if (date < today) {
-                                                return 'Img_Card Expiry cannot be in the past'
-                                            }
-                                        },
-                                    })}
-                                    className='input-sm bg-bgLight border border-gray-700 text-white focus:outline-none focus:ring-0 rounded-md w-96 text-[17px]'
-                                />
-                            </div>
-                            <div className='flex flex-col gap-y-1'>
-                                <div className='flex justify-between items-center'>
-                                    <label
-                                        htmlFor='least_contract_expiry'
-                                        className='text-sm'
-                                    >
-                                        Least Contract Expiry
-                                    </label>
-                                    {errors.least_contract_expiry && (
-                                        <span className='text-red-500 text-sm'>
-                                            {
-                                                errors.least_contract_expiry
-                                                    .message
-                                            }
-                                        </span>
-                                    )}
-                                </div>
-                                <input
-                                    type='date'
-                                    name='least_contract_expiry'
-                                    {...register('least_contract_expiry', {
-                                        required:
-                                            "Img_Card Expiry can't be empty",
-                                        validate: (value) => {
-                                            const today = new Date()
-                                            const date = new Date(value)
-                                            if (date < today) {
-                                                return 'Least Contract Expiry cannot be in the past'
-                                            }
-                                        },
-                                    })}
-                                    className='input-sm bg-bgLight border border-gray-700 text-white focus:outline-none focus:ring-0 rounded-md w-96 text-[17px]'
-                                />
-                            </div>
-                            <div className='flex flex-col gap-y-1'>
-                                <div className='flex justify-between items-center'>
-                                    <label
-                                        htmlFor='e_channel_expiry'
-                                        className='text-sm'
-                                    >
-                                        E-Channel Expiry
-                                    </label>
-                                    {errors.e_channel_expiry && (
-                                        <span className='text-red-500 text-sm'>
-                                            {errors.e_channel_expiry.message}
-                                        </span>
-                                    )}
-                                </div>
-                                <input
-                                    type='date'
-                                    name='e_channel_expiry'
-                                    {...register('e_channel_expiry', {
-                                        required:
-                                            "E-Channel Expiry can't be empty",
-                                        validate: (value) => {
-                                            const today = new Date()
-                                            const date = new Date(value)
-                                            if (date < today) {
-                                                return 'E-Channel Expiry cannot be in the past'
-                                            }
-                                        },
-                                    })}
-                                    className='input-sm bg-bgLight border border-gray-700 text-white focus:outline-none focus:ring-0 rounded-md w-96 text-[17px]'
-                                />
                             </div>
                         </div>
                         <button
                             type='submit'
                             disabled={isSubmitting}
-                            className='px-4 py-2 bg-lightGold mt-auto text-gray-900 rounded-md'
+                            className='px-4 py-2 bg-lightGold mt-auto text-gray-900 rounded-md mr-5'
                         >
                             {isSubmitting ? (
                                 <span className='loading loading-spinner loading-xs'></span>

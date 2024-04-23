@@ -4,7 +4,7 @@ import Navbar from './Navbar'
 const Wrapper = ({ children, title }) => {
     return (
         <>
-            <div className='min-w-[80%] mx-auto flex flex-col overflow-hidden max-h-[95vh] overflow-y-auto'>
+            <div className='min-w-[80%] mx-auto flex flex-col overflow-hidden overflow-y-auto'>
                 <Navbar title={title} />
                 {children}
             </div>
