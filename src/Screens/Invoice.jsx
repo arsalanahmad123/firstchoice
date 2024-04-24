@@ -5,7 +5,6 @@ import Table from '../Components/Table'
 import AddInvoice from './AddInvoice'
 import { Route, Routes, NavLink } from 'react-router-dom'
 import { useFetch } from '../Hooks/useFetch'
-import ViewInvoice from './ViewInvoice'
 import Loader from '../Components/Loader'
 
 const HomePage = () => {
@@ -142,11 +141,6 @@ const Invoice = () => {
                     key={'add-invoice'}
                     path='/add-invoice'
                     element={<AddInvoice />}
-                />
-                <Route
-                    key={'view-invoice'}
-                    path='/view-invoice/:id'
-                    element={<ViewInvoice />}
                 />
             </Routes>
         </>

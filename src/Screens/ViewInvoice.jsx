@@ -33,14 +33,8 @@ const ViewInvoice = () => {
         }
     }
 
-    const getTargetElement = () => document.getElementById('invoice-download')
-    const downloadPDF = async () => {
-        await generatePDF(getTargetElement())
-    }
-
     useEffect(() => {
         fetchData()
-        document.getElementById('sidebar').classList.add('hidden')
     }, [id])
 
     return (

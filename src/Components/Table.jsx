@@ -104,7 +104,7 @@ const Table = ({ invoices, fetchData }) => {
                             </td>
                             <td>
                                 <a
-                                    href={`/invoice/view-invoice/${invoice._id}`}
+                                    href={`/view-invoice/${invoice._id}`}
                                     target='_top'
                                 >
                                     View
