@@ -103,12 +103,12 @@ const Table = ({ invoices, fetchData }) => {
                                 </button>
                             </td>
                             <td>
-                                <NavLink
-                                    to={`/invoice/view-invoice/${invoice._id}`}
+                                <a
+                                    href={`/invoice/view-invoice/${invoice._id}`}
                                     target='_top'
                                 >
                                     View
-                                </NavLink>
+                                </a>
                             </td>
                         </tr>
                     ))}
