@@ -53,7 +53,6 @@ const AddInvoice = () => {
     const [service, setService] = useState(null)
     const [quantity, setQuantity] = useState('')
     const [companyEmployees, setCompanyEmployees] = useState(null)
-    const [filteredEmployees, setFilteredEmployees] = useState(null)
     const [selectedEmployees, setSelectedEmployees] = useState([])
     const [selectedServices, setSelectedServices] = useState([])
     const [title, setTitle] = useState('')
@@ -63,6 +62,7 @@ const AddInvoice = () => {
     const companyRef = useRef(null)
     const [submitting, setSubmitting] = useState(false)
     const [paidAmount, setPaidAmount] = useState(0)
+    const [newEmployee, setNewEmployee] = useState('')
     const navigate = useNavigate()
     const handleCompanySearchInput = useCallback((e) => {
         const query = e.target.value
@@ -89,7 +89,6 @@ const AddInvoice = () => {
                     )
                     const data = response.data.data
                     setCompanyEmployees(data)
-                    setFilteredEmployees(data)
                 } catch (error) {
                     console.log(error)
                 }
@@ -105,18 +104,6 @@ const AddInvoice = () => {
 
     const handleQuantityChange = (e) => {
         setQuantity(Number(e.target.value))
-    }
-
-    const handleEmployeeSearch = (e) => {
-        const query = e.target.value
-        if (query) {
-            const filtered = companyEmployees?.filter((employee) =>
-                employee.name.toLowerCase().includes(query.toLowerCase()),
-            )
-            setFilteredEmployees(filtered)
-        } else {
-            setFilteredEmployees(companyEmployees)
-        }
     }
 
     const handleEmployeeChange = (employee) => {
@@ -172,26 +159,34 @@ const AddInvoice = () => {
             return
         }
 
+        const employees =
+            newEmployee !== ''
+                ? [...selectedEmployees, { name: newEmployee }]
+                : selectedEmployees
+
         setSelectedServices([
             ...selectedServices,
             {
                 service,
                 quantity,
                 sale_price: salePrice,
-                employees: selectedEmployees,
+                employees: employees,
             },
         ])
+
         setTotalPrice(Number(totalPrice) + Number(salePrice * quantity))
         setService(null)
         setQuantity(0)
         setSalePrice(0)
         setSelectedEmployees([])
+        setNewEmployee('')
     }
-    const handleRemoveService = (service) => {
-        const findService = Services.find((s) => s.name === service)
 
-        setSelectedServices(
-            selectedServices.filter((s) => s.service !== service),
+    const handleRemoveService = (service) => {
+        const filtered = selectedServices.filter((s) => s.service !== service)
+        setSelectedServices(filtered)
+        setTotalPrice(
+            Number(totalPrice) - Number(service.sale_price * service.quantity),
         )
     }
 
@@ -250,6 +245,10 @@ const AddInvoice = () => {
             toast.error(error.response.data.message)
             setSubmitting(false)
         }
+    }
+
+    const handleNewEmployeeChange = (e) => {
+        setNewEmployee(e.target.value)
     }
 
     return (
@@ -489,8 +488,11 @@ const AddInvoice = () => {
                                                         name='searchEmployee'
                                                         id='searchEmployee'
                                                         placeholder='Search Employee'
-                                                        onChange={
-                                                            handleEmployeeSearch
+                                                        value={newEmployee}
+                                                        onChange={(e) =>
+                                                            handleNewEmployeeChange(
+                                                                e,
+                                                            )
                                                         }
                                                         onClick={() => {
                                                             document
@@ -508,7 +510,7 @@ const AddInvoice = () => {
                                                         id='employeeDropdown'
                                                         ref={employeeRef}
                                                     >
-                                                        {filteredEmployees?.map(
+                                                        {companyEmployees?.map(
                                                             (employee) => (
                                                                 <div
                                                                     className='flex flex-row justify-between gap-x-5 items-center'

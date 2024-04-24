@@ -267,7 +267,7 @@ const Orders = () => {
         showModal3()
     }
 
-    const items_per_page = 2
+    const items_per_page = 10
 
     const displayedOrders = useMemo(() => {
         const indexOfLastItem = currentPage * items_per_page
@@ -396,7 +396,19 @@ const Orders = () => {
                                                     {item.status !==
                                                     'waiting for payment'
                                                         ? item.status
-                                                        : ''}
+                                                        : item.services.map(
+                                                              (service) => (
+                                                                  <span
+                                                                      key={
+                                                                          service.service
+                                                                      }
+                                                                  >
+                                                                      {
+                                                                          service.status
+                                                                      }
+                                                                  </span>
+                                                              ),
+                                                          )}
                                                 </td>
                                                 <td>
                                                     <FaPencil

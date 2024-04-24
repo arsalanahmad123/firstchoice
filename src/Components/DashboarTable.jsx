@@ -196,7 +196,7 @@ const DashboarTable = ({ invoices, fetchData }) => {
                                             {item.services.map((service) => (
                                                 <span
                                                     key={service}
-                                                    className='badge mb-1'
+                                                    className=' mb-1'
                                                 >
                                                     {service.service}
                                                 </span>
@@ -221,7 +221,7 @@ const DashboarTable = ({ invoices, fetchData }) => {
                                                 (employee) => (
                                                     <span
                                                         key={employee.name}
-                                                        className='badge'
+                                                        className=''
                                                     >
                                                         {employee.name}
                                                     </span>

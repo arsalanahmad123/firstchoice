@@ -91,18 +91,6 @@ const Table = ({ invoices, fetchData }) => {
                                             </span>
                                         )),
                                     )}
-                                    {invoice.services.map((service) => {
-                                        if (service.employees.length === 0) {
-                                            return (
-                                                <span
-                                                    className=''
-                                                    key={service.service}
-                                                >
-                                                    No employees
-                                                </span>
-                                            )
-                                        }
-                                    })}
                                 </span>
                             </td>
                             <td>
