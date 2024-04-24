@@ -73,7 +73,7 @@ const Table = ({ invoices, fetchData }) => {
                                     ? invoice.pending_amount
                                     : '0'}
                             </td>
-                            <td>AED {invoice.total_price}</td>
+                            <td>AED {invoice.paid_amount}</td>
                             <td>
                                 {new Date(invoice.createdAt).getDate()}/
                                 {new Date(invoice.createdAt).getMonth() + 1}/
