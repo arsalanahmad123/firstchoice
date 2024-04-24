@@ -15,7 +15,7 @@ const Homepage = () => {
 
     const [currentPage, setCurrentPage] = useState(1)
 
-    const itemsPerPage = 1
+    const itemsPerPage = 10
 
     const displayedCompanies = useMemo(() => {
         const indexOfLastItem = currentPage * itemsPerPage
@@ -53,7 +53,7 @@ const Homepage = () => {
                             handleCompanySearchInput={handleCompanySearchInput}
                         />
                         <div className='flex'>
-                            <div className='flex gap-x-3 gap-y-3 px-5 flex-row flex-wrap pt-10 text-center'>
+                            <div className='grid grid-cols-3 gap-4 mx-5 mt-3'>
                                 {displayedCompanies?.map((company) => (
                                     <CompanyCard
                                         key={company._id}

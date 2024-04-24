@@ -105,13 +105,13 @@ const CompanyCard = ({ company, fetchData }) => {
 
     return (
         <>
-            <div className='flex flex-col justify-center items-start gap-y-2 text-white rounded-xl  bg-bgLight p-5 max-w-[400px]'>
+            <div className='flex flex-col justify-center items-start gap-y-2 text-white rounded-xl  bg-bgLight p-5 '>
                 <img
                     src={company.logo.url}
                     alt=''
                     className='w-32 h-20 mx-auto object-cover'
                 />
-                <span className='pt-4 text-2xl text-left text-lightGold uppercase whitespace-normal w-[200px] break-words'>
+                <span className='pt-4 text-2xl text-left text-lightGold uppercase whitespace-normal w-[300px] break-words'>
                     {company.username}
                 </span>
                 <div className='flex flex-col justify-center items-start gap-y-2 my-2'>
