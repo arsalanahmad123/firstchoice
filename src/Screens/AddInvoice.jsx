@@ -215,7 +215,7 @@ const AddInvoice = () => {
             return
         }
 
-        if (paidAmount <= 0) {
+        if (paidAmount < 0) {
             toast.error('Enter Correct Paid Amount')
             return
         }
