@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import AppLayout from '../Layout/AppLayout'
 import Wrapper from '../Layout/Wrapper'
 import { CgSearch } from 'react-icons/cg'
@@ -6,6 +6,7 @@ import { useFetch } from '../Hooks/useFetch'
 import { api } from '../API/api'
 import toast from 'react-hot-toast'
 import { FaPencil } from 'react-icons/fa6'
+import Loader from '../Components/Loader'
 
 const BASE_URL = import.meta.env.VITE_BASE_URL
 
@@ -242,10 +243,12 @@ const EditModal = ({ invoice, fetchData, setSelectedOrder }) => {
 }
 
 const Orders = () => {
-    const { data: orders, fetchData } = useFetch('invoices')
+    const { data: orders, fetchData, loading } = useFetch('invoices')
     const [selectedOrder, setSelectedOrder] = useState(null)
     const [filteredOrders, setFilteredOrders] = useState(null)
     const [editPending, setEditPending] = useState(false)
+
+    const [currentPage, setCurrentPage] = useState(1)
 
     const showModal = () => {
         document.getElementById('my_modal_2').showModal()
@@ -264,6 +267,17 @@ const Orders = () => {
         showModal3()
     }
 
+    const items_per_page = 2
+
+    const displayedOrders = useMemo(() => {
+        const indexOfLastItem = currentPage * items_per_page
+        return filteredOrders?.slice(0, indexOfLastItem)
+    }, [filteredOrders, currentPage])
+
+    const loadNextPage = () => {
+        setCurrentPage(currentPage + 1)
+    }
+
     const handleInputChange = (e) => {
         const value = e.target.value
         setFilteredOrders(
@@ -280,135 +294,162 @@ const Orders = () => {
     return (
         <>
             <Wrapper title={'All Orders'}>
-                <div className='flex  justify-between items-center  gap-x-20 lg:pt-4 px-5'>
-                    <div className='relative w-full'>
-                        <input
-                            type='text'
-                            className='w-full lg:py-1 pl-5 lg:rounded-2xl bg-bgLight border-2 border-gray-700 text-white'
-                            placeholder='Search Company'
-                            onChange={(e) => handleInputChange(e)}
-                        />
-                        <CgSearch className='text-slate-700 m-auto absolute lg:right-5 lg:top-3  ' />
-                    </div>
-                </div>
-                <div className='overflow-x-auto  bg-bgLight max-h-[76vh] mt-10 mx-5 rounded-xl '>
-                    <table className='table'>
-                        <thead>
-                            <tr className='bg-lightGold text-gray-900 border-gray-700'>
-                                <th>Order Title</th>
-                                <th>Company</th>
-                                <th>Services</th>
-                                <th>Quantity</th>
-                                <th>Total Price</th>
-                                <th>Employees</th>
-                                <th>Status</th>
-                                <th>Change Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {filteredOrders?.map((item) => (
-                                <>
-                                    <tr key={item._id}>
-                                        <td className='text-white'>
-                                            {item.title}
-                                        </td>
-                                        <td className='text-white'>
-                                            {item.company}
-                                        </td>
-                                        <td className='text-white'>
-                                            <div className='flex flex-col'>
-                                                {item.services.map(
-                                                    (service) => (
-                                                        <span
-                                                            key={
-                                                                service.service
-                                                            }
-                                                            className='badge mb-1'
-                                                        >
-                                                            {service.service}
-                                                        </span>
-                                                    ),
-                                                )}
-                                            </div>
-                                        </td>
-                                        <td className='text-white'>
-                                            <div className='flex flex-col'>
-                                                {item.services.map(
-                                                    (service) => (
-                                                        <span
-                                                            key={
-                                                                service.service
-                                                            }
-                                                            className='badge mb-1'
-                                                        >
-                                                            {service.quantity}
-                                                        </span>
-                                                    ),
-                                                )}
-                                            </div>
-                                        </td>
-                                        <td className='text-white'>
-                                            {item.total_price}
-                                        </td>
-                                        <td className='flex gap-x-1 flex-wrap'>
-                                            {item.services.map((service) =>
-                                                service.employees?.map(
-                                                    (employee) => (
-                                                        <span
-                                                            key={employee.name}
-                                                            className='badge'
-                                                        >
-                                                            {employee.name}
-                                                        </span>
-                                                    ),
-                                                ),
-                                            )}
-                                        </td>
-                                        <td>
-                                            {item.status !==
-                                            'waiting for payment'
-                                                ? item.status
-                                                : ''}
-                                        </td>
-                                        <td>
-                                            <FaPencil
-                                                className='cursor-pointer'
-                                                onClick={() =>
-                                                    handleOrderChange(item)
-                                                }
-                                            />
-                                        </td>
-                                        <td>
-                                            <button
-                                                className='btn btn-xs'
-                                                onClick={() =>
-                                                    handlePendingAmount(item)
-                                                }
-                                            >
-                                                Edit
-                                            </button>
-                                        </td>
+                {loading ? (
+                    <Loader />
+                ) : (
+                    <>
+                        <div className='flex  justify-between items-center  gap-x-20 lg:pt-4 px-5'>
+                            <div className='relative w-full'>
+                                <input
+                                    type='text'
+                                    className='w-full lg:py-1 pl-5 lg:rounded-2xl bg-bgLight border-2 border-gray-700 text-white'
+                                    placeholder='Search Company'
+                                    onChange={(e) => handleInputChange(e)}
+                                />
+                                <CgSearch className='text-slate-700 m-auto absolute lg:right-5 lg:top-3  ' />
+                            </div>
+                        </div>
+                        <div className='overflow-x-auto  bg-bgLight max-h-[76vh] mt-10 mx-5 rounded-xl '>
+                            <table className='table'>
+                                <thead>
+                                    <tr className='bg-lightGold text-gray-900 border-gray-700'>
+                                        <th>Order Title</th>
+                                        <th>Company</th>
+                                        <th>Services</th>
+                                        <th>Quantity</th>
+                                        <th>Total Price</th>
+                                        <th>Employees</th>
+                                        <th>Status</th>
+                                        <th>Change Status</th>
+                                        <th>Action</th>
                                     </tr>
-                                </>
-                            ))}
-                        </tbody>
-                    </table>
-                    {selectedOrder && (
-                        <EditModal
-                            invoice={selectedOrder}
-                            fetchData={fetchData}
-                            setSelectedOrder={setSelectedOrder}
-                        />
-                    )}
-                    {editPending && selectedOrder && (
-                        <PendingModal
-                            invoice={selectedOrder}
-                            fetchData={fetchData}
-                            setSelectedOrder={setSelectedOrder}
-                        />
-                    )}
-                </div>
+                                </thead>
+                                <tbody>
+                                    {displayedOrders?.map((item) => (
+                                        <>
+                                            <tr key={item._id}>
+                                                <td className='text-white'>
+                                                    {item.title}
+                                                </td>
+                                                <td className='text-white'>
+                                                    {item.company}
+                                                </td>
+                                                <td className='text-white'>
+                                                    <div className='flex flex-col'>
+                                                        {item.services.map(
+                                                            (service) => (
+                                                                <span
+                                                                    key={
+                                                                        service.service
+                                                                    }
+                                                                    className='badge mb-1'
+                                                                >
+                                                                    {
+                                                                        service.service
+                                                                    }
+                                                                </span>
+                                                            ),
+                                                        )}
+                                                    </div>
+                                                </td>
+                                                <td className='text-white'>
+                                                    <div className='flex flex-col'>
+                                                        {item.services.map(
+                                                            (service) => (
+                                                                <span
+                                                                    key={
+                                                                        service.service
+                                                                    }
+                                                                    className='badge mb-1'
+                                                                >
+                                                                    {
+                                                                        service.quantity
+                                                                    }
+                                                                </span>
+                                                            ),
+                                                        )}
+                                                    </div>
+                                                </td>
+                                                <td className='text-white'>
+                                                    {item.total_price}
+                                                </td>
+                                                <td className='flex gap-x-1 flex-wrap'>
+                                                    {item.services.map(
+                                                        (service) =>
+                                                            service.employees?.map(
+                                                                (employee) => (
+                                                                    <span
+                                                                        key={
+                                                                            employee.name
+                                                                        }
+                                                                        className='badge'
+                                                                    >
+                                                                        {
+                                                                            employee.name
+                                                                        }
+                                                                    </span>
+                                                                ),
+                                                            ),
+                                                    )}
+                                                </td>
+                                                <td>
+                                                    {item.status !==
+                                                    'waiting for payment'
+                                                        ? item.status
+                                                        : ''}
+                                                </td>
+                                                <td>
+                                                    <FaPencil
+                                                        className='cursor-pointer'
+                                                        onClick={() =>
+                                                            handleOrderChange(
+                                                                item,
+                                                            )
+                                                        }
+                                                    />
+                                                </td>
+                                                <td>
+                                                    <button
+                                                        className='btn btn-xs'
+                                                        onClick={() =>
+                                                            handlePendingAmount(
+                                                                item,
+                                                            )
+                                                        }
+                                                    >
+                                                        Edit
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </>
+                                    ))}
+                                </tbody>
+                            </table>
+                            {selectedOrder && (
+                                <EditModal
+                                    invoice={selectedOrder}
+                                    fetchData={fetchData}
+                                    setSelectedOrder={setSelectedOrder}
+                                />
+                            )}
+                            {editPending && selectedOrder && (
+                                <PendingModal
+                                    invoice={selectedOrder}
+                                    fetchData={fetchData}
+                                    setSelectedOrder={setSelectedOrder}
+                                />
+                            )}
+                        </div>
+                        {displayedOrders?.length < orders?.length && (
+                            <button
+                                className='text-gray-900 font-bold mx-auto w-52 px-2 lg:py-1 lg:rounded-2xl bg-lightGold mt-3'
+                                onClick={loadNextPage}
+                            >
+                                Load More
+                            </button>
+                        )}
+                    </>
+                )}
             </Wrapper>
         </>
     )

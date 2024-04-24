@@ -6,7 +6,7 @@ import DashboarTable from '../Components/DashboarTable'
 import { useFetch } from '../Hooks/useFetch'
 const Dashboard = () => {
     const { data: totalCompanies } = useFetch('companies')
-    const { data: dailyRevenue } = useFetch('revenue')
+    const { data: dailyRevenue } = useFetch('revenue/daily')
     const { data: profit } = useFetch('profit')
     const { data: invoices, fetchData } = useFetch('invoices')
     const invoicesLength = invoices?.length

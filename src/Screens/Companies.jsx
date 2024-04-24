@@ -7,10 +7,25 @@ import { Routes, Route } from 'react-router-dom'
 import NewCompany from './NewCompany'
 import Company from './Company'
 import { useFetch } from '../Hooks/useFetch'
+import Loader from '../Components/Loader'
 
 const Homepage = () => {
-    const { data: companies, fetchData } = useFetch('companies')
+    const { data: companies, fetchData, loading } = useFetch('companies')
     const [filteredCompanies, setFilteredCompanies] = useState(null)
+
+    const [currentPage, setCurrentPage] = useState(1)
+
+    const itemsPerPage = 1
+
+    const displayedCompanies = useMemo(() => {
+        const indexOfLastItem = currentPage * itemsPerPage
+        return filteredCompanies?.slice(0, indexOfLastItem)
+    }, [filteredCompanies, currentPage])
+
+    const loadNextPage = () => {
+        setCurrentPage(currentPage + 1)
+    }
+
     const handleCompanySearchInput = (e) => {
         const query = e.target.value
         if (query) {
@@ -22,6 +37,7 @@ const Homepage = () => {
             setFilteredCompanies(companies)
         }
     }
+
     useEffect(() => {
         setFilteredCompanies(companies)
     }, [companies])
@@ -29,21 +45,39 @@ const Homepage = () => {
     return (
         <>
             <Wrapper title={'Companies'}>
-                <Header handleCompanySearchInput={handleCompanySearchInput} />
-                <div className='flex'>
-                    <div className='flex gap-x-3 gap-y-3 px-5 flex-row flex-wrap  pt-10 text-center'>
-                        {filteredCompanies?.map((company) => (
-                            <CompanyCard
-                                key={company._id}
-                                company={company}
-                                fetchData={fetchData}
-                            />
-                        ))}
-                        {companies?.length === 0 && (
-                            <p className='text-3xl'>No Companies Found</p>
+                {loading ? (
+                    <Loader />
+                ) : (
+                    <>
+                        <Header
+                            handleCompanySearchInput={handleCompanySearchInput}
+                        />
+                        <div className='flex'>
+                            <div className='flex gap-x-3 gap-y-3 px-5 flex-row flex-wrap pt-10 text-center'>
+                                {displayedCompanies?.map((company) => (
+                                    <CompanyCard
+                                        key={company._id}
+                                        company={company}
+                                        fetchData={fetchData}
+                                    />
+                                ))}
+                                {companies?.length === 0 && (
+                                    <p className='text-3xl'>
+                                        No Companies Found
+                                    </p>
+                                )}
+                            </div>
+                        </div>
+                        {displayedCompanies?.length < companies?.length && (
+                            <button
+                                className='text-gray-900 font-bold mx-auto w-52 px-2 lg:py-1 lg:rounded-2xl bg-lightGold mt-2'
+                                onClick={loadNextPage}
+                            >
+                                Load More
+                            </button>
                         )}
-                    </div>
-                </div>
+                    </>
+                )}
             </Wrapper>
         </>
     )

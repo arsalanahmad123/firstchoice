@@ -215,6 +215,16 @@ const AddInvoice = () => {
             return
         }
 
+        if (paidAmount > totalPrice) {
+            toast.error('Paid amount cannot be greater than total price')
+            return
+        }
+
+        if (paidAmount <= 0) {
+            toast.error('Enter Correct Paid Amount')
+            return
+        }
+
         setSubmitting(true)
         try {
             const dataToSend = {

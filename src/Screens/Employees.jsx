@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Wrapper from '../Layout/Wrapper'
 import { CgSearch } from 'react-icons/cg'
 import { useFetch } from '../Hooks/useFetch'
@@ -78,6 +78,7 @@ const Employees = ({ id }) => {
 
     const { data: employees, fetchData } = useFetch(`employee/${id}`)
     const [selectedEmployee, setSelectedEmployee] = React.useState(null)
+    const [filteredEmployees, setFilteredEmployees] = React.useState(null)
 
     const deleteEmployee = async (employeeId) => {
         const confirm = window.confirm('Are you sure you want to delete?')
@@ -102,6 +103,18 @@ const Employees = ({ id }) => {
         setEditModal(true)
     }
 
+    useEffect(() => {
+        setFilteredEmployees(employees)
+    }, [employees])
+
+    const handleInputChange = (e) => {
+        const value = e.target.value
+        const filtered = employees.filter((employee) => {
+            return employee?.name?.toLowerCase().includes(value.toLowerCase())
+        })
+        setFilteredEmployees(filtered)
+    }
+
     return (
         <Wrapper title='Employees'>
             <div className='flex  justify-between  gap-x-20 lg:pt-4 px-5'>
@@ -109,6 +122,10 @@ const Employees = ({ id }) => {
                     <input
                         type='text'
                         className='w-full lg:py-1 pl-5 lg:rounded-2xl bg-bgLight border-2 border-gray-700 text-white'
+                        placeholder='Search Employee'
+                        onChange={(e) => {
+                            handleInputChange(e)
+                        }}
                     />
                     <CgSearch className='text-slate-700 m-auto absolute lg:right-5 lg:top-3  ' />
                 </div>
@@ -117,7 +134,7 @@ const Employees = ({ id }) => {
                 className='flex gap-x-6 flex-row flex-wrap mx-5 mt-3 gap-y-5
                 '
             >
-                {employees?.map((employee, i) => (
+                {filteredEmployees?.map((employee, i) => (
                     <>
                         <div
                             className=' bg-gradient-to-r from-bgLight to-bgDarkColor text-white shadow-2xl  flex justify-center flex-col p-5 gap-y-5  min-h-36 min-w-80'
@@ -227,7 +244,7 @@ const Employees = ({ id }) => {
                             </div>
                         </div>
                         <ViewEmployee
-                            key={i}
+                            key={employee?._id}
                             employee={employee}
                             fetchData={fetchData}
                             hideModal={hideModal}

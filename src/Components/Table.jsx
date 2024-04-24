@@ -51,7 +51,7 @@ const Table = ({ invoices, fetchData }) => {
                                     <div key={service.service} className='mb-2'>
                                         <span
                                             key={service.service}
-                                            className='badge badge-outline badge-secondary'
+                                            className=''
                                         >
                                             {service.service}
                                         </span>
@@ -84,7 +84,7 @@ const Table = ({ invoices, fetchData }) => {
                                     {invoice.services.map((service) =>
                                         service.employees.map((employee) => (
                                             <span
-                                                className='badge badge-outline badge-secondary'
+                                                className=''
                                                 key={employee.name}
                                             >
                                                 {employee.name}
@@ -95,7 +95,7 @@ const Table = ({ invoices, fetchData }) => {
                                         if (service.employees.length === 0) {
                                             return (
                                                 <span
-                                                    className='badge badge-outline badge-secondary'
+                                                    className=''
                                                     key={service.service}
                                                 >
                                                     No employees
@@ -116,7 +116,7 @@ const Table = ({ invoices, fetchData }) => {
                             </td>
                             <td>
                                 <NavLink
-                                    to={`https://firstchoice-opal.vercel.app/invoice/view-invoice/${invoice._id}`}
+                                    to={`/invoice/view-invoice/${invoice._id}`}
                                     target='_blank'
                                 >
                                     View

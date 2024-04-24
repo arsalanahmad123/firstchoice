@@ -5,6 +5,8 @@ import Service_Card from '../Components/Service_Card'
 import { CgSearch } from 'react-icons/cg'
 import { api } from '../API/api'
 import toast from 'react-hot-toast'
+import Loader from '../Components/Loader'
+
 const BASE_URL = import.meta.env.VITE_BASE_URL
 
 const ServiceModal = ({ getServices }) => {
@@ -76,18 +78,27 @@ const ServiceModal = ({ getServices }) => {
 const Services = () => {
     const [services, setServices] = useState([])
     const [searchQuery, setSearchQuery] = useState('')
-
-    const getServices = async () => {
-        const response = await api.get(`${BASE_URL}/services`)
-        const data = response.data.data
-        if (response.status === 200) {
-            setServices(data)
-        }
-    }
+    const [currentPage, setCurrentPage] = useState(1)
+    const [loading, setLoading] = useState(false)
+    const itemsPerPage = 10
 
     useEffect(() => {
         getServices()
     }, [])
+
+    const getServices = async () => {
+        setLoading(true)
+        try {
+            const response = await api.get(`${BASE_URL}/services`)
+            const data = response.data.data
+            if (response.status === 200) {
+                setServices(data)
+                setLoading(false)
+            }
+        } catch (error) {
+            setLoading(false)
+        }
+    }
 
     const filteredServices = useMemo(() => {
         if (!searchQuery) return services
@@ -96,6 +107,15 @@ const Services = () => {
         )
     }, [services, searchQuery])
 
+    const displayedServices = useMemo(() => {
+        const indexOfLastItem = currentPage * itemsPerPage
+        return filteredServices.slice(0, indexOfLastItem)
+    }, [filteredServices, currentPage])
+
+    const loadNextPage = () => {
+        setCurrentPage(currentPage + 1)
+    }
+
     const showServiceModal = () => {
         document.getElementById('my_modal_2').showModal()
     }
@@ -103,41 +123,57 @@ const Services = () => {
     return (
         <>
             <Wrapper title={'Services'}>
-                <div className='flex  justify-between  gap-x-20 lg:pt-4 px-5'>
-                    <div className='relative w-full'>
-                        <input
-                            type='text'
-                            className='w-full lg:py-1 pl-5 lg:rounded-2xl bg-bgLight border-2 border-gray-700 text-white'
-                            placeholder='Search Service'
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                        />
-                        <CgSearch className='text-slate-700 m-auto absolute lg:right-5 lg:top-3  ' />
-                    </div>
-                    <button
-                        className='text-gray-900 font-bold flex justify-center items-center text-sm w-52 px-2 lg:py-1 lg:rounded-2xl bg-lightGold'
-                        onClick={showServiceModal}
-                    >
-                        Add New Service
-                    </button>
-                </div>
-                <div
-                    className='flex gap-x-6 flex-row flex-wrap mx-5 mt-3 gap-y-5
+                {loading ? (
+                    <Loader />
+                ) : (
+                    <>
+                        <div className='flex  justify-between  gap-x-20 lg:pt-4 px-5'>
+                            <div className='relative w-full'>
+                                <input
+                                    type='text'
+                                    className='w-full lg:py-1 pl-5 lg:rounded-2xl bg-bgLight border-2 border-gray-700 text-white'
+                                    placeholder='Search Service'
+                                    onChange={(e) =>
+                                        setSearchQuery(e.target.value)
+                                    }
+                                />
+                                <CgSearch className='text-slate-700 m-auto absolute lg:right-5 lg:top-3  ' />
+                            </div>
+                            <button
+                                className='text-gray-900 font-bold flex justify-center items-center text-sm w-52 px-2 lg:py-1 lg:rounded-2xl bg-lightGold'
+                                onClick={showServiceModal}
+                            >
+                                Add New Service
+                            </button>
+                        </div>
+                        <div
+                            className='flex gap-x-6 flex-row flex-wrap mx-5 mt-3 gap-y-5
                 '
-                >
-                    {filteredServices?.map((service, i) => (
-                        <Service_Card
-                            key={i}
-                            service={service}
-                            getServices={getServices}
-                        />
-                    ))}
-                    {services.length === 0 && (
-                        <p className='text-center text-xl mt-5'>
-                            No Services Found
-                        </p>
-                    )}
-                </div>
-                <ServiceModal getServices={getServices} />
+                        >
+                            {displayedServices?.map((service, i) => (
+                                <Service_Card
+                                    key={i}
+                                    service={service}
+                                    getServices={getServices}
+                                />
+                            ))}
+                            {services.length === 0 && (
+                                <p className='text-center text-xl mt-5'>
+                                    No Services Found
+                                </p>
+                            )}
+                        </div>
+                        {displayedServices.length < filteredServices.length && (
+                            <button
+                                className='text-gray-900 font-bold mx-auto w-52 px-2 lg:py-1 lg:rounded-2xl bg-lightGold'
+                                onClick={loadNextPage}
+                            >
+                                View More
+                            </button>
+                        )}
+                        <ServiceModal getServices={getServices} />
+                    </>
+                )}
             </Wrapper>
         </>
     )

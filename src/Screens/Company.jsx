@@ -25,7 +25,7 @@ const Homepage = ({ id, company, employees }) => {
     return (
         <>
             <Wrapper title={'Company'}>
-                <div className='flex flex-col  mx-5 '>
+                <div className='flex flex-col mx-5 '>
                     <div className='flex flex-row justify-between items-center mt-2 mb-10'>
                         <FaArrowLeft
                             className='text-white text-2xl cursor-pointer m-3'

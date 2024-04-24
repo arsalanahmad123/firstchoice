@@ -4,6 +4,7 @@ import Wrapper from '../Layout/Wrapper'
 import { useFetch } from '../Hooks/useFetch'
 import { api } from '../API/api'
 import toast from 'react-hot-toast'
+import Loader from '../Components/Loader'
 
 const RefWorkModal = ({ fetchData }) => {
     const createRefWork = async (e) => {
@@ -85,7 +86,7 @@ const RefWorkModal = ({ fetchData }) => {
 }
 
 const Work = () => {
-    const { data: refworks, fetchData } = useFetch('refworks')
+    const { data: refworks, fetchData, loading } = useFetch('refworks')
     const [searchQuery, setSearchQuery] = useState('')
 
     const filteredWorks = useMemo(() => {
@@ -118,63 +119,73 @@ const Work = () => {
     return (
         <>
             <Wrapper title={'Reference Work'}>
-                <div className='flex  justify-between  gap-x-20 lg:pt-4 px-5'>
-                    <div className='relative w-full'>
-                        <input
-                            type='text'
-                            placeholder='Search Reference Work'
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            className='w-full lg:py-1 pl-5 lg:rounded-2xl bg-bgLight border-2 border-gray-700 text-white'
-                        />
-                    </div>
-                    <button
-                        className='text-gray-900 font-bold flex justify-center items-center text-sm w-52 px-2 lg:py-1 lg:rounded-2xl bg-lightGold'
-                        onClick={() => showRefWorkModal()}
-                    >
-                        Add New Reference Work
-                    </button>
-                </div>
-                {filteredWorks?.length > 0 && (
-                    <div className='overflow-x-auto bg-bgLight text-white mx-5 rounded-lg mt-5 '>
-                        <table className='table table-md shadow-2xl'>
-                            <thead className='bg-lightGold text-gray-900'>
-                                <tr className='border-none'>
-                                    <th>Name</th>
-                                    <th>Service Name</th>
-                                    <th>Cost Price</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {filteredWorks?.map((refwork) => (
-                                    <tr key={refwork._id}>
-                                        <td>{refwork.name}</td>
-                                        <td>{refwork.service_name}</td>
-                                        <td>{refwork.cost_price}</td>
-                                        <td>
-                                            <button
-                                                className='btn btn-xs btn-outline btn-error'
-                                                onClick={() =>
-                                                    deleteRefWork(refwork._id)
-                                                }
-                                            >
-                                                Remove
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
+                {loading ? (
+                    <Loader />
+                ) : (
+                    <>
+                        <div className='flex  justify-between  gap-x-20 lg:pt-4 px-5'>
+                            <div className='relative w-full'>
+                                <input
+                                    type='text'
+                                    placeholder='Search Reference Work'
+                                    onChange={(e) =>
+                                        setSearchQuery(e.target.value)
+                                    }
+                                    className='w-full lg:py-1 pl-5 lg:rounded-2xl bg-bgLight border-2 border-gray-700 text-white'
+                                />
+                            </div>
+                            <button
+                                className='text-gray-900 font-bold flex justify-center items-center text-sm w-52 px-2 lg:py-1 lg:rounded-2xl bg-lightGold'
+                                onClick={() => showRefWorkModal()}
+                            >
+                                Add New Reference Work
+                            </button>
+                        </div>
+                        {filteredWorks?.length > 0 && (
+                            <div className='overflow-x-auto bg-bgLight text-white mx-5 rounded-lg mt-5 '>
+                                <table className='table table-md shadow-2xl'>
+                                    <thead className='bg-lightGold text-gray-900'>
+                                        <tr className='border-none'>
+                                            <th>Name</th>
+                                            <th>Service Name</th>
+                                            <th>Cost Price</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {filteredWorks?.map((refwork) => (
+                                            <tr key={refwork._id}>
+                                                <td>{refwork.name}</td>
+                                                <td>{refwork.service_name}</td>
+                                                <td>{refwork.cost_price}</td>
+                                                <td>
+                                                    <button
+                                                        className='btn btn-xs btn-outline btn-error'
+                                                        onClick={() =>
+                                                            deleteRefWork(
+                                                                refwork._id,
+                                                            )
+                                                        }
+                                                    >
+                                                        Remove
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        )}
+                        {refworks?.length === 0 && (
+                            <div className='flex justify-center items-center h-screen'>
+                                <h4 className='text-xl font-bold text-lightGold p-5'>
+                                    No Reference Work Found
+                                </h4>
+                            </div>
+                        )}
+                        <RefWorkModal fetchData={fetchData} />
+                    </>
                 )}
-                {refworks?.length === 0 && (
-                    <div className='flex justify-center items-center h-screen'>
-                        <h4 className='text-xl font-bold text-lightGold p-5'>
-                            No Reference Work Found
-                        </h4>
-                    </div>
-                )}
-                <RefWorkModal fetchData={fetchData} />
             </Wrapper>
         </>
     )
