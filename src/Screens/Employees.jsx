@@ -284,16 +284,16 @@ const Employees = ({ id }) => {
                         </h1>
                     </div>
                 )}
-                {displayedEmployees?.length < employees?.length &&
-                    filteredEmployees?.length > 0 && (
-                        <button
-                            className='text-gray-900 font-bold mx-auto w-52 px-2 lg:py-1 lg:rounded-2xl bg-lightGold mt-2'
-                            onClick={loadNextPage}
-                        >
-                            Load More
-                        </button>
-                    )}
             </div>
+            {displayedEmployees?.length < employees?.length &&
+                filteredEmployees?.length > 0 && (
+                    <button
+                        className='text-gray-900 font-bold mx-auto w-52 px-2 lg:py-1 lg:rounded-2xl bg-lightGold mt-2'
+                        onClick={loadNextPage}
+                    >
+                        Load More
+                    </button>
+                )}
         </Wrapper>
     )
 }

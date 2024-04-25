@@ -159,12 +159,11 @@ const EditModal = ({ invoice, fetchData, setSelectedOrder }) => {
 const DashboarTable = ({ invoices, fetchData }) => {
     const [selectedOrder, setSelectedOrder] = useState(null)
 
-    const showModal = () => {
-        document.getElementById('my_modal_2').showModal()
-    }
     const handleOrderChange = (order) => {
         setSelectedOrder(order)
-        showModal()
+        if (selectedOrder !== null) {
+            document.getElementById('my_modal_2').showModal()
+        }
     }
 
     return (

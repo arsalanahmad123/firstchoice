@@ -2,77 +2,12 @@ import React, { useEffect, useState } from 'react'
 import { api } from '../API/api'
 import toast from 'react-hot-toast'
 
-const EditModal = ({ selectedService, id, getServices }) => {
-    const editService = async (e) => {
-        e.preventDefault()
-        try {
-            const name = e.target.name.value
-            const cost_price = e.target.cost_price.value
-            const response = await api.put(`/services/service/${id}`, data)
-            if (response.status === 200) {
-                getServices()
-                toast.success(response.data.message)
-                document.getElementById('my_modal_2').close()
-            }
-        } catch (error) {
-            console.log(error)
-            toast.error(error.response.data.message)
-        }
-    }
-
-    return (
-        <>
-            <dialog id='my_modal_2' className='modal'>
-                <div className='modal-box'>
-                    <form
-                        onSubmit={editService}
-                        className='flex flex-col gap-y-3'
-                    >
-                        <h3 className='text-2xl text-lightGold font-bold text-center'>
-                            Edit Service
-                        </h3>
-                        <div className='flex flex-col'>
-                            <label htmlFor='name'>Name</label>
-                            <input
-                                type='text'
-                                name='name'
-                                id='name'
-                                value={selectedService?.name}
-                                onChange={(e) => setName(e.target.value)}
-                                required
-                                className='w-full lg:py-1 pl-5 lg:rounded-xl bg-bgLight border-2 border-gray-700 text-white'
-                            />
-                        </div>
-                        <div className='flex flex-col'>
-                            <label htmlFor='cost_price'>Cost Price</label>
-                            <input
-                                type='number'
-                                name='cost_price'
-                                id='cost_price'
-                                value={selectedService?.cost_price}
-                                onChange={(e) => setCostPrice(e.target.value)}
-                                required
-                                className='w-full lg:py-1 pl-5 lg:rounded-xl bg-bgLight border-2 border-gray-700 text-white'
-                            />
-                        </div>
-                        <button
-                            type='submit'
-                            className='py-1 bg-lightGold text-gray-900 rounded-xl mt-3 font-semibold'
-                        >
-                            Create
-                        </button>
-                    </form>
-                </div>
-                <form method='dialog' className='modal-backdrop'>
-                    <button>close</button>
-                </form>
-            </dialog>
-        </>
-    )
-}
-
-const Service_Card = ({ service, getServices }) => {
-    const [selectedService, setSelectedService] = useState(null)
+const Service_Card = ({
+    service,
+    getServices,
+    setSelectedService,
+    setToggleModal,
+}) => {
     const handleDeleteService = async (id) => {
         try {
             const confirm = window.confirm('Are you sure you want to delete?')
@@ -87,20 +22,9 @@ const Service_Card = ({ service, getServices }) => {
         }
     }
 
-    const handleEdit = () => {
-        document.getElementById('my_modal_2').showModal()
-        const id = service._id
-        const getService = async () => {
-            try {
-                const response = await api.get(`/services/${id}`)
-                if (response.status === 200) {
-                    setSelectedService(response.data.data)
-                }
-            } catch (error) {
-                console.log(error)
-            }
-        }
-        getService()
+    const handleEdit = (service) => {
+        setSelectedService(service)
+        setToggleModal(true)
     }
 
     return (
@@ -115,7 +39,7 @@ const Service_Card = ({ service, getServices }) => {
             <div className='flex justify-between items-center '>
                 <button
                     className='btn btn-xs btn-outline text-white'
-                    onClick={handleEdit}
+                    onClick={() => handleEdit(service)}
                 >
                     Edit Service
                 </button>
@@ -126,14 +50,6 @@ const Service_Card = ({ service, getServices }) => {
                     Delete Service
                 </button>
             </div>
-
-            {selectedService && (
-                <EditModal
-                    selectedService={selectedService}
-                    getServices={getServices}
-                    id={service._id}
-                />
-            )}
         </div>
     )
 }

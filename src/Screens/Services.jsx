@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useEffect, useState } from 'react'
 import AppLayout from '../Layout/AppLayout'
 import Wrapper from '../Layout/Wrapper'
 import Service_Card from '../Components/Service_Card'
@@ -8,6 +8,87 @@ import toast from 'react-hot-toast'
 import Loader from '../Components/Loader'
 
 const BASE_URL = import.meta.env.VITE_BASE_URL
+
+const EditModal = ({ selectedService, getServices, setToggleModal }) => {
+    const [nameA, setAName] = useState(selectedService?.name || '')
+    const [costprice, setCostPrice] = useState(
+        selectedService?.cost_price || '',
+    )
+
+    const editService = async (e) => {
+        e.preventDefault()
+        try {
+            if (
+                nameA === selectedService.name &&
+                costprice === selectedService.cost_price
+            ) {
+                setToggleModal(false)
+                return
+            }
+            if (nameA === '' || costprice === '') {
+                toast.error('Please fill something')
+            }
+
+            const data = { name: nameA, cost_price: costprice }
+            const response = await api.put(
+                `/services/${selectedService._id}`,
+                data,
+            )
+            if (response.status === 200) {
+                getServices()
+                toast.success(response.data.message)
+                setToggleModal(false)
+            }
+        } catch (error) {
+            console.log(error)
+            toast.error(error.response.data.message)
+        }
+    }
+
+    return (
+        <>
+            <dialog id='my_modal_3' className='modal'>
+                <div className='modal-box'>
+                    <div className='flex flex-col gap-y-3'>
+                        <h3 className='text-2xl text-lightGold font-bold text-center'>
+                            Edit Service
+                        </h3>
+                        <div className='flex flex-col'>
+                            <label htmlFor='Name'>Name</label>
+                            <input
+                                type='text'
+                                value={nameA}
+                                onChange={(e) => setAName(e.target.value)}
+                                className='w-full lg:py-1 pl-5 lg:rounded-xl bg-bgLight border-2 border-gray-700 text-white'
+                            />
+                        </div>
+                        <div className='flex flex-col'>
+                            <label htmlFor='costPrice'>Cost Price</label>
+                            <input
+                                type='number'
+                                value={costprice}
+                                onChange={(e) => setCostPrice(e.target.value)}
+                                className='w-full lg:py-1 pl-5 lg:rounded-xl bg-bgLight border-2 border-gray-700 text-white'
+                            />
+                        </div>
+                        <button
+                            onClick={(e) => editService(e)}
+                            className='py-1 bg-lightGold text-gray-900 rounded-xl mt-3 font-semibold'
+                        >
+                            Update
+                        </button>
+                    </div>
+                </div>
+                <form
+                    method='dialog'
+                    className='modal-backdrop backdrop-blur-sm'
+                >
+                    <button onClick={() => setToggleModal(false)}>close</button>
+                </form>
+            </dialog>
+        </>
+    )
+}
 
 const ServiceModal = ({ getServices }) => {
     const createService = async (e) => {
@@ -80,6 +161,10 @@ const Services = () => {
     const [searchQuery, setSearchQuery] = useState('')
     const [currentPage, setCurrentPage] = useState(1)
     const [loading, setLoading] = useState(false)
+    const [displayedServices, setDisplayedServices] = useState([])
+    const [filteredServices, setFilteredServices] = useState([])
+    const [selectedService, setSelectedService] = useState(null)
+    const [toggleModal, setToggleModal] = useState(false)
     const itemsPerPage = 10
 
     useEffect(() => {
@@ -100,16 +185,19 @@ const Services = () => {
         }
     }
 
-    const filteredServices = useMemo(() => {
-        if (!searchQuery) return services
-        return services.filter((service) =>
-            service.name.toLowerCase().includes(searchQuery.toLowerCase()),
-        )
-    }, [services, searchQuery])
-
-    const displayedServices = useMemo(() => {
-        const indexOfLastItem = currentPage * itemsPerPage
-        return filteredServices.slice(0, indexOfLastItem)
+    useEffect(() => {
+        if (!searchQuery) setFilteredServices(services)
+        else {
+            const filtered = services.filter((service) =>
+                service.name.toLowerCase().includes(searchQuery.toLowerCase()),
+            )
+            setFilteredServices(filtered)
+        }
+    }, [searchQuery, services])
+    useEffect(() => {
+        const startIndex = (currentPage - 1) * itemsPerPage
+        const endIndex = startIndex + itemsPerPage
+        setDisplayedServices(filteredServices.slice(startIndex, endIndex))
     }, [filteredServices, currentPage])
 
     const loadNextPage = () => {
@@ -119,6 +207,12 @@ const Services = () => {
     const showServiceModal = () => {
         document.getElementById('my_modal_2').showModal()
     }
+
+    useEffect(() => {
+        if (toggleModal) {
+            document.getElementById('my_modal_3').showModal()
+        }
+    }, [toggleModal])
 
     return (
         <>
@@ -155,15 +249,18 @@ const Services = () => {
                                     key={i}
                                     service={service}
                                     getServices={getServices}
+                                    setSelectedService={setSelectedService}
+                                    setToggleModal={setToggleModal}
                                 />
                             ))}
-                            {services.length === 0 && (
+                            {services?.length === 0 && (
                                 <p className='text-center text-xl mt-5'>
                                     No Services Found
                                 </p>
                             )}
                         </div>
-                        {displayedServices.length < filteredServices.length && (
+                        {displayedServices?.length <
+                            filteredServices?.length && (
                             <button
                                 className='text-gray-900 font-bold mx-auto w-52 px-2 lg:py-1 lg:rounded-2xl bg-lightGold'
                                 onClick={loadNextPage}
@@ -172,6 +269,13 @@ const Services = () => {
                             </button>
                         )}
                         <ServiceModal getServices={getServices} />
+                        {selectedService !== null && toggleModal && (
+                            <EditModal
+                                selectedService={selectedService}
+                                getServices={getServices}
+                                setToggleModal={setToggleModal}
+                            />
+                        )}
                     </>
                 )}
             </Wrapper>

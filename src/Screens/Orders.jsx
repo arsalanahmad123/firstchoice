@@ -187,7 +187,7 @@ const EditModal = ({ invoice, fetchData, setSelectedOrder }) => {
                                     <div>
                                         {service.employees.length === 0 && (
                                             <div className='flex flex-row justify-between gap-x-5 items-center'>
-                                                <span className='badge badge-primary'>
+                                                <span className=''>
                                                     No employees
                                                 </span>
                                                 <span>{invoice.status}</span>
@@ -342,7 +342,7 @@ const Orders = () => {
                                                                     key={
                                                                         service.service
                                                                     }
-                                                                    className='badge mb-1'
+                                                                    className=' mb-1'
                                                                 >
                                                                     {
                                                                         service.service
@@ -360,7 +360,7 @@ const Orders = () => {
                                                                     key={
                                                                         service.service
                                                                     }
-                                                                    className='badge mb-1'
+                                                                    className=' mb-1'
                                                                 >
                                                                     {
                                                                         service.quantity
@@ -382,7 +382,7 @@ const Orders = () => {
                                                                         key={
                                                                             employee.name
                                                                         }
-                                                                        className='badge'
+                                                                        className=''
                                                                     >
                                                                         {
                                                                             employee.name
