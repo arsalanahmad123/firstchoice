@@ -116,15 +116,15 @@ const HomePage = () => {
                             invoices={displayedInvoices}
                             fetchData={fetchData}
                         />
-                        {displayedInvoices?.length <
-                            filteredInvoices?.length && (
-                            <button
-                                className='text-gray-900 font-bold mx-auto w-52 px-2 lg:py-1 lg:rounded-2xl bg-lightGold mt-2'
-                                onClick={loadNextPage}
-                            >
-                                View More
-                            </button>
-                        )}
+                        {displayedInvoices?.length < filteredInvoices?.length &&
+                            filteredInvoices?.length > 0 && (
+                                <button
+                                    className='text-gray-900 font-bold mx-auto w-52 px-2 lg:py-1 lg:rounded-2xl bg-lightGold mt-2'
+                                    onClick={loadNextPage}
+                                >
+                                    View More
+                                </button>
+                            )}
                     </>
                 )}
             </Wrapper>

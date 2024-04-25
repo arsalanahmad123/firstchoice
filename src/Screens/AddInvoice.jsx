@@ -267,7 +267,7 @@ const AddInvoice = () => {
                                 <div className='relative'>
                                     {selectedCompany ? (
                                         <div className='flex justify-between items-center w-full gap-x-3'>
-                                            <p className='text-lg border-b border-gray-600 border-dashed'>
+                                            <p className=' border-b border-gray-600 border-dashed text-sm'>
                                                 {selectedCompany.username}
                                             </p>
                                             <FaEdit

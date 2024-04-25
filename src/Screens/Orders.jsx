@@ -136,7 +136,7 @@ const EditModal = ({ invoice, fetchData, setSelectedOrder }) => {
                                                 key={employee.name}
                                                 className='flex flex-row justify-between gap-x-5 items-center'
                                             >
-                                                <span className='badge badge-primary'>
+                                                <span className=''>
                                                     {employee.name ||
                                                         'No employees'}
                                                 </span>
@@ -452,14 +452,15 @@ const Orders = () => {
                                 />
                             )}
                         </div>
-                        {displayedOrders?.length < orders?.length && (
-                            <button
-                                className='text-gray-900 font-bold mx-auto w-52 px-2 lg:py-1 lg:rounded-2xl bg-lightGold mt-3'
-                                onClick={loadNextPage}
-                            >
-                                Load More
-                            </button>
-                        )}
+                        {displayedOrders?.length < orders?.length &&
+                            filteredOrders?.length > 0 && (
+                                <button
+                                    className='text-gray-900 font-bold mx-auto w-52 px-2 lg:py-1 lg:rounded-2xl bg-lightGold mt-3'
+                                    onClick={loadNextPage}
+                                >
+                                    Load More
+                                </button>
+                            )}
                     </>
                 )}
             </Wrapper>

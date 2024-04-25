@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import Wrapper from '../Layout/Wrapper'
 import { CgSearch } from 'react-icons/cg'
 import { useFetch } from '../Hooks/useFetch'
@@ -74,11 +74,25 @@ const Employees = ({ id }) => {
         document.getElementById('my_modal_2').close()
     }
 
+    const [currentPage, setCurrentPage] = useState(1)
+
+    const itemsPerPage = 10
+
     const [editModal, setEditModal] = React.useState(false)
 
     const { data: employees, fetchData } = useFetch(`employee/${id}`)
     const [selectedEmployee, setSelectedEmployee] = React.useState(null)
     const [filteredEmployees, setFilteredEmployees] = React.useState(null)
+
+    const displayedEmployees = useMemo(() => {
+        const startIndex = (currentPage - 1) * itemsPerPage
+        const endIndex = startIndex + itemsPerPage
+        return filteredEmployees?.slice(startIndex, endIndex)
+    }, [filteredEmployees, currentPage])
+
+    const loadNextPage = () => {
+        setCurrentPage(currentPage + 1)
+    }
 
     const deleteEmployee = async (employeeId) => {
         const confirm = window.confirm('Are you sure you want to delete?')
@@ -113,6 +127,7 @@ const Employees = ({ id }) => {
             return employee?.name?.toLowerCase().includes(value.toLowerCase())
         })
         setFilteredEmployees(filtered)
+        setCurrentPage(1)
     }
 
     return (
@@ -131,18 +146,18 @@ const Employees = ({ id }) => {
                 </div>
             </div>
             <div
-                className='flex gap-x-6 flex-row flex-wrap mx-5 mt-3 gap-y-5
+                className='grid grid-cols-3 gap-4 mx-5 mt-3
                 '
             >
                 {filteredEmployees?.map((employee, i) => (
                     <>
                         <div
-                            className=' bg-gradient-to-r from-bgLight to-bgDarkColor text-white shadow-2xl  flex justify-center flex-col p-5 gap-y-5  min-h-36 min-w-80'
+                            className=' bg-gradient-to-r from-bgLight to-bgDarkColor text-white shadow-2xl  flex justify-center flex-col p-5 gap-y-5  min-h-36'
                             key={employee?._id}
                         >
-                            <h2 className='font-extrabold text-xl flex flex-row justify-between items-center'>
-                                <span>Name: </span>
-                                <span className='text-lightGold text-wrap'>
+                            <h2 className='font-extrabold flex flex-row justify-between items-center gap-x-2 text-xl'>
+                                <span className=''>Name: </span>
+                                <span className='text-left text-lightGold uppercase whitespace-normal w-[300px] break-words'>
                                     {employee?.name}
                                 </span>
                             </h2>
@@ -269,6 +284,15 @@ const Employees = ({ id }) => {
                         </h1>
                     </div>
                 )}
+                {displayedEmployees?.length < employees?.length &&
+                    filteredEmployees?.length > 0 && (
+                        <button
+                            className='text-gray-900 font-bold mx-auto w-52 px-2 lg:py-1 lg:rounded-2xl bg-lightGold mt-2'
+                            onClick={loadNextPage}
+                        >
+                            Load More
+                        </button>
+                    )}
             </div>
         </Wrapper>
     )

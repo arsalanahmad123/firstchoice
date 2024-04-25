@@ -49,7 +49,7 @@ const Login = () => {
     return (
         <div
             data-theme='dark'
-            className='flex  justify-between  min-h-screen flex-col md:flex-row md:bg-lightGold'
+            className='flex  justify-between  min-h-screen flex-col md:flex-row md:bg-lightGold overflow-hidden'
         >
             <div className=' lg:flex flex-col justify-start w-full pt-16 items-center relative hidden'>
                 <video

@@ -68,14 +68,15 @@ const Homepage = () => {
                                 )}
                             </div>
                         </div>
-                        {displayedCompanies?.length < companies?.length && (
-                            <button
-                                className='text-gray-900 font-bold mx-auto w-52 px-2 lg:py-1 lg:rounded-2xl bg-lightGold mt-2'
-                                onClick={loadNextPage}
-                            >
-                                Load More
-                            </button>
-                        )}
+                        {displayedCompanies?.length < companies?.length &&
+                            filteredCompanies?.length > 0 && (
+                                <button
+                                    className='text-gray-900 font-bold mx-auto w-52 px-2 lg:py-1 lg:rounded-2xl bg-lightGold mt-2'
+                                    onClick={loadNextPage}
+                                >
+                                    Load More
+                                </button>
+                            )}
                     </>
                 )}
             </Wrapper>
