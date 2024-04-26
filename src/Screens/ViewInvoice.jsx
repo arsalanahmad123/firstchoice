@@ -40,7 +40,7 @@ const ViewInvoice = () => {
 
     return (
         <section className='w-full min-h-screen bg-[#F5F5F7] flex flex-col justify-start items-start overflow-auto'>
-            <div className='flex justify-center items-center w-full -mt-16'>
+            <div className='flex justify-center items-center w-full -mt-9'>
                 <img src={logo} alt='Logo1' className='w-[20%]' />
                 <img src={logo2} alt='Logo2' className='w-[50%]' />
             </div>
@@ -59,7 +59,7 @@ const ViewInvoice = () => {
                         BILL TO:
                     </span>
                     <span className='flex flex-col justify-start items-start gap-y-1 border-2 border-gray-900 p-3'>
-                        <span className='text-xl text-black uppercase'>
+                        <span className=' text-lightGold font-medium uppercase'>
                             {invoice?.company}
                         </span>
                         <span className='text-black text-sm'>
@@ -129,7 +129,7 @@ const ViewInvoice = () => {
                         ))}
                     </tbody>
                 </table>
-                <div className='w-60 ml-auto mr-10 flex flex-col gap-y-1 mt-2 text-sm'>
+                <div className='w-60 ml-auto mr-10 flex flex-col gap-y-1 mt-2 text-xs'>
                     <div className='flex flex-row w-full  justify-between items-center'>
                         <span className='text-black'>TOTAL:</span>
                         <span className='font-medium'>
