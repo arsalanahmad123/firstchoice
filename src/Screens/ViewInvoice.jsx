@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { api } from '../API/api'
-import stamp from '../assets/stamp.png'
 import logo from '../assets/invoice-1.png'
 import logo2 from '../assets/invoice-2.png'
+import stamp from '../assets/stamp.png'
 
 const ViewInvoice = () => {
     const { id } = useParams()
@@ -40,9 +40,9 @@ const ViewInvoice = () => {
 
     return (
         <section className='w-full min-h-screen bg-[#F5F5F7] flex flex-col justify-start items-start overflow-auto'>
-            <div className='p-4 flex justify-center items-center w-full h-60'>
-                <img src={logo} alt='Logo1' className='w-[25%]' />
-                <img src={logo2} alt='Logo2' className='w-[75%]' />
+            <div className='flex justify-center items-center w-full -mt-16'>
+                <img src={logo} alt='Logo1' className='w-[20%]' />
+                <img src={logo2} alt='Logo2' className='w-[50%]' />
             </div>
             <div className='flex flex-col justify-start items-start gap-y-1 w-60 ml-auto text-black'>
                 <span>Mob: +971 58 571 6322</span>
@@ -53,8 +53,8 @@ const ViewInvoice = () => {
                     shop#2 -Sharjah
                 </span>
             </div>
-            <div className='flex flex-row justify-between items-center p-5 w-full'>
-                <div className='flex flex-col justify-center items-start gap-x-3'>
+            <div className='flex flex-row justify-between items-center p-2 w-full'>
+                <div className='flex flex-col justify-center items-start gap-x-2'>
                     <span className='text-black font-medium text-lg'>
                         BILL TO:
                     </span>
@@ -89,8 +89,8 @@ const ViewInvoice = () => {
                     </span>
                 </div>
             </div>
-            <div className='w-[97%] text-black border border-gray-900 mx-auto my-10'>
-                <table className='table table-bordered  w-full'>
+            <div className='w-[98%] text-black border border-gray-900 mx-auto relative '>
+                <table className='table table-sm table-bordered  w-full'>
                     <thead>
                         <tr className='border-collapse'>
                             <th className='text-black font-bold border-r border-gray-900 border-collapse'>
@@ -129,7 +129,7 @@ const ViewInvoice = () => {
                         ))}
                     </tbody>
                 </table>
-                <div className='w-60 ml-auto mr-10 flex flex-col gap-y-3 mt-3'>
+                <div className='w-60 ml-auto mr-10 flex flex-col gap-y-1 mt-2 text-sm'>
                     <div className='flex flex-row w-full  justify-between items-center'>
                         <span className='text-black'>TOTAL:</span>
                         <span className='font-medium'>
@@ -149,10 +149,11 @@ const ViewInvoice = () => {
                         </span>
                     </div>
                 </div>
-
-                <div className='flex justify-center items-center'>
-                    <img src={stamp} alt='Stamp' className='w-[25%] ' />
-                </div>
+                <img
+                    src={stamp}
+                    alt='Stamp'
+                    className='absolute top-1/2 right-1/2 transform translate-x-1/2 translate-y-1/2 w-52 opacity-30'
+                />
             </div>
         </section>
     )
