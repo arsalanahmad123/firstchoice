@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { api } from '../API/api'
 import stamp from '../assets/stamp.png'
-import logo from '../assets/logo.png'
+import logo from '../assets/invoice-1.png'
+import logo2 from '../assets/invoice-2.png'
 
 const ViewInvoice = () => {
     const { id } = useParams()
@@ -39,24 +40,33 @@ const ViewInvoice = () => {
 
     return (
         <section className='w-full min-h-screen bg-[#F5F5F7] flex flex-col justify-start items-start overflow-auto'>
-            <div className='flex flex-row justify-between items-start py-4 px-16 border-b-4 border-double border-lightGold'>
-                <img src={logo} alt='logo' className='w-[40%]' />
-                <span className='text-4xl font-bold text-black'>Invoice</span>
+            <div className='p-4 flex justify-center items-center w-full h-60'>
+                <img src={logo} alt='Logo1' className='w-[25%]' />
+                <img src={logo2} alt='Logo2' className='w-[75%]' />
             </div>
-            <div className='flex flex-row justify-between items-start p-5 w-full'>
-                <div className='flex flex-row justify-center items-start gap-x-3'>
-                    <span className='text-black font-bold text-lg'>
+            <div className='flex flex-col justify-start items-start gap-y-1 w-60 ml-auto text-black'>
+                <span>Mob: +971 58 571 6322</span>
+                <span>Email: info@1stchoicemc.com</span>
+                <span>Website: 1stchoicemc.com</span>
+                <span>
+                    Al yarmok - Kuwait Square <br />
+                    shop#2 -Sharjah
+                </span>
+            </div>
+            <div className='flex flex-row justify-between items-center p-5 w-full'>
+                <div className='flex flex-col justify-center items-start gap-x-3'>
+                    <span className='text-black font-medium text-lg'>
                         BILL TO:
                     </span>
-                    <span className='flex flex-col justify-start items-start gap-y-1'>
-                        <span className='text-2xl font-semibold text-black uppercase'>
+                    <span className='flex flex-col justify-start items-start gap-y-1 border-2 border-gray-900 p-3'>
+                        <span className='text-xl text-black uppercase'>
                             {invoice?.company}
                         </span>
                         <span className='text-black text-sm'>
-                            {selectedCompany?.email}
+                            Email: {selectedCompany?.email}
                         </span>
                         <span className='text-black text-sm'>
-                            {selectedCompany?.phone}
+                            Mob: {selectedCompany?.phone}
                         </span>
                     </span>
                 </div>
@@ -65,13 +75,13 @@ const ViewInvoice = () => {
                         <span className='text-black font-bold'>
                             Invoice Number:
                         </span>
-                        <span className='text-black font-medium italic'>
+                        <span className='text-black font-medium italic border-b-2 border-gray-900 '>
                             {invoice?._id}
                         </span>
                     </span>
-                    <span className='flex flex-row justify-start items-center gap-x-5'>
+                    <span className='flex flex-row justify-start items-center gap-x-10'>
                         <span className='text-black font-bold'>Date: </span>
-                        <span className='text-black font-medium italic'>
+                        <span className='text-black font-medium italic border-b-2 border-gray-900 w-full'>
                             {new Date(invoice?.createdAt).getDate()}/
                             {new Date(invoice?.createdAt).getMonth() + 1}/
                             {new Date(invoice?.createdAt).getFullYear()}
@@ -79,47 +89,67 @@ const ViewInvoice = () => {
                     </span>
                 </div>
             </div>
-            <div className='w-full p-5 text-black'>
-                <table className='table  w-full'>
+            <div className='w-[97%] text-black border border-gray-900 mx-auto my-10'>
+                <table className='table table-bordered  w-full'>
                     <thead>
-                        <tr>
-                            <th className='text-black font-bold'>Service</th>
-                            <th className='text-black font-bold'>Quantity</th>
-                            <th className='text-black font-bold'>Unit Price</th>
-                            <th className='text-black font-bold'>Amount</th>
+                        <tr className='border-collapse'>
+                            <th className='text-black font-bold border-r border-gray-900 border-collapse'>
+                                No.
+                            </th>
+                            <th className='text-black font-bold border-r border-gray-900 border-collapse'>
+                                Service
+                            </th>
+                            <th className='text-black font-bold border-r border-gray-900 border-collapse '>
+                                Quantity
+                            </th>
+                            <th className='text-black font-bold border-r border-gray-900 border-collapse'>
+                                Unit Price
+                            </th>
+                            <th className='text-black font-bold '>Amount</th>
                         </tr>
                     </thead>
 
                     <tbody>
-                        {invoice?.services?.map((item) => (
+                        {invoice?.services?.map((item, index) => (
                             <tr key={item.service}>
-                                <td>{item.service}</td>
-                                <td>{item.quantity}</td>
-                                <td>{item.sale_price} AED</td>
+                                <td className='border-r border-gray-900'>
+                                    {index + 1}
+                                </td>
+                                <td className='border-r border-gray-900'>
+                                    {item.service}
+                                </td>
+                                <td className='border-r border-gray-900'>
+                                    {item.quantity}
+                                </td>
+                                <td className='border-r border-gray-900'>
+                                    {item.sale_price} AED
+                                </td>
                                 <td>{item.quantity * item.sale_price} AED</td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
-
-                <div className='w-80 ml-auto mr-10 flex flex-col gap-y-3 mt-3'>
-                    <div className='flex flex-row w-full border-b-2 border-black justify-between items-center'>
-                        <span className='text-black font-bold'>TOTAL</span>
-                        <span>{invoice?.total_price} AED</span>
-                    </div>
-                    <div className='flex flex-row w-full border-b-2 border-black justify-between items-center'>
-                        <span className='text-black font-bold'>
-                            PAID AMOUNT
+                <div className='w-60 ml-auto mr-10 flex flex-col gap-y-3 mt-3'>
+                    <div className='flex flex-row w-full  justify-between items-center'>
+                        <span className='text-black'>TOTAL:</span>
+                        <span className='font-medium'>
+                            {invoice?.total_price} AED
                         </span>
-                        <span>{invoice?.paid_amount || 0} AED</span>
                     </div>
-                    <div className='flex flex-row w-full border-b-2 border-black justify-between items-center'>
-                        <span className='text-black font-bold'>
-                            BALANCE DUE{' '}
+                    <div className='flex flex-row w-full  justify-between items-center '>
+                        <span className='text-black'>PAID AMOUNT:</span>
+                        <span className='font-medium'>
+                            {invoice?.paid_amount || 0} AED
                         </span>
-                        <span>{invoice?.pending_amount} AED</span>
+                    </div>
+                    <div className='flex flex-row w-full  justify-between items-center'>
+                        <span className='text-black '>BALANCE DUE: </span>
+                        <span className='font-medium'>
+                            {invoice?.pending_amount} AED
+                        </span>
                     </div>
                 </div>
+
                 <div className='flex justify-center items-center'>
                     <img src={stamp} alt='Stamp' className='w-[25%] ' />
                 </div>
