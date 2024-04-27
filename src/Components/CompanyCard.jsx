@@ -1,9 +1,9 @@
-import React from 'react'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { api } from '../API/api'
 import toast from 'react-hot-toast'
 
-const ViewCompany = ({ company, fetchData }) => {
+const ViewCompany = ({ company, fetchData, setSelectedCompany }) => {
     const deleteFile = async (file) => {
         try {
             const confirm = window.confirm('Are you sure you want to delete?')
@@ -32,8 +32,8 @@ const ViewCompany = ({ company, fetchData }) => {
                     </h3>
                     <div className='py-3 flex justify-center items-center gap-x-2'>
                         <div className='flex flex-col justify-center items-center gap-y-2 flex-wrap'>
-                            {company?.documents.length > 0 &&
-                                company?.documents?.map((doc) => (
+                            {company?.documents?.map((doc) => {
+                                return (
                                     <div
                                         key={doc?.fileName}
                                         className='flex flex-row justify-center items-center gap-x-5'
@@ -54,12 +54,15 @@ const ViewCompany = ({ company, fetchData }) => {
                                             Remove Document
                                         </button>
                                     </div>
-                                ))}
+                                )
+                            })}
                         </div>
                     </div>
                 </div>
                 <form method='dialog' className='modal-backdrop'>
-                    <button>close</button>
+                    <button onClick={() => setSelectedCompany(null)}>
+                        close
+                    </button>
                 </form>
             </dialog>
         </>
@@ -67,7 +70,11 @@ const ViewCompany = ({ company, fetchData }) => {
 }
 
 const CompanyCard = ({ company, fetchData }) => {
-    const toggleModal = () => {
+    const [selectedCompany, setSelectedCompany] = useState(null)
+    const [showModal, setShowModal] = useState(false)
+    const toggleModal = (compn) => {
+        setSelectedCompany(compn)
+        setShowModal(true)
         document.getElementById('my_modal_2').showModal()
     }
 
@@ -199,7 +206,7 @@ const CompanyCard = ({ company, fetchData }) => {
                     </Link>
                     <button
                         className='btn btn-xs btn-warning btn-outline text-gray-900 ml-auto'
-                        onClick={toggleModal}
+                        onClick={() => toggleModal(company)}
                     >
                         View Documents
                     </button>
@@ -221,11 +228,15 @@ const CompanyCard = ({ company, fetchData }) => {
                     </button>
                 </div>
             </div>
-            <ViewCompany
-                key={company._id}
-                company={company}
-                fetchData={fetchData}
-            />
+
+            {showModal && selectedCompany && (
+                <ViewCompany
+                    key={company._id}
+                    company={selectedCompany}
+                    fetchData={fetchData}
+                    setSelectedCompany={setSelectedCompany}
+                />
+            )}
         </>
     )
 }

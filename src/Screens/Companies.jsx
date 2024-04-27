@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useEffect, useState } from 'react'
 import AppLayout from '../Layout/AppLayout'
 import Wrapper from '../Layout/Wrapper'
 import CompanyCard from '../Components/CompanyCard'
@@ -19,11 +19,14 @@ const Homepage = () => {
 
     const itemsPerPage = 10
 
-    const displayedCompanies = useMemo(() => {
-        const indexOfLastItem = currentPage * itemsPerPage
-        return filteredCompanies?.slice(0, indexOfLastItem)
-    }, [filteredCompanies, currentPage])
-
+    const getDisplayedCompanies = () => {
+        let filtered = companies
+        const startIndex = (currentPage - 1) * itemsPerPage
+        return filtered?.slice(startIndex, startIndex + itemsPerPage)
+    }
+    useEffect(() => {
+        setFilteredCompanies(getDisplayedCompanies())
+    }, [currentPage, companies])
     const loadNextPage = () => {
         setCurrentPage(currentPage + 1)
     }
@@ -101,7 +104,7 @@ const Homepage = () => {
                         />
                         <div className='flex'>
                             <div className='grid grid-cols-3 gap-4 mx-5 mt-3'>
-                                {displayedCompanies?.map((company) => (
+                                {filteredCompanies?.map((company) => (
                                     <CompanyCard
                                         key={company._id}
                                         company={company}
@@ -115,7 +118,7 @@ const Homepage = () => {
                                 )}
                             </div>
                         </div>
-                        {displayedCompanies?.length < companies?.length &&
+                        {filteredCompanies?.length < companies?.length &&
                             filteredCompanies?.length > 0 &&
                             searchQuery === '' &&
                             expiredFilter === false && (

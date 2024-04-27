@@ -83,15 +83,18 @@ const Employees = ({ id }) => {
 
     const { data: employees, fetchData } = useFetch(`employee/${id}`)
     const [selectedEmployee, setSelectedEmployee] = React.useState(null)
-    const [filteredEmployees, setFilteredEmployees] = React.useState(null)
+    const [filteredEmployees, setFilteredEmployees] = React.useState([])
     const [searchQuery, setSearchQuery] = React.useState('')
-    const [expired, setExpired] = React.useState(false)
 
-    const displayedEmployees = useMemo(() => {
+    const getDisplayedEmployees = () => {
         const startIndex = (currentPage - 1) * itemsPerPage
         const endIndex = startIndex + itemsPerPage
         return filteredEmployees?.slice(startIndex, endIndex)
-    }, [filteredEmployees, currentPage])
+    }
+
+    useEffect(() => {
+        setFilteredEmployees(getDisplayedEmployees())
+    }, [currentPage])
 
     const loadNextPage = () => {
         setCurrentPage(currentPage + 1)
@@ -124,56 +127,18 @@ const Employees = ({ id }) => {
         setFilteredEmployees(employees)
     }, [employees])
 
-    const handleInputChange = (e) => {
-        const value = e.target.value
-        setSearchQuery(value)
-        const filtered = employees.filter((employee) => {
-            return employee?.name?.toLowerCase().includes(value.toLowerCase())
-        })
-        setFilteredEmployees(filtered)
-    }
-
     useEffect(() => {
-        if (expired) {
-            let expiredEmployees = []
-            const checkAlreadyExists = (employee) => {
-                if (expiredEmployees.includes(employee)) return true
-                return false
-            }
-
-            for (let i = 0; i < filteredEmployees?.length; i++) {
-                if (
-                    new Date().toLocaleDateString() >
-                        new Date(
-                            filteredEmployees[i].eid_expiry,
-                        ).toLocaleDateString() &&
-                    !checkAlreadyExists(filteredEmployees[i].name)
-                ) {
-                    expiredEmployees.push(filteredEmployees[i])
-                } else if (
-                    new Date().toLocaleDateString() >
-                        new Date(
-                            filteredEmployees[i].labor_card_expiry,
-                        ).toLocaleDateString() &&
-                    !checkAlreadyExists(filteredEmployees[i].name)
-                ) {
-                    expiredEmployees.push(filteredEmployees[i])
-                } else if (
-                    new Date().toLocaleDateString() >
-                        new Date(
-                            filteredEmployees[i].passport_expiry,
-                        ).toLocaleDateString() &&
-                    !checkAlreadyExists(filteredEmployees[i].name)
-                ) {
-                    expiredEmployees.push(filteredEmployees[i])
-                }
-            }
-            if (expiredEmployees.length > 0)
-                setFilteredEmployees(expiredEmployees)
+        if (searchQuery) {
+            const filtered = employees.filter((employee) =>
+                employee?.name
+                    ?.toLowerCase()
+                    .includes(searchQuery?.toLowerCase()),
+            )
+            setFilteredEmployees(filtered)
         } else {
             setFilteredEmployees(employees)
         }
-    }, [expired])
+    }, [searchQuery])
 
     return (
         <Wrapper title='Employees'>
@@ -184,12 +149,12 @@ const Employees = ({ id }) => {
                         className='w-full lg:py-1 pl-5 lg:rounded-2xl bg-bgLight border-2 border-gray-700 text-white'
                         placeholder='Search Employee'
                         onChange={(e) => {
-                            handleInputChange(e)
+                            setSearchQuery(e.target.value)
                         }}
                     />
                     <CgSearch className='text-slate-700 m-auto absolute lg:right-5 lg:top-3  ' />
                 </div>
-                <div className='flex justify-center items-center gap-x-3'>
+                {/* <div className='flex justify-center items-center gap-x-3'>
                     <span
                         className={`badge p-2 cursor-pointer ${
                             expired && 'text-white badge-ghost'
@@ -206,7 +171,7 @@ const Employees = ({ id }) => {
                     >
                         All Employees
                     </span>
-                </div>
+                </div> */}
             </div>
             <div
                 className='grid grid-cols-3 gap-4 mx-5 mt-3
@@ -216,7 +181,7 @@ const Employees = ({ id }) => {
                     <>
                         <div
                             className=' bg-gradient-to-r from-bgLight to-bgDarkColor text-white shadow-2xl  flex justify-center flex-col p-5 gap-y-5  min-h-36'
-                            key={employee?._id}
+                            key={i}
                         >
                             <h2 className='font-extrabold flex flex-row justify-between items-center gap-x-2 text-xl'>
                                 <span className=''>Name: </span>
@@ -322,7 +287,7 @@ const Employees = ({ id }) => {
                             </div>
                         </div>
                         <ViewEmployee
-                            key={employee?._id}
+                            key={i}
                             employee={selectedEmployee}
                             fetchData={fetchData}
                             hideModal={hideModal}
@@ -348,16 +313,14 @@ const Employees = ({ id }) => {
                     </div>
                 )}
             </div>
-            {displayedEmployees?.length < employees?.length &&
-                filteredEmployees?.length > 0 &&
-                searchQuery === '' &&
-                !expired(
+            {filteredEmployees?.length < employees?.length &&
+                filteredEmployees?.length > 0 && searchQuery === '' && (
                     <button
                         className='text-gray-900 font-bold mx-auto w-52 px-2 lg:py-1 lg:rounded-2xl bg-lightGold mt-2'
                         onClick={loadNextPage}
                     >
                         Load More
-                    </button>,
+                    </button>
                 )}
         </Wrapper>
     )
