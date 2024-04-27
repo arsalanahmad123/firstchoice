@@ -67,7 +67,8 @@ const ViewEmployee = ({ employee, fetchData, hideModal }) => {
 }
 
 const Employees = ({ id }) => {
-    const toggleModal = () => {
+    const toggleModal = (employ) => {
+        setSelectedEmployee(employ)
         document.getElementById('my_modal_2').showModal()
     }
     const hideModal = () => {
@@ -83,6 +84,8 @@ const Employees = ({ id }) => {
     const { data: employees, fetchData } = useFetch(`employee/${id}`)
     const [selectedEmployee, setSelectedEmployee] = React.useState(null)
     const [filteredEmployees, setFilteredEmployees] = React.useState(null)
+    const [searchQuery, setSearchQuery] = React.useState('')
+    const [expired, setExpired] = React.useState(false)
 
     const displayedEmployees = useMemo(() => {
         const startIndex = (currentPage - 1) * itemsPerPage
@@ -123,17 +126,59 @@ const Employees = ({ id }) => {
 
     const handleInputChange = (e) => {
         const value = e.target.value
+        setSearchQuery(value)
         const filtered = employees.filter((employee) => {
             return employee?.name?.toLowerCase().includes(value.toLowerCase())
         })
         setFilteredEmployees(filtered)
-        setCurrentPage(1)
     }
+
+    useEffect(() => {
+        if (expired) {
+            let expiredEmployees = []
+            const checkAlreadyExists = (employee) => {
+                if (expiredEmployees.includes(employee)) return true
+                return false
+            }
+
+            for (let i = 0; i < filteredEmployees?.length; i++) {
+                if (
+                    new Date().toLocaleDateString() >
+                        new Date(
+                            filteredEmployees[i].eid_expiry,
+                        ).toLocaleDateString() &&
+                    !checkAlreadyExists(filteredEmployees[i].name)
+                ) {
+                    expiredEmployees.push(filteredEmployees[i])
+                } else if (
+                    new Date().toLocaleDateString() >
+                        new Date(
+                            filteredEmployees[i].labor_card_expiry,
+                        ).toLocaleDateString() &&
+                    !checkAlreadyExists(filteredEmployees[i].name)
+                ) {
+                    expiredEmployees.push(filteredEmployees[i])
+                } else if (
+                    new Date().toLocaleDateString() >
+                        new Date(
+                            filteredEmployees[i].passport_expiry,
+                        ).toLocaleDateString() &&
+                    !checkAlreadyExists(filteredEmployees[i].name)
+                ) {
+                    expiredEmployees.push(filteredEmployees[i])
+                }
+            }
+            if (expiredEmployees.length > 0)
+                setFilteredEmployees(expiredEmployees)
+        } else {
+            setFilteredEmployees(employees)
+        }
+    }, [expired])
 
     return (
         <Wrapper title='Employees'>
             <div className='flex  justify-between  gap-x-20 lg:pt-4 px-5'>
-                <div className='relative w-full'>
+                <div className='relative'>
                     <input
                         type='text'
                         className='w-full lg:py-1 pl-5 lg:rounded-2xl bg-bgLight border-2 border-gray-700 text-white'
@@ -143,6 +188,24 @@ const Employees = ({ id }) => {
                         }}
                     />
                     <CgSearch className='text-slate-700 m-auto absolute lg:right-5 lg:top-3  ' />
+                </div>
+                <div className='flex justify-center items-center gap-x-3'>
+                    <span
+                        className={`badge p-2 cursor-pointer ${
+                            expired && 'text-white badge-ghost'
+                        }`}
+                        onClick={() => setExpired(true)}
+                    >
+                        Expired Employees
+                    </span>
+                    <span
+                        className={`badge p-2 cursor-pointer ${
+                            !expired && 'text-white badge-ghost'
+                        }`}
+                        onClick={() => setExpired(false)}
+                    >
+                        All Employees
+                    </span>
                 </div>
             </div>
             <div
@@ -238,7 +301,7 @@ const Employees = ({ id }) => {
                             <div className='flex justify-between items-center gap-x-3'>
                                 <button
                                     className='btn btn-xs btn-outline text-white'
-                                    onClick={toggleModal}
+                                    onClick={() => toggleModal(employee)}
                                 >
                                     View Documents
                                 </button>
@@ -260,7 +323,7 @@ const Employees = ({ id }) => {
                         </div>
                         <ViewEmployee
                             key={employee?._id}
-                            employee={employee}
+                            employee={selectedEmployee}
                             fetchData={fetchData}
                             hideModal={hideModal}
                         />
@@ -277,7 +340,7 @@ const Employees = ({ id }) => {
                             )}
                     </>
                 ))}
-                {employees?.length === 0 && (
+                {filteredEmployees?.length === 0 && (
                     <div className='text-center'>
                         <h1 className='text-3xl font-bold text-white'>
                             No Employee Found
@@ -286,13 +349,15 @@ const Employees = ({ id }) => {
                 )}
             </div>
             {displayedEmployees?.length < employees?.length &&
-                filteredEmployees?.length > 0 && (
+                filteredEmployees?.length > 0 &&
+                searchQuery === '' &&
+                !expired(
                     <button
                         className='text-gray-900 font-bold mx-auto w-52 px-2 lg:py-1 lg:rounded-2xl bg-lightGold mt-2'
                         onClick={loadNextPage}
                     >
                         Load More
-                    </button>
+                    </button>,
                 )}
         </Wrapper>
     )

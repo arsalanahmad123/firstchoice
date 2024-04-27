@@ -65,6 +65,7 @@ const AddInvoice = () => {
     const [newEmployee, setNewEmployee] = useState('')
     const navigate = useNavigate()
     const handleCompanySearchInput = useCallback((e) => {
+        document.getElementById('companyDropdown').classList.remove('hidden')
         const query = e.target.value
         if (query) {
             const filtered = Companies?.filter((company) =>
@@ -248,6 +249,7 @@ const AddInvoice = () => {
     }
 
     const handleNewEmployeeChange = (e) => {
+        document.getElementById('employeeDropdown').classList.remove('hidden')
         setNewEmployee(e.target.value)
     }
 
@@ -297,15 +299,6 @@ const AddInvoice = () => {
                                                 onChange={
                                                     handleCompanySearchInput
                                                 }
-                                                onClick={() => {
-                                                    document
-                                                        .getElementById(
-                                                            'companyDropdown',
-                                                        )
-                                                        .classList.remove(
-                                                            'hidden',
-                                                        )
-                                                }}
                                                 className=' bg-bgDarkColor  text-sm text-white rounded-lg  py-1  px-5 focus:outline-none w-full ring-0 border-0 disabled:cursor-not-allowed shadow-lg'
                                             />
                                             <p className='text-xs text-lightGold'>
@@ -494,15 +487,6 @@ const AddInvoice = () => {
                                                                 e,
                                                             )
                                                         }
-                                                        onClick={() => {
-                                                            document
-                                                                .getElementById(
-                                                                    'employeeDropdown',
-                                                                )
-                                                                .classList.remove(
-                                                                    'hidden',
-                                                                )
-                                                        }}
                                                         className=' bg-bgDarkColor  text-white rounded-md  py-1 w-fit pl-1 focus:outline-none  ring-0 border-0'
                                                     />
                                                     <div

@@ -12,6 +12,8 @@ import Loader from '../Components/Loader'
 const Homepage = () => {
     const { data: companies, fetchData, loading } = useFetch('companies')
     const [filteredCompanies, setFilteredCompanies] = useState(null)
+    const [searchQuery, setSearchQuery] = useState('')
+    const [expiredFilter, setExpiredFilter] = useState(false)
 
     const [currentPage, setCurrentPage] = useState(1)
 
@@ -28,6 +30,7 @@ const Homepage = () => {
 
     const handleCompanySearchInput = (e) => {
         const query = e.target.value
+        setSearchQuery(query)
         if (query) {
             const filtered = companies?.filter((company) =>
                 company.username.toLowerCase().includes(query.toLowerCase()),
@@ -37,6 +40,48 @@ const Homepage = () => {
             setFilteredCompanies(companies)
         }
     }
+
+    useEffect(() => {
+        if (expiredFilter) {
+            let expiredcompanies = []
+            const checkAlreadyExists = (company) => {
+                if (expiredcompanies.includes(company)) return true
+                return false
+            }
+
+            for (let i = 0; i < filteredCompanies?.length; i++) {
+                if (
+                    new Date().toLocaleDateString() >
+                        new Date(
+                            filteredCompanies[i].licence_expiry,
+                        ).toLocaleDateString() &&
+                    !checkAlreadyExists(filteredCompanies[i].username)
+                ) {
+                    expiredcompanies.push(filteredCompanies[i])
+                } else if (
+                    new Date().toLocaleDateString() >
+                        new Date(
+                            filteredCompanies[i].img_card_expiry,
+                        ).toLocaleDateString() &&
+                    !checkAlreadyExists(filteredCompanies[i].username)
+                ) {
+                    expiredcompanies.push(filteredCompanies[i])
+                } else if (
+                    new Date().toLocaleDateString() >
+                        new Date(
+                            filteredCompanies[i].least_contract_expiry,
+                        ).toLocaleDateString() &&
+                    !checkAlreadyExists(filteredCompanies[i].username)
+                ) {
+                    expiredcompanies.push(filteredCompanies[i])
+                }
+            }
+            if (expiredcompanies.length > 0)
+                setFilteredCompanies(expiredcompanies)
+        } else {
+            setFilteredCompanies(companies)
+        }
+    }, [expiredFilter])
 
     useEffect(() => {
         setFilteredCompanies(companies)
@@ -51,6 +96,8 @@ const Homepage = () => {
                     <>
                         <Header
                             handleCompanySearchInput={handleCompanySearchInput}
+                            setExpiredFilter={setExpiredFilter}
+                            expiredFilter={expiredFilter}
                         />
                         <div className='flex'>
                             <div className='grid grid-cols-3 gap-4 mx-5 mt-3'>
@@ -61,7 +108,7 @@ const Homepage = () => {
                                         fetchData={fetchData}
                                     />
                                 ))}
-                                {companies?.length === 0 && (
+                                {filteredCompanies?.length === 0 && (
                                     <p className='text-3xl'>
                                         No Companies Found
                                     </p>
@@ -69,7 +116,9 @@ const Homepage = () => {
                             </div>
                         </div>
                         {displayedCompanies?.length < companies?.length &&
-                            filteredCompanies?.length > 0 && (
+                            filteredCompanies?.length > 0 &&
+                            searchQuery === '' &&
+                            expiredFilter === false && (
                                 <button
                                     className='text-gray-900 font-bold mx-auto w-52 px-2 lg:py-1 lg:rounded-2xl bg-lightGold mt-2'
                                     onClick={loadNextPage}

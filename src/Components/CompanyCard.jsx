@@ -117,7 +117,16 @@ const CompanyCard = ({ company, fetchData }) => {
                 <div className='flex flex-col justify-center items-start gap-y-2 my-2'>
                     <p className='flex flex-row justify-between items-center gap-x-5'>
                         <span>Licence Expiry: </span>
-                        <span>
+                        <span
+                            className={` ${
+                                new Date(
+                                    company?.licence_expiry,
+                                ).toLocaleDateString() <=
+                                new Date().toLocaleDateString()
+                                    ? 'text-red-500 font-medium'
+                                    : ''
+                            } `}
+                        >
                             {new Date(company?.licence_expiry).getDate()}/
                             {new Date(company?.licence_expiry).getMonth() + 1}/
                             {new Date(company?.licence_expiry).getFullYear()}
@@ -125,7 +134,16 @@ const CompanyCard = ({ company, fetchData }) => {
                     </p>
                     <p className='flex flex-row justify-between items-center gap-x-5'>
                         <span>Img Card Expiry: </span>
-                        <span>
+                        <span
+                            className={`
+                        ${
+                            new Date(
+                                company?.img_card_expiry,
+                            ).toLocaleDateString() <=
+                            new Date().toLocaleDateString()
+                        }
+                        `}
+                        >
                             {new Date(company?.img_card_expiry).getDate()}/
                             {new Date(company?.img_card_expiry).getMonth() + 1}/
                             {new Date(company?.img_card_expiry).getFullYear()}
@@ -133,7 +151,16 @@ const CompanyCard = ({ company, fetchData }) => {
                     </p>
                     <p className='flex flex-row justify-between items-center gap-x-5'>
                         <span>Least Contract Expiry: </span>
-                        <span>
+                        <span
+                            className={`
+                        ${
+                            new Date(
+                                company?.least_contract_expiry,
+                            ).toLocaleDateString() <=
+                            new Date().toLocaleDateString()
+                        }
+                        `}
+                        >
                             {new Date(company?.least_contract_expiry).getDate()}
                             /
                             {new Date(
@@ -147,7 +174,16 @@ const CompanyCard = ({ company, fetchData }) => {
                     </p>
                     <p className='flex flex-row justify-between items-center gap-x-5'>
                         <span>E Channel Expiry: </span>
-                        <span>
+                        <span
+                            className={`
+                        ${
+                            new Date(
+                                company?.e_channel_expiry,
+                            ).toLocaleDateString() <=
+                            new Date().toLocaleDateString()
+                        }
+                        `}
+                        >
                             {new Date(company?.e_channel_expiry).getDate()}/
                             {new Date(company?.e_channel_expiry).getMonth() + 1}
                             /{new Date(company?.e_channel_expiry).getFullYear()}
