@@ -58,7 +58,7 @@ const Homepage = () => {
                         new Date(
                             filteredCompanies[i].licence_expiry,
                         ).toLocaleDateString() &&
-                    !checkAlreadyExists(filteredCompanies[i].username)
+                    !checkAlreadyExists(filteredCompanies[i])
                 ) {
                     expiredcompanies.push(filteredCompanies[i])
                 } else if (
@@ -66,7 +66,7 @@ const Homepage = () => {
                         new Date(
                             filteredCompanies[i].img_card_expiry,
                         ).toLocaleDateString() &&
-                    !checkAlreadyExists(filteredCompanies[i].username)
+                    !checkAlreadyExists(filteredCompanies[i])
                 ) {
                     expiredcompanies.push(filteredCompanies[i])
                 } else if (
@@ -74,7 +74,7 @@ const Homepage = () => {
                         new Date(
                             filteredCompanies[i].least_contract_expiry,
                         ).toLocaleDateString() &&
-                    !checkAlreadyExists(filteredCompanies[i].username)
+                    !checkAlreadyExists(filteredCompanies[i])
                 ) {
                     expiredcompanies.push(filteredCompanies[i])
                 }
@@ -85,10 +85,6 @@ const Homepage = () => {
             setFilteredCompanies(companies)
         }
     }, [expiredFilter])
-
-    useEffect(() => {
-        setFilteredCompanies(companies)
-    }, [companies])
 
     return (
         <>

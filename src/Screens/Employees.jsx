@@ -77,7 +77,7 @@ const Employees = ({ id }) => {
 
     const [currentPage, setCurrentPage] = useState(1)
 
-    const itemsPerPage = 10
+    const itemsPerPage = 1
 
     const [editModal, setEditModal] = React.useState(false)
 
@@ -86,19 +86,9 @@ const Employees = ({ id }) => {
     const [filteredEmployees, setFilteredEmployees] = React.useState([])
     const [searchQuery, setSearchQuery] = React.useState('')
 
-    const getDisplayedEmployees = () => {
-        const startIndex = (currentPage - 1) * itemsPerPage
-        const endIndex = startIndex + itemsPerPage
-        return filteredEmployees?.slice(startIndex, endIndex)
-    }
-
     useEffect(() => {
-        setFilteredEmployees(getDisplayedEmployees())
-    }, [currentPage])
-
-    const loadNextPage = () => {
-        setCurrentPage(currentPage + 1)
-    }
+        setFilteredEmployees(employees)
+    }, [employees])
 
     const deleteEmployee = async (employeeId) => {
         const confirm = window.confirm('Are you sure you want to delete?')
@@ -122,10 +112,6 @@ const Employees = ({ id }) => {
         setSelectedEmployee(employee)
         setEditModal(true)
     }
-
-    useEffect(() => {
-        setFilteredEmployees(employees)
-    }, [employees])
 
     useEffect(() => {
         if (searchQuery) {
@@ -308,20 +294,11 @@ const Employees = ({ id }) => {
                 {filteredEmployees?.length === 0 && (
                     <div className='text-center'>
                         <h1 className='text-3xl font-bold text-white'>
-                            No Employee Found
+                            No Employee
                         </h1>
                     </div>
                 )}
             </div>
-            {filteredEmployees?.length < employees?.length &&
-                filteredEmployees?.length > 0 && searchQuery === '' && (
-                    <button
-                        className='text-gray-900 font-bold mx-auto w-52 px-2 lg:py-1 lg:rounded-2xl bg-lightGold mt-2'
-                        onClick={loadNextPage}
-                    >
-                        Load More
-                    </button>
-                )}
         </Wrapper>
     )
 }
