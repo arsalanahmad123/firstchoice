@@ -126,10 +126,8 @@ const CompanyCard = ({ company, fetchData }) => {
                         <span>Licence Expiry: </span>
                         <span
                             className={` ${
-                                new Date(
-                                    company?.licence_expiry,
-                                ).toLocaleDateString() <=
-                                new Date().toLocaleDateString()
+                                new Date(company?.licence_expiry).getTime() <
+                                new Date().getTime()
                                     ? 'text-red-500 font-medium'
                                     : ''
                             } `}
@@ -146,7 +144,7 @@ const CompanyCard = ({ company, fetchData }) => {
                         ${
                             new Date(
                                 company?.img_card_expiry,
-                            ).toLocaleDateString() <=
+                            ).toLocaleDateString() <
                             new Date().toLocaleDateString()
                         }
                         `}
@@ -163,7 +161,7 @@ const CompanyCard = ({ company, fetchData }) => {
                         ${
                             new Date(
                                 company?.least_contract_expiry,
-                            ).toLocaleDateString() <=
+                            ).toLocaleDateString() <
                             new Date().toLocaleDateString()
                         }
                         `}
