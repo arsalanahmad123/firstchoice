@@ -69,6 +69,12 @@ const ViewInvoice = () => {
                             Mob: {selectedCompany?.phone}
                         </span>
                     </span>
+                    <span className='flex flex-row justify-start items-start gap-x-3'>
+                        <span className='text-black font-bold'>Subject:</span>
+                        <span className='text-black border-b border-black '>
+                            {invoice?.title}
+                        </span>
+                    </span>
                 </div>
                 <div className='flex flex-col gap-y-2'>
                     <span className='flex flex-row justify-start items-center gap-x-2'>
