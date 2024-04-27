@@ -54,26 +54,26 @@ const Homepage = () => {
 
             for (let i = 0; i < filteredCompanies?.length; i++) {
                 if (
-                    new Date().toLocaleDateString() >
+                    new Date().getTime() >
                         new Date(
                             filteredCompanies[i].licence_expiry,
-                        ).toLocaleDateString() &&
+                        ).getTime() &&
                     !checkAlreadyExists(filteredCompanies[i])
                 ) {
                     expiredcompanies.push(filteredCompanies[i])
                 } else if (
-                    new Date().toLocaleDateString() >
+                    new Date().getTime() >
                         new Date(
                             filteredCompanies[i].img_card_expiry,
-                        ).toLocaleDateString() &&
+                        ).getTime() &&
                     !checkAlreadyExists(filteredCompanies[i])
                 ) {
                     expiredcompanies.push(filteredCompanies[i])
                 } else if (
-                    new Date().toLocaleDateString() >
+                    new Date().getTime() >
                         new Date(
                             filteredCompanies[i].least_contract_expiry,
-                        ).toLocaleDateString() &&
+                        ).getTime() &&
                     !checkAlreadyExists(filteredCompanies[i])
                 ) {
                     expiredcompanies.push(filteredCompanies[i])
