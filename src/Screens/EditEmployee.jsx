@@ -204,7 +204,11 @@ const EditEmployee = ({
                                 type='date'
                                 name='labor_card_expiry'
                                 className='input-sm bg-bgLight border border-gray-700 text-white focus:outline-none focus:ring-0 rounded-md w-96 text-[17px]'
-                                value={newdata?.labor_card_expiry}
+                                value={
+                                    new Date(newdata?.labor_card_expiry)
+                                        .toISOString()
+                                        .split('T')[0]
+                                }
                                 onChange={(e) => {
                                     setNewData({
                                         ...newdata,
@@ -222,7 +226,11 @@ const EditEmployee = ({
                             <input
                                 type='date'
                                 name='eid_expiry'
-                                value={newdata?.eid_expiry}
+                                value={
+                                    new Date(newdata?.eid_expiry)
+                                        .toISOString()
+                                        .split('T')[0]
+                                }
                                 onChange={(e) => {
                                     setNewData({
                                         ...newdata,
@@ -267,7 +275,11 @@ const EditEmployee = ({
                             <input
                                 type='date'
                                 name='passport_expiry'
-                                value={newdata?.passport_expiry}
+                                value={
+                                    new Date(newdata?.passport_expiry)
+                                        .toISOString()
+                                        .split('T')[0]
+                                }
                                 onChange={(e) => {
                                     setNewData({
                                         ...newdata,

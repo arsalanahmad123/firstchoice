@@ -292,6 +292,11 @@ const EditCompany = ({ setCompanyModal, Company }) => {
                                 <input
                                     type='date'
                                     name='licence_expiry'
+                                    value={
+                                        new Date(newdata.licence_expiry)
+                                            .toISOString()
+                                            .split('T')[0]
+                                    }
                                     onChange={(e) =>
                                         setNewData({
                                             ...newdata,
@@ -313,6 +318,11 @@ const EditCompany = ({ setCompanyModal, Company }) => {
                                 <input
                                     type='date'
                                     name='img_card_expiry'
+                                    value={
+                                        new Date(newdata.img_card_expiry)
+                                            .toISOString()
+                                            .split('T')[0]
+                                    }
                                     onChange={(e) =>
                                         setNewData({
                                             ...newdata,
@@ -336,6 +346,11 @@ const EditCompany = ({ setCompanyModal, Company }) => {
                                 <input
                                     type='date'
                                     name='least_contract_expiry'
+                                    value={
+                                        new Date(newdata.least_contract_expiry)
+                                            .toISOString()
+                                            .split('T')[0]
+                                    }
                                     onChange={(e) =>
                                         setNewData({
                                             ...newdata,
@@ -358,6 +373,11 @@ const EditCompany = ({ setCompanyModal, Company }) => {
                                 <input
                                     type='date'
                                     name='e_channel_expiry'
+                                    value={
+                                        new Date(newdata.e_channel_expiry)
+                                            .toISOString()
+                                            .split('T')[0]
+                                    }
                                     onChange={(e) =>
                                         setNewData({
                                             ...newdata,
