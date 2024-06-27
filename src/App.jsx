@@ -14,6 +14,7 @@ import Services from './Screens/Services'
 import Admin from './Screens/Admin'
 import AddInvoice from './Screens/AddInvoice'
 import ViewInvoice from './Screens/ViewInvoice'
+import SingleInvoice from './Screens/SingleInovice'
 import { Toaster } from 'react-hot-toast'
 
 function App() {
@@ -32,6 +33,10 @@ function App() {
                         <Route path='/revenue' element={<Revenue />} />
                         <Route path='/services' element={<Services />} />
                         <Route path='/add_invoice' element={<AddInvoice />} />
+                        <Route
+                            path='/singleinvoice/*'
+                            element={<SingleInvoice />}
+                        />
                         <Route
                             path='/view-invoice/:id'
                             element={<ViewInvoice />}

@@ -76,15 +76,13 @@ const Employees = ({ id }) => {
     }
 
     const [currentPage, setCurrentPage] = useState(1)
-
     const itemsPerPage = 1
-
     const [editModal, setEditModal] = React.useState(false)
-
     const { data: employees, fetchData } = useFetch(`employee/${id}`)
     const [selectedEmployee, setSelectedEmployee] = React.useState(null)
     const [filteredEmployees, setFilteredEmployees] = React.useState([])
     const [searchQuery, setSearchQuery] = React.useState('')
+    const [expiredFilter, setExpiredFilter] = React.useState(false)
 
     useEffect(() => {
         setFilteredEmployees(employees)
@@ -98,7 +96,6 @@ const Employees = ({ id }) => {
             const response = await api.delete(
                 `/employee/delete-employee/${employeeId}`,
             )
-
             if (response.status === 200) {
                 toast.success(response.data.message)
                 fetchData()
@@ -126,9 +123,48 @@ const Employees = ({ id }) => {
         }
     }, [searchQuery])
 
+    useEffect(() => {
+        if (expiredFilter) {
+            let expiredEmployees = []
+            const checkAlreadyExists = (employee) => {
+                return expiredEmployees.includes(employee)
+            }
+
+            for (let i = 0; i < filteredEmployees?.length; i++) {
+                if (
+                    new Date().getTime() >
+                        new Date(
+                            filteredEmployees[i].labor_card_expiry,
+                        ).getTime() &&
+                    !checkAlreadyExists(filteredEmployees[i])
+                ) {
+                    expiredEmployees.push(filteredEmployees[i])
+                } else if (
+                    new Date().getTime() >
+                        new Date(filteredEmployees[i].eid_expiry).getTime() &&
+                    !checkAlreadyExists(filteredEmployees[i])
+                ) {
+                    expiredEmployees.push(filteredEmployees[i])
+                } else if (
+                    new Date().getTime() >
+                        new Date(
+                            filteredEmployees[i].passport_expiry,
+                        ).getTime() &&
+                    !checkAlreadyExists(filteredEmployees[i])
+                ) {
+                    expiredEmployees.push(filteredEmployees[i])
+                }
+            }
+            if (expiredEmployees.length > 0)
+                setFilteredEmployees(expiredEmployees)
+        } else {
+            setFilteredEmployees(employees)
+        }
+    }, [expiredFilter])
+
     return (
         <Wrapper title='Employees'>
-            <div className='flex  justify-between  gap-x-20 lg:pt-4 px-5'>
+            <div className='flex justify-between gap-x-20 lg:pt-4 px-5'>
                 <div className='relative'>
                     <input
                         type='text'
@@ -138,36 +174,33 @@ const Employees = ({ id }) => {
                             setSearchQuery(e.target.value)
                         }}
                     />
-                    <CgSearch className='text-slate-700 m-auto absolute lg:right-5 lg:top-3  ' />
+                    <CgSearch className='text-slate-700 m-auto absolute lg:right-5 lg:top-3' />
                 </div>
-                {/* <div className='flex justify-center items-center gap-x-3'>
+                <div className='flex justify-center items-center gap-x-3'>
                     <span
                         className={`badge p-2 cursor-pointer ${
-                            expired && 'text-white badge-ghost'
+                            expiredFilter && 'text-white badge-ghost'
                         }`}
-                        onClick={() => setExpired(true)}
+                        onClick={() => setExpiredFilter(true)}
                     >
                         Expired Employees
                     </span>
                     <span
                         className={`badge p-2 cursor-pointer ${
-                            !expired && 'text-white badge-ghost'
+                            !expiredFilter && 'text-white badge-ghost'
                         }`}
-                        onClick={() => setExpired(false)}
+                        onClick={() => setExpiredFilter(false)}
                     >
                         All Employees
                     </span>
-                </div> */}
+                </div>
             </div>
-            <div
-                className='grid grid-cols-3 gap-4 mx-5 mt-3
-                '
-            >
-                {filteredEmployees?.map((employee, i) => (
+            <div className='grid grid-cols-3 gap-4 mx-5 mt-3'>
+                {filteredEmployees?.map((employee) => (
                     <>
                         <div
-                            className=' bg-gradient-to-r from-bgLight to-bgDarkColor text-white shadow-2xl  flex justify-center flex-col p-5 gap-y-5  min-h-36'
-                            key={i}
+                            className='bg-gradient-to-r from-bgLight to-bgDarkColor text-white shadow-2xl flex justify-center flex-col p-5 gap-y-5 min-h-36'
+                            key={employee._id}
                         >
                             <h2 className='font-extrabold flex flex-row justify-between items-center gap-x-2 text-xl'>
                                 <span className=''>Name: </span>
@@ -187,15 +220,7 @@ const Employees = ({ id }) => {
                                     <span className='border-b border-dashed'>
                                         {new Date(
                                             employee?.labor_card_expiry,
-                                        ).getDate()}
-                                        /
-                                        {new Date(
-                                            employee?.labor_card_expiry,
-                                        ).getMonth() + 1}
-                                        /
-                                        {new Date(
-                                            employee?.labor_card_expiry,
-                                        ).getFullYear()}
+                                        ).toLocaleDateString()}
                                     </span>
                                 </p>
                                 <p className='flex flex-row justify-between items-center'>
@@ -215,15 +240,7 @@ const Employees = ({ id }) => {
                                     <span className='border-b border-dashed'>
                                         {new Date(
                                             employee?.eid_expiry,
-                                        ).getDate()}
-                                        /
-                                        {new Date(
-                                            employee?.eid_expiry,
-                                        ).getMonth() + 1}
-                                        /
-                                        {new Date(
-                                            employee?.eid_expiry,
-                                        ).getFullYear()}
+                                        ).toLocaleDateString()}
                                     </span>
                                 </p>
                                 <p className='flex flex-row justify-between items-center'>
@@ -237,15 +254,7 @@ const Employees = ({ id }) => {
                                     <span className='border-b border-dashed'>
                                         {new Date(
                                             employee?.passport_expiry,
-                                        ).getDate()}
-                                        /
-                                        {new Date(
-                                            employee?.passport_expiry,
-                                        ).getMonth() + 1}
-                                        /
-                                        {new Date(
-                                            employee?.passport_expiry,
-                                        ).getFullYear()}
+                                        ).toLocaleDateString()}
                                     </span>
                                 </p>
                             </div>
@@ -273,7 +282,6 @@ const Employees = ({ id }) => {
                             </div>
                         </div>
                         <ViewEmployee
-                            key={i}
                             employee={selectedEmployee}
                             fetchData={fetchData}
                             hideModal={hideModal}

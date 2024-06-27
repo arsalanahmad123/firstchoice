@@ -15,22 +15,6 @@ const Homepage = () => {
     const [searchQuery, setSearchQuery] = useState('')
     const [expiredFilter, setExpiredFilter] = useState(false)
 
-    const [currentPage, setCurrentPage] = useState(1)
-
-    const itemsPerPage = 10
-
-    const getDisplayedCompanies = () => {
-        let filtered = companies
-        const startIndex = (currentPage - 1) * itemsPerPage
-        return filtered?.slice(startIndex, startIndex + itemsPerPage)
-    }
-    useEffect(() => {
-        setFilteredCompanies(getDisplayedCompanies())
-    }, [currentPage, companies])
-    const loadNextPage = () => {
-        setCurrentPage(currentPage + 1)
-    }
-
     const handleCompanySearchInput = (e) => {
         const query = e.target.value
         setSearchQuery(query)
@@ -43,6 +27,10 @@ const Homepage = () => {
             setFilteredCompanies(companies)
         }
     }
+
+    useEffect(() => {
+        setFilteredCompanies(companies)
+    }, [companies])
 
     useEffect(() => {
         if (expiredFilter) {
@@ -107,24 +95,13 @@ const Homepage = () => {
                                         fetchData={fetchData}
                                     />
                                 ))}
-                                {filteredCompanies?.length === 0 && (
+                                {companies?.length === 0 && (
                                     <p className='text-3xl'>
                                         No Companies Found
                                     </p>
                                 )}
                             </div>
                         </div>
-                        {filteredCompanies?.length < companies?.length &&
-                            filteredCompanies?.length > 0 &&
-                            searchQuery === '' &&
-                            expiredFilter === false && (
-                                <button
-                                    className='text-gray-900 font-bold mx-auto w-52 px-2 lg:py-1 lg:rounded-2xl bg-lightGold mt-2'
-                                    onClick={loadNextPage}
-                                >
-                                    Load More
-                                </button>
-                            )}
                     </>
                 )}
             </Wrapper>

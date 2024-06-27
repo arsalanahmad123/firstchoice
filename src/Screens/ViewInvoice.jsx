@@ -13,7 +13,9 @@ const ViewInvoice = () => {
 
     const fetchData = async () => {
         try {
-            const invoiceResponse = await api.get(`/invoices/get-invoice/${id}`)
+            const invoiceResponse = await api.get(
+                `/singleInvoices/get-invoice/${id}`,
+            )
             const invoiceData = invoiceResponse.data.data
             if (invoiceResponse.status === 200) {
                 setInvoice(invoiceData)
@@ -62,12 +64,17 @@ const ViewInvoice = () => {
                         <span className=' text-lightGold font-medium uppercase'>
                             {invoice?.company}
                         </span>
-                        <span className='text-black text-sm'>
-                            Email: {selectedCompany?.email}
-                        </span>
-                        <span className='text-black text-sm'>
-                            Mob: {selectedCompany?.phone}
-                        </span>
+                        {selectedCompany?.email && (
+                            <span className='text-black text-sm'>
+                                Email: {selectedCompany.email}
+                            </span>
+                        )}
+
+                        {selectedCompany?.phone && (
+                            <span className='text-black text-sm'>
+                                Mob: {selectedCompany.phone}
+                            </span>
+                        )}
                     </span>
                     <span className='flex flex-row justify-start items-start gap-x-3'>
                         <span className='text-black font-bold'>Subject:</span>
