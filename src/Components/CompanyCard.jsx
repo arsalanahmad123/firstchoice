@@ -114,7 +114,7 @@ const CompanyCard = ({ company, fetchData }) => {
         <>
             <div className='flex flex-col justify-center items-start gap-y-2 text-white rounded-xl  bg-bgLight p-5 '>
                 <img
-                    src={company.logo.url}
+                    src={company?.logo?.url}
                     alt=''
                     className='w-32 h-20 mx-auto object-cover'
                 />

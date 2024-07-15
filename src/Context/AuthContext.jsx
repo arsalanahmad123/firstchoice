@@ -15,25 +15,6 @@ export const AuthProvider = ({ children }) => {
         JSON.parse(localStorage.getItem('company')),
     )
 
-    useEffect(() => {
-        const checkAuth = async () => {
-            try {
-                const response = await api.get('/auth/check-auth')
-
-                if (response.status === 200) {
-                    setLoggedIn(true)
-                } else {
-                    setLoggedIn(false)
-                }
-            } catch (error) {
-                setLoggedIn(false)
-            }
-        }
-
-        if (!loggedIn) {
-            checkAuth()
-        }
-    }, [loggedIn])
 
     useEffect(() => {
         localStorage.setItem('loggedIn', loggedIn)
